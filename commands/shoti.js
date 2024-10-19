@@ -15,15 +15,15 @@ module.exports = {
       const shotiUrl = response.data.shotiurl;
 
       if (shotiUrl) {
-        sendMessage(senderId, {
-          attachment: {
-            type: 'video',
-            payload: {
-              url: shotiUrl,
-              is_reusable: true
-            }
+  sendMessage(senderId, {
+     attachment: {
+          type: 'video',
+          payload: {
+            url: shotiUrl,
+            is_reusable: true
           }
-        }, pageAccessToken);
+        }
+      }, pageAccessToken);
       } else {
         sendMessage(senderId, { text: 'Sorry, no Shoti video found.' }, pageAccessToken);
       }

@@ -7,6 +7,10 @@ const path = require("path");
 const app = express();
 app.use(bodyParser.json());
 
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "/public/index.html"));
+});
+
 function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
@@ -34,7 +38,7 @@ function sendMessage(senderId, message, pageAccessToken) {
   }
 
   request({
-    url: 'https://graph.facebook.com/v13.0/me/messages',
+    url: 'https://graph.facebook.com/v21.0/me/messages',
     qs: { access_token: pageAccessToken },
     method: 'POST',
     json: payload,
