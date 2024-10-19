@@ -1,9 +1,13 @@
-const express = require('express');
+;const express = require('express');
+const bodyParser = require('body-parser');
 const fs = require('fs');
 const request = require("request");
 const path = require("path");
 
 const app = express();
+app.use(bodyParser.json());
+
+const PORT = process.env.PORT || 8080;
 
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "public", "index.html"));
@@ -121,7 +125,6 @@ app.post('/webhook', (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
