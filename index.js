@@ -90,7 +90,6 @@ function sendMessage(senderId, message) {
 }
 
 async function handleMessage(event) {
-  event.source.page_id
   const senderId = event.sender.id;
   const messageText = event.message?.text;
 
