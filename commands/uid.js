@@ -1,21 +1,22 @@
 const axios = require('axios');
 
-async function getUserInfo(senderId, pageAccessToken) {
-  try {
-    const response = await axios.get(`https://graph.facebook.com/v14.0/${senderId}?access_token=${pageAccessToken}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching user info:', error);
-    return null;
-  }
-}
-
 module.exports = {
   name: 'uid',
   description: 'Get Uid',
   usage: '<uid>',
   author: 'Cliff',
   async execute(senderId, args, pageAccessToken, sendMessage, pageid) {
+
+    async function getUserInfo(senderId, pageAccessToken) {
+      try {
+        const response = await axios.get(`https://graph.facebook.com/v14.0/${senderId}?access_token=${pageAccessToken}`);
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        return null;
+      }
+    }
+
     try {
       const userInfo = await getUserInfo(senderId, pageAccessToken);
       if (!userInfo) {
@@ -24,10 +25,7 @@ module.exports = {
 
       const { name, id } = userInfo;
 
-      const quick_replies = [];
-
       await sendMessage(senderId, {
-        quick_replies,
         attachment: {
           type: "template",
           payload: {
@@ -49,7 +47,6 @@ module.exports = {
         }
       }, pageAccessToken);
     } catch (error) {
-      console.error('Error in execute function:', error);
       await sendMessage(senderId, { text: 'Error: Could not generate the buttons. Please try again later.' }, pageAccessToken);
     }
   }
