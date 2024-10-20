@@ -40,7 +40,7 @@ module.exports = {
     const totalCommands = commandFiles.length;
     const commands = commandFiles.map((file, index) => {
       const command = require(path.join(commandsDir, file));
-      return `\n${index + 1}. ${formatFont(command.name.toUpperCase())}\n`;
+      return `${index + 1}. ${formatFont(command.name.toUpperCase())}`;
     });
 
     const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n${commands.join('\n')}\n\n📋 ${formatFont("Total Commands")}: ${totalCommands}`;
