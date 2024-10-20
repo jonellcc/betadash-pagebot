@@ -13,6 +13,7 @@ app.use(express.static('public'));
 
 const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
+const pageid = "100849055472459";
 const PAGE_ACCESS_TOKEN = 'EAANTypknxAUBO3sH6YgqoekOJ5a3D0Ut4ZBQ4YZAMtrwRnV6RmYd9MDRpIP4WLZAnzC57nmemnyyDX4gJVKr3mt9ZBMB9iqVXlQkMXECwkLMOOZBdOXZC8SqWVP7hnKfTdgWaXDgDazcZBOBQyzHKFur45bGwaFAavPkPeL51NC2olmn0rzRGca4ZCVqGlZAWvzT7';
 
 const commandList = [];
@@ -103,7 +104,7 @@ async function handleMessage(event) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, PAGE_ACCESS_TOKEN, sendMessage);
+      await command.execute(senderId, args, PAGE_ACCESS_TOKEN, sendMessage, pageid);
     } catch (error) {
       sendMessage(senderId, { text: 'There was an error executing that command.' });
     }
