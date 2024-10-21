@@ -66,18 +66,11 @@ app.post('/webhook', (req, res) => {
 function handlePostback(event) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
-  sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` });
-}
-
-const handlePostback = (event, pageAccessToken) => {
-  const senderId = event.sender?.id;
-  const payload = event.postback?.payload;
-
-  if (senderId && payload) {
+if (senderId && payload) {
     if (payload === 'GET_STARTED_PAYLOAD') {
 
       const welcomeMessage = {
-        text: 'Hello, I'm Yazbot and I am your assistant. Type 'help' for available commands'
+        text: "Hello, I'm Yazbot and I am your assistant. Type 'help' for available commands"
       };
       sendMessage(senderId, welcomeMessage, pageAccessToken);
     } else {
@@ -89,8 +82,6 @@ const handlePostback = (event, pageAccessToken) => {
   }
 };
 
-
-Hello, I'm Yazbot and I am your assistant. Type 'help' for available commands.
 
 function sendMessage(senderId, message) {
   if (!message || (!message.text && !message.attachment)) {
@@ -109,7 +100,7 @@ function sendMessage(senderId, message) {
     json: payload,
   }, (error, response, body) => {
     if (error) {
-      console.error('Error sending message);
+      console.error('Error sending message');
     } else if (response.body.error) {
       console.error();
     }
