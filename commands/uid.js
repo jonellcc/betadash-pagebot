@@ -22,7 +22,7 @@ module.exports = {
       if (!userInfo) {
         throw new Error('User info not found');
       }
-
+ 
       const { name, id } = userInfo;
 
       await sendMessage(senderId, {
@@ -47,7 +47,9 @@ module.exports = {
         }
       }, pageAccessToken);
     } catch (error) {
-      await sendMessage(senderId, { text: 'Error: Could not generate the buttons. Please try again later.' }, pageAccessToken);
+      await sendMessage(senderId, { 
+        text: 'Error: Could not generate the buttons. Please try again later.' 
+      }, pageAccessToken);
     }
   }
 };

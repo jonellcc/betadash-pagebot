@@ -49,6 +49,8 @@ app.post('/webhook', (req, res) => {
           handleMessage(event);
         } else if (event.postback) {
           handlePostback(event);
+        } else if (event.get_started) {
+          getStarted((message) => sendMessage(event.sender.id, message));
         }
       });
     });
@@ -162,43 +164,69 @@ loadCommands();
 
 async function publishPost(message, access_token) {
   return await new Promise(async (resolve, reject) => {
-  const res = await axios.post(`https://graph.facebook.com/v21.0/me/feed`,
-  {
-    message,
-    access_token
-  }, {
-    params: {
-      access_token
-    },
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
-  if (!res) reject();
-  resolve(res.data);
+    const res = await axios.post(`https://graph.facebook.com/v21.0/me/feed`, 
+    { message, access_token }, 
+    { params: { access_token }, headers: { "Content-Type": "application/json" } });
+    if (!res) reject();
+    resolve(res.data);
   });
 }
 
 async function post() {
   console.log("Auto 1 Hour Post Enabled");
   const autoPost = cron.schedule(`0 */3 * * *`, async () => {
-    const {
-      content,
-      author
-    } = (await axios.get(`https://api.realinspire.tech/v1/quotes/random`)).data[0];
+    const { content, author } = (await axios.get(`https://api.realinspire.tech/v1/quotes/random`)).data[0];
     await publishPost(`💭 Remember...
 ${content}
 -${author}
 `, PAGE_ACCESS_TOKEN);
     console.log("Triggered autopost.");
-  }, {
-    scheduled: true,
-    timezone: "Asia/Manila"
-  });
+  }, { scheduled: true, timezone: "Asia/Manila" });
   autoPost.start();
 }
 
 post();
+
+// Set up Get Started button in Messenger
+axios.post(
+  `https://graph.facebook.com/v2.6/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
+  {
+    get_started: { payload: "GET_STARTED" }
+  },
+  { headers: { "Content-Type": "application/json" } }
+).then(() => {
+  console.log('Get Started button set');
+}).catch((error) => {
+  console.error('Error setting Get Started button:', error);
+});
+
+// Get Started function
+const getStarted = async (send) => send({
+  attachment: {
+    type: "template",
+    payload: {
+      template_type: "button",
+      text: "Hello, I'm Yazbot and I am your assistant. Type 'help' for available commands.",
+      buttons: [
+        {
+          type: "postback",
+          title: "Commands",
+          payload: "HELP"
+        },
+        {
+          type: "postback",
+          title: "About",
+          payload: "ABOUT"
+        },
+        {
+          type: "postback",
+          title: "Prefix",
+          payload: "PREFIX"
+        }
+      ]
+    }
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
