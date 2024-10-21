@@ -14,7 +14,7 @@ app.use(express.static('public'));
 const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "100849055472459";
-const PAGE_ACCESS_TOKEN = 'EAANTypknxAUBOxYazHgdQAXX9ZBdpivt9TEMJTurY228mJQI1nr0b41iZCWClicdYGZByKnrGi2orug5KmL11TQpoDITTaGCdeZBKQ9DR9wOjpX6yW4FSLtZAFJ20kBrEwVeJFAJZCzZAFHr8QeGNPYcWi5WawAcaufmqdn45omxUjwBsXWzhBy2xxAHEvxQQr6';
+const PAGE_ACCESS_TOKEN = 'EAANTypknxAUBO2BA9JyiikceEJ5LxvZC6PZBK5YfHsXK1LjAZAEi9fBoAgfMAp1hzIHwfyi1l6Gcodx4aVJkxW959rHIbcit69rroGyib5FDFWZBEZCw0ZBQkGWZAZA4p5F3l4rTMYfyVG25M6kZCACz2Unr7oRIhVCgW5LsBJJzBPTaHv9NJZATqRefsZCeLHz6IYX';
 
 const commandList = [];
 const descriptions = [];
