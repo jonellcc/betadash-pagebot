@@ -96,7 +96,7 @@ module.exports = {
       return `│ ✧ ${command.name}`;
     });
 
-    const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commands.join('\n')}\n╰───────────⟡\n├─────☾⋆ \n│ » Admin: Cliffvincent\n│ » 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${formatFont(totalCommands)} ]\n│ » 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}\n╰──────────⧕`;
+    const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commands.join('\n')}\n╰───────────⟡\n├─────☾⋆ \n│ » Admin: Cliffvincent\n│ » 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${totalCommands} ]\n│ » 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}\n╰──────────⧕`;
     sendMessage(senderId, { text: helpMessage }, pageAccessToken);
   }
 };

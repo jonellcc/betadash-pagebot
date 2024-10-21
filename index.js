@@ -187,9 +187,7 @@ ${content}
 
 post();
 
-// Set up Get Started button in Messenger
-axios.post(
-  `https://graph.facebook.com/v2.6/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
+axios.post(`https://graph.facebook.com/v2.6/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
   {
     get_started: { payload: "GET_STARTED" }
   },
@@ -200,7 +198,6 @@ axios.post(
   console.error('Error setting Get Started button:', error);
 });
 
-// Get Started function
 const getStarted = async (send) => send({
   attachment: {
     type: "template",
