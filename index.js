@@ -158,7 +158,7 @@ async function updateMessengerCommands() {
 
     console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to load commands');
   } catch (error) {
-    console.error('Error updating commands:', error);
+    console.error();
   }
 }
 
