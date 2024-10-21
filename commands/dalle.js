@@ -1,9 +1,9 @@
 const axios = require('axios');
 
 module.exports = {
-  name: 'flux',
-  description: 'Generate image  from fluxpro dev',
-  usage: 'flux <prompt>',
+  name: 'dalle',
+  description: 'Generate image  from Dalle',
+  usage: 'dalle <prompt>',
   author: 'Cliff Vincent',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     if (!args || !Array.isArray(args) || args.length === 0) {
@@ -14,9 +14,12 @@ module.exports = {
     const prompt = args.join(' ');
 
     try {
-      const apiUrl = `https://www.samirxpikachu.run.place/ArcticFL?prompt=${encodeURIComponent(prompt)}--styles+3`;
+      const apiUrl = `https://dall-e-tau-steel.vercel.app/kshitiz?prompt=${encodeURIComponent(prompt)}`;
 
-      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: apiUrl } } }, pageAccessToken);
+const response = await axios.get(apiUrl);
+const image = response.data.response;
+
+      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: image } } }, pageAccessToken);
 
     } catch (error) {
       await sendMessage(senderId, { text: 'Error: Could not generate image.' }, pageAccessToken);

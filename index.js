@@ -14,7 +14,7 @@ app.use(express.static('public'));
 const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "100849055472459";
-const PAGE_ACCESS_TOKEN = 'EAANTypknxAUBO3sH6YgqoekOJ5a3D0Ut4ZBQ4YZAMtrwRnV6RmYd9MDRpIP4WLZAnzC57nmemnyyDX4gJVKr3mt9ZBMB9iqVXlQkMXECwkLMOOZBdOXZC8SqWVP7hnKfTdgWaXDgDazcZBOBQyzHKFur45bGwaFAavPkPeL51NC2olmn0rzRGca4ZCVqGlZAWvzT7';
+const PAGE_ACCESS_TOKEN = 'EAANTypknxAUBOxYazHgdQAXX9ZBdpivt9TEMJTurY228mJQI1nr0b41iZCWClicdYGZByKnrGi2orug5KmL11TQpoDITTaGCdeZBKQ9DR9wOjpX6yW4FSLtZAFJ20kBrEwVeJFAJZCzZAFHr8QeGNPYcWi5WawAcaufmqdn45omxUjwBsXWzhBy2xxAHEvxQQr6';
 
 const commandList = [];
 const descriptions = [];
@@ -69,6 +69,29 @@ function handlePostback(event) {
   sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` });
 }
 
+const handlePostback = (event, pageAccessToken) => {
+  const senderId = event.sender?.id;
+  const payload = event.postback?.payload;
+
+  if (senderId && payload) {
+    if (payload === 'GET_STARTED_PAYLOAD') {
+
+      const welcomeMessage = {
+        text: 'Hello, I'm Yazbot and I am your assistant. Type 'help' for available commands'
+      };
+      sendMessage(senderId, welcomeMessage, pageAccessToken);
+    } else {
+
+      sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
+    }
+  } else {
+    console.error('Invalid postback event data');
+  }
+};
+
+
+Hello, I'm Yazbot and I am your assistant. Type 'help' for available commands.
+
 function sendMessage(senderId, message) {
   if (!message || (!message.text && !message.attachment)) {
     return;
@@ -86,9 +109,9 @@ function sendMessage(senderId, message) {
     json: payload,
   }, (error, response, body) => {
     if (error) {
-      console.error('Error sending message:', error);
+      console.error('Error sending message);
     } else if (response.body.error) {
-      console.error('Response error:', response.body.error);
+      console.error();
     }
   });
 }
@@ -96,11 +119,6 @@ function sendMessage(senderId, message) {
 async function handleMessage(event) {
   const senderId = event.sender.id;
   const messageText = event.message?.text;
-
-  if (!messageText) {
-    sendMessage(senderId, { text: 'Invalid message format.' });
-    return;
-  }
 
   const args = messageText.split(' ');
   const commandName = args.shift().toLowerCase();
@@ -176,7 +194,7 @@ async function publishPost(message, access_token) {
 
 async function post() {
   console.log("Auto 1 Hour Post Enabled");
-  const autoPost = cron.schedule(`0 */3 * * *`, async () => {
+  const autoPost = cron.schedule(`0 */5 * * *`, async () => {
     const { content, author } = (await axios.get(`https://api.realinspire.tech/v1/quotes/random`)).data[0];
     await publishPost(`💭 Remember...
 ${content}
@@ -188,103 +206,6 @@ ${content}
 }
 
 post();
-
-axios.post(`https://graph.facebook.com/v2.6/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
-  {
-    get_started: { payload: "GET_STARTED" }
-  },
-  { headers: { "Content-Type": "application/json" } }
-).then(() => {
-  console.log('Get Started button set');
-}).catch((error) => {
-  console.error('Error setting Get Started button:', error);
-});
-
-const getStarted = async (send) => send({
-  attachment: {
-    type: "template",
-    payload: {
-      template_type: "button",
-      text: "Hello, I'm Yazbot and I am your assistant. Type 'help' for available commands.",
-      buttons: [
-        {
-          type: "postback",
-          title: "Commands",
-          payload: "HELP"
-        },
-        {
-          type: "postback",
-          title: "About",
-          payload: "ABOUT"
-        },
-        {
-          type: "postback",
-          title: "Prefix",
-          payload: "PREFIX"
-        }
-      ]
-    }
-  }
-});
-
-
-async function getUserInfo(senderId, pageAccessToken) {
-  try {
-    const response = await axios.get(`https://graph.facebook.com/v14.0/${senderId}?access_token=${pageAccessToken}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching user info:', error);
-    return null;
-  }
-}
-
-function getRandomValue(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-
-async function sendLevelUpMessage(senderId, pageAccessToken) {
-  const userInfo = await getUserInfo(senderId, pageAccessToken);
-  if (!userInfo) {
-    console.error('User info could not be retrieved.');
-    return;
-  }
-
-  const { name } = userInfo; // Extract user name
-  const currentLvl = getRandomValue(1, 10);  // Random level between 1 and 10
-  const currentRank = getRandomValue(1, 5);  // Random rank between 1 and 5
-  const currentXP = getRandomValue(50, 200); // Random XP between 50 and 200
-  const requiredXP = getRandomValue(500, 10000); // Random required XP
-
-  const apiUrl = `https://api-canvass.vercel.app/rankcard?name=${encodeURIComponent(name)}&userid=${senderId}&currentLvl=${currentLvl}&currentRank=${currentRank}&currentXP=${currentXP}&requiredXP=${requiredXP}`;
-
-  const messagePayload = {
-    attachment: {
-      type: 'image',
-      payload: { url: apiUrl }
-    }
-  };
-
-  try {
-    await sendMessage(senderId, messagePayload, pageAccessToken);
-    console.log(`Message sent to user ${senderId} with level ${currentLvl}!`);
-  } catch (error) {
-    console.error(`Failed to send message: ${error}`);
-  }
-}
-
-async function sendMessage(recipientId, messagePayload, pageAccessToken) {
-  try {
-    await axios.post(`https://graph.facebook.com/v14.0/me/messages?access_token=${pageAccessToken}`, {
-      recipient: { id: recipientId },
-      message: messagePayload,
-    });
-  } catch (error) {
-    console.error('Error sending message:', error);
-    throw error;
-  }
-}
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
