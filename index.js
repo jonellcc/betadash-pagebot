@@ -20,7 +20,7 @@ const commandList = [];
 const descriptions = [];
 const commands = new Map();
 
-app.get('/', (req, res) => {
+app.get('/webhook', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
@@ -46,6 +46,8 @@ app.post('/webhook', (req, res) => {
     body.entry.forEach(entry => {
       entry.messaging.forEach(event => {
         if (event.message) {
+          handleMessage(event);
+        } else if (event.sender.id) {
           handleMessage(event);
         } else if (event.postback) {
           handlePostback(event);
@@ -224,6 +226,65 @@ const getStarted = async (send) => send({
     }
   }
 });
+
+
+async function getUserInfo(senderId, pageAccessToken) {
+  try {
+    const response = await axios.get(`https://graph.facebook.com/v14.0/${senderId}?access_token=${pageAccessToken}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user info:', error);
+    return null;
+  }
+}
+
+function getRandomValue(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+async function sendLevelUpMessage(senderId, pageAccessToken) {
+  const userInfo = await getUserInfo(senderId, pageAccessToken);
+  if (!userInfo) {
+    console.error('User info could not be retrieved.');
+    return;
+  }
+
+  const { name } = userInfo; // Extract user name
+  const currentLvl = getRandomValue(1, 10);  // Random level between 1 and 10
+  const currentRank = getRandomValue(1, 5);  // Random rank between 1 and 5
+  const currentXP = getRandomValue(50, 200); // Random XP between 50 and 200
+  const requiredXP = getRandomValue(500, 10000); // Random required XP
+
+  const apiUrl = `https://api-canvass.vercel.app/rankcard?name=${encodeURIComponent(name)}&userid=${senderId}&currentLvl=${currentLvl}&currentRank=${currentRank}&currentXP=${currentXP}&requiredXP=${requiredXP}`;
+
+  const messagePayload = {
+    attachment: {
+      type: 'image',
+      payload: { url: apiUrl }
+    }
+  };
+
+  try {
+    await sendMessage(senderId, messagePayload, pageAccessToken);
+    console.log(`Message sent to user ${senderId} with level ${currentLvl}!`);
+  } catch (error) {
+    console.error(`Failed to send message: ${error}`);
+  }
+}
+
+async function sendMessage(recipientId, messagePayload, pageAccessToken) {
+  try {
+    await axios.post(`https://graph.facebook.com/v14.0/me/messages?access_token=${pageAccessToken}`, {
+      recipient: { id: recipientId },
+      message: messagePayload,
+    });
+  } catch (error) {
+    console.error('Error sending message:', error);
+    throw error;
+  }
+}
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
