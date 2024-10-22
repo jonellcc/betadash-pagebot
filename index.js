@@ -102,7 +102,7 @@ function sendMessage(senderId, message, event, pageAccessToken, isTyping) {
     return new Promise((resolve, reject) => {
       axios
         .post(
-          `https://graph.facebook.com/v20.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`,
+          `https://graph.facebook.com/v20.0/me/messages?access_token=${pageAccesToken}`,
           form
         )
         .then((res) => {
@@ -155,7 +155,7 @@ function sendMessage(senderId, message, event, pageAccessToken, isTyping) {
     if (!error && response.statusCode === 200) {
       console.log('Message sent successfully');
     } else {
-      console.error('Failed to send message:', error || body.error);
+      console.error();
     }
   });
 
