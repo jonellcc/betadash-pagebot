@@ -51,8 +51,6 @@ app.post('/webhook', (req, res) => {
           handleMessage(event);
         } else if (event.postback) {
           handlePostback(event);
-        } else if (event.get_started) {
-          getStarted((message) => sendMessage(event.sender.id, message));
         }
       });
     });
@@ -66,50 +64,7 @@ app.post('/webhook', (req, res) => {
 function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
-
-  if (senderId && payload) {
-    if (payload === 'GET_STARTED_PAYLOAD') {
-      const welcomeMessage = {
-        text: "Hello, I'm Yazbot and I am your assistant. Type 'help' for available commands"
-      };
-      sendMessage(senderId, welcomeMessage, pageAccessToken);
-    } else {
-      sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
-    }
-  }
-}
-
-const form = {
-  get_started: {
-    payload: "GET_STARTED_PAYLOAD"
-  },
-  greeting: [
-    {
-      locale: "default",
-      text: "Hello, I'm Yazbot! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving. What's on your mind today?"
-    }
-  ]
-};
-
-function setupMessengerProfile(pageAccessToken) {
-  const requestBody = {
-    get_started: form.get_started,
-    greeting: form.greeting
-  };
-
-  const requestOptions = {
-    method: 'POST',
-    uri: `https://graph.facebook.com/v11.0/me/messenger_profile?access_token=${pageAccessToken}`,
-    json: requestBody
-  };
-
-  request(requestOptions, (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      console.log('Messenger profile setup successful');
-    } else {
-      console.error('Error setting up Messenger profile:', error);
-    }
-  });
+  sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
 }
 
 async function sendMessage(senderId, message) {
@@ -222,32 +177,6 @@ async function updateMessengerCommands() {
 }
 
 loadCommands();
-
-async function publishPost(message, pageAccesToken) {
-  return await new Promise(async (resolve, reject) => {
-    const res = await axios.post(`https://graph.facebook.com/v21.0/me/feed`, 
-    { message, pageAccesToken }, 
-    { params: { pageAccesToken }, headers: { "Content-Type": "application/json" } });
-    if (!res) reject();
-    resolve(res.data);
-  });
-}
-
-async function post() {
-  console.log("Auto 1 Hour Post Enabled");
-  const autoPost = cron.schedule(`0 */5 * * *`, async () => {
-    const { content, author } = (await axios.get(`https://api.realinspire.tech/v1/quotes/random`)).data[0];
-    await publishPost(`💭 Remember...
-${content}
--${author}
-`, PAGE_ACCESS_TOKEN);
-    console.log("Triggered autopost.");
-  }, { scheduled: true, timezone: "Asia/Manila" });
-  autoPost.start();
-}
-
-post();
-
 
 function splitMessageIntoChunks(message, chunkSize) {
   const chunks = [];
