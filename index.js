@@ -14,7 +14,7 @@ app.use(express.static('public'));
 const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "61567757543707";
-const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBO4QyaIXfKsefYld5oumsZCtQ5CFhB9kJANEDQ93GGDqHdlWFGlYyZBxmEYP3nRwFJlwPAO4HwO7RUT1d8QgrS2Q5rTVMB5qljf8QLZBttzXLeWZCLZCY2ZBQkW2dHZBjaZBiQNlHtnOPZBim5OwZBQdswcyONviT7VmPTglkvhFryWYIj2QbwZBjwk3FQZDZD";
+const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBOykIvMUSZAq2YtwDTNoZBKxj4ipxTXnJBAFACyGambKZCU6ZBKPZAQexjuPbwpc4ZCc6gvIjZBT1Gz3UTjjnOGmvxilikIjohqKS9sQkzTnKLYKSAV2dgVZAtTxZCCkrFqG5ytr1IeDnZC3cjBdZCkwoZAHDUv7kZA9rbP6hhtm1s21vUXIeZA6RwryGDlsAZDZD";
 
 const commandList = [];
 const descriptions = [];
@@ -102,7 +102,7 @@ function sendMessage(senderId, message, event, pageAccessToken, isTyping) {
     return new Promise((resolve, reject) => {
       axios
         .post(
-          `https://graph.facebook.com/v20.0/me/messages?access_token=${pageAccessToken}`,
+          `https://graph.facebook.com/v20.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`,
           form
         )
         .then((res) => {
@@ -248,11 +248,11 @@ async function updateMessengerCommands() {
 
 loadCommands();
 
-async function publishPost(message, access_token) {
+async function publishPost(message, pageAccesToken) {
   return await new Promise(async (resolve, reject) => {
     const res = await axios.post(`https://graph.facebook.com/v21.0/me/feed`, 
-    { message, access_token }, 
-    { params: { access_token }, headers: { "Content-Type": "application/json" } });
+    { message, pageAccesToken }, 
+    { params: { pageAccesToken }, headers: { "Content-Type": "application/json" } });
     if (!res) reject();
     resolve(res.data);
   });
