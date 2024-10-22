@@ -76,90 +76,65 @@ function handlePostback(event, pageAccessToken) {
     } else {
       sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
     }
-  } else {
-    console.error('Invalid postback event data');
   }
 }
 
-function sendMessage(senderId, message, event, pageAccessToken, isTyping) {
-  const sendTypingIndicator = async (isTyping) => {
-    const senderAction = isTyping ? "typing_on" : "typing_off";
-    const form = {
-      recipient: {
-        id: senderId,
-      },
-      sender_action: senderAction,
-    };
-
-    try {
-      return await Graph(form);
-    } catch (err) {
-      return err;
+const form = {
+  get_started: {
+    payload: "GET_STARTED_PAYLOAD"
+  },
+  greeting: [
+    {
+      locale: "default",
+      text: "Hello, I'm Yazbot! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving. What's on your mind today?"
     }
-  };
+  ]
+};
 
-  const Graph = (form) => {
-    return new Promise((resolve, reject) => {
-      axios
-        .post(
-          `https://graph.facebook.com/v20.0/me/messages?access_token=${pageAccesToken}`,
-          form
-        )
-        .then((res) => {
-          resolve(res.data);
-        })
-        .catch((err) => {
-          reject(err.response ? err.response.data : err.message);
-        });
-    });
-  };
-
-  if (!message || (!message.text && !message.attachment)) {
-    return;
-  }
-
-  sendTypingIndicator(isTyping);
-
-  const payload = {
-    recipient: { id: senderId },
-    message: message.text ? { text: message.text } : { attachment: message.attachment }
-  };
-
-  request({
-    url: 'https://graph.facebook.com/v21.0/me/messages',
-    qs: { access_token: pageAccessToken },
-    method: 'POST',
-    json: payload,
-  }, (error, response, body) => {
-    if (error) {
-      console.error('Error sending message');
-    } else if (response.body.error) {
-      console.error(response.body.error);
-    }
-  });
-
-  const additionalMessage = {
-    recipient: {
-      id: senderId
-    },
-    message: message
+function setupMessengerProfile(pageAccessToken) {
+  const requestBody = {
+    get_started: form.get_started,
+    greeting: form.greeting
   };
 
   const requestOptions = {
     method: 'POST',
-    uri: `https://graph.facebook.com/v11.0/me/messages?access_token=${pageAccessToken}`,
-    json: additionalMessage
+    uri: `https://graph.facebook.com/v11.0/me/messenger_profile?access_token=${pageAccessToken}`,
+    json: requestBody
   };
 
   request(requestOptions, (error, response, body) => {
     if (!error && response.statusCode === 200) {
-      console.log('Message sent successfully');
+      console.log('Messenger profile setup successful');
     } else {
-      console.error();
+      console.error('Error setting up Messenger profile:', error);
     }
   });
+}
 
-  sendTypingIndicator(false);
+async function sendMessage(senderId, message) {
+  try {
+    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+      recipient: { id: senderId },
+      sender_action: "typing_on"
+    });
+
+    const messagePayload = {
+      recipient: { id: senderId },
+      message: message.text ? { text: message.text } : { attachment: message.attachment }
+    };
+
+    const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
+
+    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+      recipient: { id: senderId },
+      sender_action: "typing_off"
+    });
+
+    return res.data;
+  } catch (error) {
+    console.error();
+  }
 }
 
 async function handleMessage(event, pageAccessToken) {
@@ -182,7 +157,7 @@ async function handleMessage(event, pageAccessToken) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, pageid);
+      await command.execute(senderId, args, pageAccessToken, sendMessage, pageid, splitMessageIntoChunks);
     } catch (error) {
       sendMessage(senderId, { text: 'There was an error executing that command.' });
     }
@@ -272,6 +247,15 @@ ${content}
 }
 
 post();
+
+
+function splitMessageIntoChunks(message, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < message.length; i += chunkSize) {
+    chunks.push(message.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

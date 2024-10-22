@@ -4,7 +4,7 @@ module.exports = {
   name: 'grok',
   description: 'Ask a question to Grok API',
   author: 'Cliff (rest api)',
-  async execute(senderId, args, pageAccessToken, sendMessage) {
+  async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
     const prompt = args.join(' ');
 if (!prompt) {
           sendMessage(senderId, { text: 'please provide a question first ' }, pageAccessToken);
@@ -31,11 +31,3 @@ if (!prompt) {
     }
   }
 };
-
-function splitMessageIntoChunks(message, chunkSize) {
-  const chunks = [];
-  for (let i = 0; i < message.length; i += chunkSize) {
-    chunks.push(message.slice(i, i + chunkSize));
-  }
-  return chunks;
-}
