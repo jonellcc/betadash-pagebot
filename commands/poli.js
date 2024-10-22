@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = {
   name: 'poli',
-  description: 'Generate image  from Pollination',
+  description: 'Generate image from Pollination',
   usage: 'poli <prompt>',
   author: 'Cliff Vincent',
   async execute(senderId, args, pageAccessToken, sendMessage) {
@@ -15,9 +15,8 @@ module.exports = {
 
     try {
       const apiUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
-
-const response = await axios.get(apiUrl);
-const image = response.data.response;
+      const response = await axios.get(apiUrl);
+      const image = response.data.response;
 
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: apiUrl } } }, pageAccessToken);
 

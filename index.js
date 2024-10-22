@@ -13,8 +13,8 @@ app.use(express.static('public'));
 
 const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
-const pageid = "100849055472459";
-const PAGE_ACCESS_TOKEN = 'EAANTypknxAUBO2BA9JyiikceEJ5LxvZC6PZBK5YfHsXK1LjAZAEi9fBoAgfMAp1hzIHwfyi1l6Gcodx4aVJkxW959rHIbcit69rroGyib5FDFWZBEZCw0ZBQkGWZAZA4p5F3l4rTMYfyVG25M6kZCACz2Unr7oRIhVCgW5LsBJJzBPTaHv9NJZATqRefsZCeLHz6IYX';
+const pageid = "61567757543707";
+const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBO4QyaIXfKsefYld5oumsZCtQ5CFhB9kJANEDQ93GGDqHdlWFGlYyZBxmEYP3nRwFJlwPAO4HwO7RUT1d8QgrS2Q5rTVMB5qljf8QLZBttzXLeWZCLZCY2ZBQkW2dHZBjaZBiQNlHtnOPZBim5OwZBQdswcyONviT7VmPTglkvhFryWYIj2QbwZBjwk3FQZDZD";
 
 const commandList = [];
 const descriptions = [];
@@ -63,7 +63,7 @@ app.post('/webhook', (req, res) => {
   }
 });
 
-function handlePostback(event) {
+function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
 if (senderId && payload) {
@@ -74,7 +74,6 @@ if (senderId && payload) {
       };
       sendMessage(senderId, welcomeMessage, pageAccessToken);
     } else {
-
       sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
     }
   } else {
@@ -107,17 +106,27 @@ function sendMessage(senderId, message) {
   });
 }
 
-async function handleMessage(event) {
+async function handleMessage(event, pageAccessToken) {
+  if (!event || !event.sender || !event.message) {
+    console.error();
+    return;
+  }
+
   const senderId = event.sender.id;
-  const messageText = event.message?.text;
+
+  const messageText = event.message.text;
+  if (!messageText) {
+    sendMessage(senderId, { text: 'No message text provided.' });
+    return;
+  }
 
   const args = messageText.split(' ');
-  const commandName = args.shift().toLowerCase();
+  const commandName = args.shift().toLowerCase(); 
 
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, PAGE_ACCESS_TOKEN, sendMessage, pageid);
+      await command.execute(senderId, args, pageAccessToken, sendMessage, pageid);
     } catch (error) {
       sendMessage(senderId, { text: 'There was an error executing that command.' });
     }
