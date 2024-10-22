@@ -66,9 +66,9 @@ app.post('/webhook', (req, res) => {
 function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
-if (senderId && payload) {
-    if (payload === 'GET_STARTED_PAYLOAD') {
 
+  if (senderId && payload) {
+    if (payload === 'GET_STARTED_PAYLOAD') {
       const welcomeMessage = {
         text: "Hello, I'm Yazbot and I am your assistant. Type 'help' for available commands"
       };
@@ -79,13 +79,46 @@ if (senderId && payload) {
   } else {
     console.error('Invalid postback event data');
   }
-};
+}
 
+function sendMessage(senderId, message, event, pageAccessToken, isTyping) {
+  const sendTypingIndicator = async (isTyping) => {
+    const senderAction = isTyping ? "typing_on" : "typing_off";
+    const form = {
+      recipient: {
+        id: event.sender.id,
+      },
+      sender_action: senderAction,
+    };
 
-function sendMessage(senderId, message) {
+    try {
+      return await Graph(form);
+    } catch (err) {
+      return err;
+    }
+  };
+
+  const Graph = (form) => {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(
+          `https://graph.facebook.com/v20.0/me/messages?access_token=${pageAccessToken}`,
+          form
+        )
+        .then((res) => {
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err.response ? err.response.data : err.message);
+        });
+    });
+  };
+
   if (!message || (!message.text && !message.attachment)) {
     return;
   }
+
+  sendTypingIndicator(isTyping);
 
   const payload = {
     recipient: { id: senderId },
@@ -94,16 +127,39 @@ function sendMessage(senderId, message) {
 
   request({
     url: 'https://graph.facebook.com/v21.0/me/messages',
-    qs: { access_token: PAGE_ACCESS_TOKEN },
+    qs: { access_token: pageAccessToken },
     method: 'POST',
     json: payload,
   }, (error, response, body) => {
     if (error) {
       console.error('Error sending message');
     } else if (response.body.error) {
-      console.error();
+      console.error(response.body.error);
     }
   });
+
+  const additionalMessage = {
+    recipient: {
+      id: senderId
+    },
+    message: message
+  };
+
+  const requestOptions = {
+    method: 'POST',
+    uri: `https://graph.facebook.com/v11.0/me/messages?access_token=${pageAccessToken}`,
+    json: additionalMessage
+  };
+
+  request(requestOptions, (error, response, body) => {
+    if (!error && response.statusCode === 200) {
+      console.log('Message sent successfully');
+    } else {
+      console.error('Failed to send message:', error || body.error);
+    }
+  });
+
+  sendTypingIndicator(false);
 }
 
 async function handleMessage(event, pageAccessToken) {
@@ -113,15 +169,15 @@ async function handleMessage(event, pageAccessToken) {
   }
 
   const senderId = event.sender.id;
-
   const messageText = event.message.text;
+
   if (!messageText) {
     sendMessage(senderId, { text: 'No message text provided.' });
     return;
   }
 
   const args = messageText.split(' ');
-  const commandName = args.shift().toLowerCase(); 
+  const commandName = args.shift().toLowerCase();
 
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
@@ -131,9 +187,19 @@ async function handleMessage(event, pageAccessToken) {
       sendMessage(senderId, { text: 'There was an error executing that command.' });
     }
   } else {
-    sendMessage(senderId, {
-      text: `Invalid command '${commandName}', please use help to see available commands.`
-    });
+    const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4-turbo-2024-04-09?ask=${encodeURIComponent(messageText)}`;
+    const response = await axios.get(apiUrl);
+    const text = response.data.message;
+
+    const maxMessageLength = 2000;
+    if (text.length > maxMessageLength) {
+      const messages = splitMessageIntoChunks(text, maxMessageLength);
+      for (const message of messages) {
+        sendMessage(senderId, { text: message }, pageAccessToken);
+      }
+    } else {
+      sendMessage(senderId, { text }, pageAccessToken);
+    }
   }
 }
 
