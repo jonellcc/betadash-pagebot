@@ -86,7 +86,7 @@ function sendMessage(senderId, message, event, pageAccessToken, isTyping) {
     const senderAction = isTyping ? "typing_on" : "typing_off";
     const form = {
       recipient: {
-        id: event.sender.id,
+        id: senderId,
       },
       sender_action: senderAction,
     };
