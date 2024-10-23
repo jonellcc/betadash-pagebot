@@ -4,7 +4,6 @@ const fs = require('fs');
 const request = require('request');
 const path = require('path');
 const axios = require('axios');
-const cron = require('node-cron');
 
 const app = express();
 app.use(bodyParser.json());
@@ -12,8 +11,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 8080;
+
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "61567757543707";
+const admin = ["8786755161388846", "8376765705775283", "8552967284765085"];
 const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBOykIvMUSZAq2YtwDTNoZBKxj4ipxTXnJBAFACyGambKZCU6ZBKPZAQexjuPbwpc4ZCc6gvIjZBT1Gz3UTjjnOGmvxilikIjohqKS9sQkzTnKLYKSAV2dgVZAtTxZCCkrFqG5ytr1IeDnZC3cjBdZCkwoZAHDUv7kZA9rbP6hhtm1s21vUXIeZA6RwryGDlsAZDZD";
 
 const commandList = [];
@@ -67,21 +68,45 @@ function handlePostback(event, pageAccessToken) {
   sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
 }
 
-async function sendMessage(senderId, message) {
+
+async function getAttachments(mid){
+  return await new Promise(async (resolve, reject) => {
+  if (!mid) reject();
+  await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments?access_token=${PAGE_ACCESS_TOKEN}`).then(data => {
+    resolve(data.data.data);
+  }).catch(err => {
+    reject(err);
+  });
+  });
+}
+
+function splitMessageIntoChunks(message, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < message.length; i += chunkSize) {
+    chunks.push(message.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
+async function sendMessage(senderId, message, mid = null, pageAccessToken) {
   try {
-    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${pageAccessToken}`, {
       recipient: { id: senderId },
       sender_action: "typing_on"
     });
 
     const messagePayload = {
       recipient: { id: senderId },
-      message: message.text ? { text: message.text } : { attachment: message.attachment }
+      message: message.text ? { text: message.text } : { attachment: message.attachment },
+      ...(mid && { reply_to: { mid } })
     };
 
-    const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
+    const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages`, messagePayload, {
+      params: { access_token: pageAccessToken },
+      headers: { "Content-Type": "application/json" }
+    });
 
-    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${pageAccessToken}`, {
       recipient: { id: senderId },
       sender_action: "typing_off"
     });
@@ -93,7 +118,7 @@ async function sendMessage(senderId, message) {
 }
 
 async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.message) {
+  if (!event || !event.sender || !event.message || !event.message.reply_to.mid || !event.message.mid) {
     console.error();
     return;
   }
@@ -112,7 +137,7 @@ async function handleMessage(event, pageAccessToken) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, pageid, splitMessageIntoChunks);
+      await command.execute(senderId, args, pageAccessToken, sendMessage, pageid, splitMessageIntoChunks, admin, admin, message, event, getAttachments);
     } catch (error) {
       sendMessage(senderId, { text: 'There was an error executing that command.' });
     }
@@ -164,8 +189,7 @@ async function updateMessengerCommands() {
       return;
     }
 
-    const response = await axios.post(
-      `https://graph.facebook.com/v21.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
+    const response = await axios.post(`https://graph.facebook.com/v21.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
       { commands: [{ locale: 'default', commands: commandsPayload }] },
       { headers: { 'Content-Type': 'application/json' } }
     );
@@ -177,14 +201,6 @@ async function updateMessengerCommands() {
 }
 
 loadCommands();
-
-function splitMessageIntoChunks(message, chunkSize) {
-  const chunks = [];
-  for (let i = 0; i < message.length; i += chunkSize) {
-    chunks.push(message.slice(i, i + chunkSize));
-  }
-  return chunks;
-}
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
