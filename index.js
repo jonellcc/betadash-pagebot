@@ -69,15 +69,18 @@ function handlePostback(event, pageAccessToken) {
 }
 
 
-async function getAttachments(mid){
-  return await new Promise(async (resolve, reject) => {
-  if (!mid) reject();
-  await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments?access_token=${PAGE_ACCESS_TOKEN}`).then(data => {
-    resolve(data.data.data);
-  }).catch(err => {
-    reject(err);
+async function getAttachments(mid, pageAccessToken) {
+  if (!mid) throw new Error("No message ID provided.");
+
+  const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+    params: { access_token: pageAccessToken }
   });
-  });
+
+  if (data && data.data.length > 0 && data.data[0].image_data) {
+    return data.data[0].image_data.url;
+  } else {
+    throw new Error("No image found in the replied message.");
+  }
 }
 
 function splitMessageIntoChunks(message, chunkSize) {
@@ -89,7 +92,7 @@ function splitMessageIntoChunks(message, chunkSize) {
 }
 
 
-async function sendMessage(senderId, message, mid = null, pageAccesToken) {
+async function sendMessage(senderId, message pageAccesToken) {
   try {
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
       recipient: { id: senderId },
@@ -114,7 +117,6 @@ async function sendMessage(senderId, message, mid = null, pageAccesToken) {
   }
 }
 
-
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
     console.error();
@@ -135,9 +137,9 @@ if (!messageText) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage);
+      await command.execute(senderId, args, pageAccessToken, sendMessage, getAttachments, pageid, admin);
     } catch (error) {
-      sendMessage(senderId, { text: 'There was an error executing that command.' });
+      sendMessage(senderId, {text: "There was an error executing that command"}, pageAccesToken);
     }
   } else {
     const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4-turbo-2024-04-09?ask=${encodeURIComponent(messageText)}`;
@@ -152,7 +154,7 @@ if (!messageText) {
       }
     } else {
       sendMessage(senderId, { text }, pageAccessToken);
-    }
+    } 
   }
 }
 
