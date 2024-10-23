@@ -4,10 +4,9 @@ module.exports = {
   usage: '<eval> <code>',
   author: 'Cliff',
   async execute(senderId, args, pageAccessToken, sendMessage, pageid, splitMessageIntoChunks, admin) {
-const OWNER_ID = ["8786755161388846", "8376765705775283", "8552967284765085"];
-
-    if (!OWNER_ID.includes(senderId)) {
-      return sendMessage(senderId, { text: "This command is only for pagebot owner." }, pageAccessToken);
+if (!args || !Array.isArray(args) || args.length === 0) {
+      await sendMessage(senderId, { text: 'Please provide a cose you want to test' }, pageAccessToken);
+      return;
     }
 
     try {

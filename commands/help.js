@@ -69,7 +69,7 @@ module.exports = {
   name: 'help',
   description: 'Show available commands or details of a specific command',
   author: 'Cliff',
-  execute(senderId, args, pageAccessToken, sendMessage) {
+  execute(senderId, args, pageAccessToken, sendMessage, pageid, splitMessageIntoChunks, admin, message, event, getAttachments) {
     const commandsDir = path.join(__dirname, '../commands');
     const commandFiles = fs.readdirSync(commandsDir).filter(file => file.endsWith('.js'));
 
@@ -96,7 +96,7 @@ module.exports = {
       return `│ ✧ ${command.name}`;
     });
 
-    const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commands.join('\n')}\n╰───────────◊\n\n » 𝗔𝗱𝗺𝗶𝗻: Cliffvincent\n » 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${totalCommands} ]\n » 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
+    const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commands.join('\n')}\n╰───────────◊\n\n\n » 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${totalCommands} ]\n » 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
     sendMessage(senderId, { text: helpMessage }, pageAccessToken);
   }
 };

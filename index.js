@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "61567757543707";
 const admin = ["8786755161388846", "8376765705775283", "8552967284765085"];
-const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBOykIvMUSZAq2YtwDTNoZBKxj4ipxTXnJBAFACyGambKZCU6ZBKPZAQexjuPbwpc4ZCc6gvIjZBT1Gz3UTjjnOGmvxilikIjohqKS9sQkzTnKLYKSAV2dgVZAtTxZCCkrFqG5ytr1IeDnZC3cjBdZCkwoZAHDUv7kZA9rbP6hhtm1s21vUXIeZA6RwryGDlsAZDZD";
+const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBOzAUk3nzG3HtZCIvZAZCDZApssrjsZBi1HfKZB2O4ZBvZBRbnsVHLJJGjjFuZC4Gpcu2QKIsCHyjmNdQNUDid2CZABCgJ2ZC4ZAVNX6lgXnezWfI7sXboGYm9o26yFf0fujeTC6BnUOnkQvPJ8AHV6s31Oh4LjedRE5bquqLN0t9HXgBpngPru6GPA7EJQZDZD";
 
 const commandList = [];
 const descriptions = [];
@@ -88,25 +88,22 @@ function splitMessageIntoChunks(message, chunkSize) {
   return chunks;
 }
 
-async function sendMessage(senderId, message, mid = null, pageAccessToken) {
+
+async function sendMessage(senderId, message, mid = null, pageAccesToken) {
   try {
-    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${pageAccessToken}`, {
+    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
       recipient: { id: senderId },
       sender_action: "typing_on"
     });
 
     const messagePayload = {
       recipient: { id: senderId },
-      message: message.text ? { text: message.text } : { attachment: message.attachment },
-      ...(mid && { reply_to: { mid } })
+      message: message.text ? { text: message.text } : { attachment: message.attachment }
     };
 
-    const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages`, messagePayload, {
-      params: { access_token: pageAccessToken },
-      headers: { "Content-Type": "application/json" }
-    });
+    const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
 
-    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${pageAccessToken}`, {
+    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
       recipient: { id: senderId },
       sender_action: "typing_off"
     });
@@ -117,8 +114,9 @@ async function sendMessage(senderId, message, mid = null, pageAccessToken) {
   }
 }
 
+
 async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.message || !event.message.reply_to.mid || !event.message.mid) {
+  if (!event || !event.sender || !event.message || !event.sender.id) {
     console.error();
     return;
   }
@@ -126,7 +124,7 @@ async function handleMessage(event, pageAccessToken) {
   const senderId = event.sender.id;
   const messageText = event.message.text;
 
-  if (!messageText) {
+if (!messageText) {
     sendMessage(senderId, { text: 'No message text provided.' });
     return;
   }
@@ -137,7 +135,7 @@ async function handleMessage(event, pageAccessToken) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, pageid, splitMessageIntoChunks, admin, admin, message, event, getAttachments);
+      await command.execute(senderId, args, pageAccessToken, sendMessage);
     } catch (error) {
       sendMessage(senderId, { text: 'There was an error executing that command.' });
     }
@@ -201,6 +199,41 @@ async function updateMessengerCommands() {
 }
 
 loadCommands();
+
+const form = {
+  get_started: {
+    payload: "GET_STARTED_PAYLOAD"
+  },
+  greeting: [
+    {
+      locale: "default",
+      text: "Hello, I'm Yazbot! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving. What's on your mind today?"
+    }
+  ]
+};
+
+function setupMessengerProfile(pageAccessToken) {
+  const requestBody = {
+    get_started: form.get_started,
+    greeting: form.greeting
+  };
+
+  const requestOptions = {
+    method: 'POST',
+    uri: `https://graph.facebook.com/v11.0/me/messenger_profile?access_token=${pageAccessToken}`,
+    json: requestBody
+  };
+
+  request(requestOptions, (error, response, body) => {
+    if (!error && response.statusCode === 200) {
+      console.log('Messenger profile setup successful');
+    } else {
+      console.error();
+    }
+  });
+}
+
+setupMessengerProfile();
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
