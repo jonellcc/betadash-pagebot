@@ -92,7 +92,7 @@ function splitMessageIntoChunks(message, chunkSize) {
 }
 
 
-async function sendMessage(senderId, message pageAccesToken) {
+async function sendMessage(senderId, message, pageAccesToken) {
   try {
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
       recipient: { id: senderId },
@@ -228,7 +228,7 @@ function setupMessengerProfile(pageAccessToken) {
 
   request(requestOptions, (error, response, body) => {
     if (!error && response.statusCode === 200) {
-      console.log('Messenger profile setup successful');
+      console.log();
     } else {
       console.error();
     }
