@@ -1,5 +1,5 @@
 module.exports = {
-  name: '\n\n\n',
+  name: 'ld',
   description: 'Undefined',
   author: 'CLIFF',
   async execute(senderId, args, pageAccessToken, sendMessage) {
