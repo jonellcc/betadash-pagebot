@@ -12,7 +12,7 @@ if (!prompt) {
     }
 
     try {
-      const apiUrl = `https://akhiro-tech.vercel.app/api?model=besh&q=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://akhiro-tech.vercel.app/api?model=beshv2&q=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
       const text = response.data.message;
 
@@ -30,6 +30,3 @@ if (!prompt) {
     }
   }
 };
-
-
-

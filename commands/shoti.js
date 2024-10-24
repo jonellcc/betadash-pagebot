@@ -13,8 +13,12 @@ module.exports = {
 
       const response = await axios.get(apiUrl);
       const shotiUrl = response.data.shotiurl;
+const kupal = {
+    text: `𝗨𝘀𝗲𝗿𝗻𝗮𝗺𝗲: ${response.data.username}\n𝗡𝗶𝗰𝗸𝗻𝗮𝗺𝗲: ${response.data.nickname}\n𝗥𝗲𝗴𝗶𝗼𝗻: ${response.data.region}\nSending video wait a seconds....`,
+};
 
-      if (shotiUrl) {
+ if (shotiUrl) {
+sendMessage(senderId, kupal, pageAccessToken);
   sendMessage(senderId, {
      attachment: {
           type: 'video',

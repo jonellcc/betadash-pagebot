@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "61567757543707";
 const admin = ["8786755161388846", "8376765705775283", "8552967284765085"];
-const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBOzAUk3nzG3HtZCIvZAZCDZApssrjsZBi1HfKZB2O4ZBvZBRbnsVHLJJGjjFuZC4Gpcu2QKIsCHyjmNdQNUDid2CZABCgJ2ZC4ZAVNX6lgXnezWfI7sXboGYm9o26yFf0fujeTC6BnUOnkQvPJ8AHV6s31Oh4LjedRE5bquqLN0t9HXgBpngPru6GPA7EJQZDZD";
+const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBOZBooZAKPamQey5dC7e5ahG8tDiyGBBmJ1ERQOZCaTZA69OpLJCv9EdZAjbg6N1krS3w6z0kvaWxJEAPZBZCKxDS78lHSLMRdPhZCmSNvqGKhc96qZCUcgpWKCGVyU4mhHKufyq3FWHoZAIgDqCWZAl7Ac621ZBai4d1lTDflz07Y9GZAidKpuZB6MnHzyZBwZDZD";
 
 const commandList = [];
 const descriptions = [];
@@ -68,6 +68,21 @@ function handlePostback(event, pageAccessToken) {
   sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
 }
 
+
+async function getAttachments(mid, pageAccessToken) {
+  if (!mid) throw new Error("No message ID provided.");
+
+  const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+    params: { access_token: pageAccessToken }
+  });
+
+  if (data && data.data.length > 0 && data.data[0].image_data) {
+    return data.data[0].image_data.url;
+  } else {
+    throw new Error("No image found in the replied message.");
+  }
+}
+
 function splitMessageIntoChunks(message, chunkSize) {
   const chunks = [];
   for (let i = 0; i < message.length; i += chunkSize) {
@@ -77,8 +92,7 @@ function splitMessageIntoChunks(message, chunkSize) {
 }
 
 
-async function sendMessage(senderId, mid = null, message, pageAccesToken) {
-
+async function sendMessage(senderId, message, pageAccesToken) {
   try {
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
       recipient: { id: senderId },
@@ -101,7 +115,7 @@ async function sendMessage(senderId, mid = null, message, pageAccesToken) {
   } catch (error) {
     console.error();
   }
-} 
+}
 
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
@@ -117,27 +131,15 @@ if (!messageText) {
     return;
   }
 
-if (event.message && event.message.text) {
   const args = messageText.split(' ');
   const commandName = args.shift().toLowerCase();
 
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
-   try {
-        let imageUrl = '';
-        if (event.message.reply_to && event.message.reply_to.mid) {
-          try {
-            imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
-          } catch (error) {
-            console.error();
-            imageUrl = '';
-          }
-        } else if (event.message.attachments && event.message.attachments[0]?.type === 'image') {
-          imageUrl = event.message.attachments[0].payload.url;
-        }
-      await command.execute(senderId, args, pageAccessToken, sendMessage, imageUrl, event, pageid, admin, splitMessageIntoChunks);
+    try {
+      await command.execute(senderId, args, pageAccessToken, sendMessage, getAttachments, pageid, admin);
     } catch (error) {
-      sendMessage(senderId, {text: "There was an error executing that command"}, pageAccessToken);
+      sendMessage(senderId, {text: "There was an error executing that command"}, pageAccesToken);
     }
   } else {
     const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4-turbo-2024-04-09?ask=${encodeURIComponent(messageText)}`;
@@ -154,30 +156,7 @@ if (event.message && event.message.text) {
       sendMessage(senderId, { text }, pageAccessToken);
     } 
   }
- }
 }
-
-async function getAttachments(mid, pageAccessToken) {
-  if (!mid) {
-    console.error("No message ID provided for getAttachments.");
-    throw new Error("No message ID provided.");
-  }
-
-  try {
-    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-      params: { access_token: pageAccessToken }
-    });
-
-    if (data && data.data.length > 0 && data.data[0].image_data) {
-      return data.data[0].image_data.url;
-    } else {
-      throw new Error("No image found in the replied message.");
-    }
-  } catch (error) {
-    throw new Error("Failed to fetch attachments.");
-  }
-}
-
 
 function loadCommands() {
   const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
@@ -215,7 +194,7 @@ async function updateMessengerCommands() {
       { headers: { 'Content-Type': 'application/json' } }
     );
 
-    console.log(response.data.result === 'success' ? 'ALL COMMANDS LOADED' : 'Failed to load commands');
+    console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to load commands');
   } catch (error) {
     console.error();
   }
