@@ -68,21 +68,6 @@ function handlePostback(event, pageAccessToken) {
   sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
 }
 
-
-async function getAttachments(mid, pageAccessToken) {
-  if (!mid) throw new Error("No message ID provided.");
-
-  const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-    params: { access_token: pageAccessToken }
-  });
-
-  if (data && data.data.length > 0 && data.data[0].image_data) {
-    return data.data[0].image_data.url;
-  } else {
-    throw new Error("No image found in the replied message.");
-  }
-}
-
 function splitMessageIntoChunks(message, chunkSize) {
   const chunks = [];
   for (let i = 0; i < message.length; i += chunkSize) {
@@ -92,7 +77,8 @@ function splitMessageIntoChunks(message, chunkSize) {
 }
 
 
-async function sendMessage(senderId, message, pageAccesToken) {
+async function sendMessage(senderId, mid = null, message, pageAccesToken) {
+
   try {
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
       recipient: { id: senderId },
@@ -115,7 +101,7 @@ async function sendMessage(senderId, message, pageAccesToken) {
   } catch (error) {
     console.error();
   }
-}
+} 
 
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
@@ -131,15 +117,27 @@ if (!messageText) {
     return;
   }
 
+if (event.message && event.message.text) {
   const args = messageText.split(' ');
   const commandName = args.shift().toLowerCase();
 
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
-    try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, getAttachments, pageid, admin);
+   try {
+        let imageUrl = '';
+        if (event.message.reply_to && event.message.reply_to.mid) {
+          try {
+            imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
+          } catch (error) {
+            console.error();
+            imageUrl = '';
+          }
+        } else if (event.message.attachments && event.message.attachments[0]?.type === 'image') {
+          imageUrl = event.message.attachments[0].payload.url;
+        }
+      await command.execute(senderId, args, pageAccessToken, sendMessage, imageUrl, event, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
-      sendMessage(senderId, {text: "There was an error executing that command"}, pageAccesToken);
+      sendMessage(senderId, {text: "There was an error executing that command"}, pageAccessToken);
     }
   } else {
     const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4-turbo-2024-04-09?ask=${encodeURIComponent(messageText)}`;
@@ -156,7 +154,30 @@ if (!messageText) {
       sendMessage(senderId, { text }, pageAccessToken);
     } 
   }
+ }
 }
+
+async function getAttachments(mid, pageAccessToken) {
+  if (!mid) {
+    console.error("No message ID provided for getAttachments.");
+    throw new Error("No message ID provided.");
+  }
+
+  try {
+    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+      params: { access_token: pageAccessToken }
+    });
+
+    if (data && data.data.length > 0 && data.data[0].image_data) {
+      return data.data[0].image_data.url;
+    } else {
+      throw new Error("No image found in the replied message.");
+    }
+  } catch (error) {
+    throw new Error("Failed to fetch attachments.");
+  }
+}
+
 
 function loadCommands() {
   const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
@@ -167,7 +188,7 @@ function loadCommands() {
     const description = command.description || 'No description provided.';
     commandList.push(command.name);
     descriptions.push(description);
-    console.log(`${command.name} loaded`);
+    console.log(`Command loaded: ${command.name}`);
   });
 
   updateMessengerCommands();
@@ -194,48 +215,13 @@ async function updateMessengerCommands() {
       { headers: { 'Content-Type': 'application/json' } }
     );
 
-    console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to load commands');
+    console.log(response.data.result === 'success' ? 'ALL COMMANDS LOADED' : 'Failed to load commands');
   } catch (error) {
     console.error();
   }
 }
 
 loadCommands();
-
-const form = {
-  get_started: {
-    payload: "GET_STARTED_PAYLOAD"
-  },
-  greeting: [
-    {
-      locale: "default",
-      text: "Hello, I'm Yazbot! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving. What's on your mind today?"
-    }
-  ]
-};
-
-function setupMessengerProfile(pageAccessToken) {
-  const requestBody = {
-    get_started: form.get_started,
-    greeting: form.greeting
-  };
-
-  const requestOptions = {
-    method: 'POST',
-    uri: `https://graph.facebook.com/v11.0/me/messenger_profile?access_token=${pageAccessToken}`,
-    json: requestBody
-  };
-
-  request(requestOptions, (error, response, body) => {
-    if (!error && response.statusCode === 200) {
-      console.log();
-    } else {
-      console.error();
-    }
-  });
-}
-
-setupMessengerProfile();
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

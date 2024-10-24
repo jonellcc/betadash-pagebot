@@ -53,7 +53,6 @@ const randomQuotes = [
 
  const randomQuote = randomQuotes[Math.floor(Math.random() * randomQuotes.length)];
 
-
 function formatFont(text) {
   const fontMapping = {
     a: "𝗮", b: "𝗯", c: "𝗰", d: "𝗱", e: "𝗲", f: "𝗳", g: "𝗴", h: "𝗵", i: "𝗶", j: "𝗷", k: "𝗸", l: "𝗹", m: "𝗺",
@@ -65,6 +64,10 @@ function formatFont(text) {
   return text.split('').map(char => fontMapping[char] || char).join('');
 }
 
+function paginate(array, page_size, page_number) {
+  return array.slice((page_number - 1) * page_size, page_number * page_size);
+}
+
 module.exports = {
   name: 'help',
   description: 'Show available commands or details of a specific command',
@@ -72,8 +75,10 @@ module.exports = {
   execute(senderId, args, pageAccessToken, sendMessage, pageid, splitMessageIntoChunks, admin, message, event, getAttachments) {
     const commandsDir = path.join(__dirname, '../commands');
     const commandFiles = fs.readdirSync(commandsDir).filter(file => file.endsWith('.js'));
+    const totalCommands = commandFiles.length;
+    const commandsPerPage = 20;
 
-    if (args.length > 0) {
+    if (args.length > 0 && isNaN(args[0])) {
       const commandName = args[0].toLowerCase();
       const commandFile = commandFiles.find(file => file.replace('.js', '') === commandName);
 
@@ -90,13 +95,54 @@ module.exports = {
       }
     }
 
-    const totalCommands = commandFiles.length;
-    const commands = commandFiles.map((file, index) => {
+    const pageNumber = args[0] && !isNaN(args[0]) ? parseInt(args[0]) : 1;
+    const paginatedCommands = paginate(commandFiles, commandsPerPage, pageNumber);
+
+    if (paginatedCommands.length === 0) {
+      return sendMessage(senderId, { text: `❌ No commands found for page ${pageNumber}` }, pageAccessToken);
+    }
+
+    const commandsList = paginatedCommands.map(file => {
       const command = require(path.join(commandsDir, file));
       return `│ ✧ ${command.name}`;
     });
 
-    const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commands.join('\n')}\n╰───────────◊\n\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${totalCommands} ]\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
-    sendMessage(senderId, { text: helpMessage }, pageAccessToken);
+    const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commandsList.join('\n')}\n╰───────────◊\n\n» 𝗣𝗮𝗴𝗲: <${pageNumber}/${Math.ceil(totalCommands / commandsPerPage)}>\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${totalCommands} ]\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
+
+const kupal = {
+        text: helpMessage,
+        quick_replies: [ {
+                content_type: "text",
+                title: "blackbox",
+                payload: "BLACKBOX"
+               },
+       {
+    content_type: "text",
+    title: "claude",
+    payload: "CLAUDE"
+  },
+  {
+    content_type: "text",
+    title: "cohere",
+    payload: "COHERE"
+  },
+  {
+    content_type: "text",
+    title: "davinci",
+    payload: "DAVINCI"
+  },
+  {
+    content_type: "text",
+    title: "gpt4",
+    payload: "GPT4"
+  },
+  {
+    content_type: "text",
+    title: "deepseek",
+    payload: "DEEPSEEK"
+  }
+  ]
+};
+    sendMessage(senderId, kupal, pageAccessToken);
   }
 };
