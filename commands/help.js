@@ -109,6 +109,76 @@ module.exports = {
 
     const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commandsList.join('\n')}\n╰───────────◊\n\n» 𝗣𝗮𝗴𝗲: <${pageNumber}/${Math.ceil(totalCommands / commandsPerPage)}>\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${totalCommands} ]\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
 
-    sendMessage(senderId, {text: helpMessage}, pageAccessToken);
+const kupal = {
+      text: helpMessage,
+       quick_replies: [
+          {
+            content_type: "text",
+            title: "blackbox",
+            payload: "BLACKBOX"
+          },
+            {
+            content_type: "text",
+            title: "llama",
+            payload: "LLAMA"
+          },
+           {
+            content_type: "text",
+            title: "cohere",
+            payload: "COHERE"
+          },
+          {
+            content_type: "text",
+            title: "mixtral",
+            payload: "MIXTRAL"
+          },
+            {
+            content_type: "text",
+            title: "nova",
+            payload: "NOVA"
+          },
+           {
+            content_type: "text",
+            title: "besh",
+            payload: "BESH"
+          },        
+          {
+            content_type: "text",
+            title: "okeyai",
+            payload: "OKEYAI"
+          },
+            {
+            content_type: "text",
+            title: "font",
+            payload: "FONT"
+          },
+           {
+            content_type: "text",
+            title: "davinci",
+            payload: "davinci"
+          },
+          {
+            content_type: "text",
+            title: "claude",
+            payload: "CLAUDE"
+          },
+            {
+            content_type: "text",
+            title: "gpt4",
+            payload: "GPT4"
+          },
+            {
+            content_type: "text",
+            title: "maloi",
+            payload: "MALOI"
+          },
+          {
+            content_type: "text",
+            title: "shoti",
+            payload: "SHOTI"
+          }
+        ]
+      };
+    sendMessage(senderId, kupal, pageAccessToken);
   }
 };

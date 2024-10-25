@@ -8,7 +8,6 @@ const axios = require('axios');
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
 
 const PORT = process.env.PORT || 8080;
 
@@ -22,7 +21,11 @@ const descriptions = [];
 const commands = new Map();
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "page.html"));
+});
+
+app.get('/privacy', (req, res) => {
+  res.sendFile(path.join(__dirname, "privacy.html"));
 });
 
 app.get('/webhook', (req, res) => {
@@ -47,11 +50,13 @@ app.post('/webhook', (req, res) => {
     body.entry.forEach(entry => {
       entry.messaging.forEach(event => {
         if (event.message) {
-          handleMessage(event);
+          handleMessage(event, PAGE_ACCESS_TOKEN);
         } else if (event.sender.id) {
-          handleMessage(event);
+          handleMessage(event, PAGE_ACCESS_TOKEN);
         } else if (event.postback) {
-          handlePostback(event);
+          handlePostback(event, PAGE_ACCESS_TOKEN);
+        } else if (GET_STARTED_PAYLOAD) {
+          handlePostback(event, PAGE_ACCESS_TOKEN);
         }
       });
     });
@@ -65,34 +70,46 @@ app.post('/webhook', (req, res) => {
 function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
-  sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
-}
-
-
-async function getAttachments(mid, pageAccessToken) {
-  if (!mid) throw new Error("No message ID provided.");
-
-  const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-    params: { access_token: pageAccessToken }
-  });
-
-  if (data && data.data.length > 0 && data.data[0].image_data) {
-    return data.data[0].image_data.url;
+if (senderId && payload) {
+    if (payload === 'GET_STARTED_PAYLOAD') {
+  const welcomeMessage = {
+  attachment: {
+    type: "template",
+    payload: {
+      template_type: "button",
+      text: "Hi {{user_first_name}}, welcome to our page!\nThank you for visiting. We hope you enjoy using our page bot. If you encounter any issues with commands, feel free to click below to contact the page owner for assistance.\nWe've received your message and appreciate you reaching out.",
+      buttons: [
+        {
+          type: "web_url",
+          url: "https://www.facebook.com/swordigo.swordslush",
+          title: "Contact"
+        },
+        {
+          type: "web_url",
+          url: "https://m.me/swordigo.swordslush",
+          title: "Message"
+        }
+      ]
+    }
+  }
+};
+sendMessage(senderId, welcomeMessage, pageAccessToken);
+    } else {
+       sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
+    }
   } else {
-    throw new Error("No image found in the replied message.");
+    console.error();
   }
-}
+};
 
-function splitMessageIntoChunks(message, chunkSize) {
-  const chunks = [];
-  for (let i = 0; i < message.length; i += chunkSize) {
-    chunks.push(message.slice(i, i + chunkSize));
+
+
+async function sendMessage(senderId, message, mid = null, pageAccessToken) {
+  if (!message || (!message.text && !message.attachment)) {
+    console.error();
+    return;
   }
-  return chunks;
-}
 
-
-async function sendMessage(senderId, message, pageAccesToken) {
   try {
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
       recipient: { id: senderId },
@@ -103,6 +120,18 @@ async function sendMessage(senderId, message, pageAccesToken) {
       recipient: { id: senderId },
       message: message.text ? { text: message.text } : { attachment: message.attachment }
     };
+
+    if (message.text) {
+      messagePayload.message.text = message.text;
+    }
+
+    if (message.attachment) {
+      messagePayload.message.attachment = message.attachment;
+    }
+
+    if (message.quick_replies) {
+      messagePayload.message.quick_replies = message.quick_replies;
+    }
 
     const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
 
@@ -117,6 +146,7 @@ async function sendMessage(senderId, message, pageAccesToken) {
   }
 }
 
+
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
     console.error();
@@ -126,9 +156,19 @@ async function handleMessage(event, pageAccessToken) {
   const senderId = event.sender.id;
   const messageText = event.message.text;
 
-if (!messageText) {
-    sendMessage(senderId, { text: 'No message text provided.' });
-    return;
+  if (event.message && event.message.attachments) {
+    const imageAttachment = event.message.attachments.find(att => att.type === 'image');
+    if (imageAttachment) {
+      imageUrl = imageAttachment.payload.url;
+    }
+  }
+
+  if (event.message && event.message.reply_to && event.message.reply_to.mid) {
+    try {
+      imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken); 
+    } catch (error) {
+      console.error();
+    }
   }
 
   const args = messageText.split(' ');
@@ -137,9 +177,20 @@ if (!messageText) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, getAttachments, pageid, admin);
+     let imageUrl = '';
+
+        if (event.message.reply_to && event.message.reply_to.mid) {
+          try {
+            imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
+          } catch (error) {
+            imageUrl = '';
+          }
+        } else if (event.message.attachments && event.message.attachments[0]?.type === 'image') {
+          imageUrl = event.message.attachments[0].payload.url;
+        }
+      await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
-      sendMessage(senderId, {text: "There was an error executing that command"}, pageAccesToken);
+      sendMessage(senderId, {text: "There was an error executing that command"}, pageAccessToken);
     }
   } else {
     const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4-turbo-2024-04-09?ask=${encodeURIComponent(messageText)}`;
@@ -157,6 +208,38 @@ if (!messageText) {
     } 
   }
 }
+
+
+async function getAttachments(mid, pageAccessToken) {
+  if (!mid) {
+    throw new Error("No message ID provided.");
+  }
+
+  try {
+    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+      params: { access_token: pageAccessToken }
+    });
+
+    if (data && data.data.length > 0 && data.data[0].image_data) {
+      return data.data[0].image_data.url;
+    } else {
+      throw new Error("No image found in the replied message.");
+    }
+  } catch (error) {
+    throw new Error("Failed to fetch attachments.");
+  }
+}
+
+
+function splitMessageIntoChunks(message, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < message.length; i += chunkSize) {
+    chunks.push(message.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
+
 
 function loadCommands() {
   const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
