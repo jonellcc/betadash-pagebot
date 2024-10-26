@@ -4,8 +4,6 @@ const fs = require('fs');
 const request = require('request');
 const path = require('path');
 const axios = require('axios');
-const kupal = require('./kupal2');
-const kupal3 = require('./kupal3');
 
 const app = express();
 app.use(bodyParser.json());
@@ -105,15 +103,11 @@ sendMessage(senderId, welcomeMessage, pageAccessToken);
 
 
 
-async function sendMessage(senderId, event, message, mid = null, pageAccessToken) {
+async function sendMessage(senderId, event, message, pageAccessToken) {
   if (!message || (!message.text && !message.attachment)) {
     console.error();
     return;
   }
-
-if (!mid) {
-reply_to = mid;
-}
 
 if (event.message && event.message.attachments) {
     const imageAttachment = event.message.attachments.find(att => att.type === 'image');
