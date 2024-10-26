@@ -143,6 +143,9 @@ async function sendMessage(senderId, message, pageAccessToken) {
   }
 }
 
+function isAdmin(senderId) {
+    return admin.includes(senderId);
+}
 
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
@@ -185,6 +188,7 @@ async function handleMessage(event, pageAccessToken) {
         } else if (event.message.attachments && event.message.attachments[0]?.type === 'image') {
           imageUrl = event.message.attachments[0].payload.url;
         }
+   if (isAdmin(senderId)) {
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
       sendMessage(senderId, {text: "There was an error executing that command"}, pageAccessToken);
@@ -203,7 +207,8 @@ async function handleMessage(event, pageAccessToken) {
     } else {
       sendMessage(senderId, { text }, pageAccessToken);
     } 
-  }
+   }
+ }
 }
 
 
@@ -285,4 +290,3 @@ loadCommands();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-

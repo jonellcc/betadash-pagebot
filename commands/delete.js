@@ -1,16 +1,17 @@
 module.exports = {
-  name: 'delete',
+  name: "delete",
   description: 'Undefined',
   author: 'CLIFF',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     const fs = require('fs');
     const path = require('path');
-const OWNER_ID = ["8786755161388846", "8376765705775283", "8552967284765085"];
+const kupal = ["8786755161388846", "8376765705775283", "8552967284765085"];
 
-    if (!OWNER_ID.includes(senderId)) {
-      return sendMessage(senderId, { text: "This command is only for pagebot owner." }, pageAccessToken);
-    }
-    
+    if (!kupal.includes(senderId)) {
+      sendMessage(senderId, { text: "This command is only for pagebot owner." }, pageAccessToken);
+    return;
+}
+
     const fileName = args[0];
 
     if (!fileName) {
@@ -23,7 +24,6 @@ const OWNER_ID = ["8786755161388846", "8376765705775283", "8552967284765085"];
 
     fs.unlink(filePath, (err) => {
       if (err) {
-        console.error(err);
         return sendMessage(senderId, {
           text: `❎ | Failed to delete ${fileName}.`
         }, pageAccessToken);
