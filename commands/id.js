@@ -10,7 +10,7 @@ module.exports = {
     try {
       sendMessage(senderId, { text: uid }, pageAccessToken);
     } catch (error) {
-     sendMessage(senderId, {text: error), pageAccessToken);
+     sendMessage(senderId, {text: error}, pageAccessToken);
     }
     return;
   }
