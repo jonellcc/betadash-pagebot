@@ -143,10 +143,6 @@ async function sendMessage(senderId, message, pageAccessToken) {
   }
 }
 
-function isAdmin(senderId) {
-    return admin.includes(senderId);
-}
-
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
     console.error();
@@ -188,7 +184,7 @@ async function handleMessage(event, pageAccessToken) {
         } else if (event.message.attachments && event.message.attachments[0]?.type === 'image') {
           imageUrl = event.message.attachments[0].payload.url;
         }
-      await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, isAdmin, splitMessageIntoChunks);
+      await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl = nulll, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
       sendMessage(senderId, {text: "There was an error executing that command"}, pageAccessToken);
     }

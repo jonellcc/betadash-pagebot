@@ -2,8 +2,16 @@ module.exports = {
   name: "id",
   description: "Check your user ID while on a page bot",
   async execute(senderId, event, sendMessage, pageAccessToken) {
-const uid = `Your ID: ${senderId}`;
-    sendMessage(senderId, { text: uid}, pageAccessToken);
-   return;
+    if (!senderId || !sendMessage || !pageAccessToken) {
+      return;
+    }
+
+    const uid = `Your ID: ${senderId}`;
+    try {
+      sendMessage(senderId, { text: uid }, pageAccessToken);
+    } catch (error) {
+     sendMessage(senderId, {text: error), pageAccessToken);
+    }
+    return;
   }
-}
+};
