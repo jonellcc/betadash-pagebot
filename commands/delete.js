@@ -1,11 +1,16 @@
 module.exports = {
-  name: 'ld',
+  name: 'delete',
   description: 'Undefined',
   author: 'CLIFF',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     const fs = require('fs');
     const path = require('path');
+const OWNER_ID = ["8786755161388846", "8376765705775283", "8552967284765085"];
 
+    if (!OWNER_ID.includes(senderId)) {
+      return sendMessage(senderId, { text: "This command is only for pagebot owner." }, pageAccessToken);
+    }
+    
     const fileName = args[0];
 
     if (!fileName) {
