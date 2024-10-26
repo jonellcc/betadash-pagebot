@@ -198,7 +198,17 @@ async function handleMessage(event, pageAccessToken) {
       }
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
-      sendMessage(senderId, { text: "There was an error executing that command" }, pageAccessToken);
+const kupall = {
+ text: "❌ There was an error executing that command type 'help' to see more usefull commands",
+ quick_replies: [
+    {
+      content_type: "text",
+      title: "help",
+      payload: "HELP"
+    }
+  ]
+};
+      sendMessage(senderId, kupall, pageAccessToken);
     }
   } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && jb !== messageText)  {
     try {

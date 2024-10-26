@@ -32,6 +32,16 @@ sendMessage(senderId, kupal, pageAccessToken);
       content_type: "text",
       title: "More shoti",
       payload: "MORE SHOTI"
+    },
+    {
+      content_type: "text",
+      title: "help",
+      payload: "HELP"
+    },
+    {
+      content_type: "text",
+      title: "privacy",
+      payload: "PRIVACY"
     }
   ]
 }, pageAccessToken);
