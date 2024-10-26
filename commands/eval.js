@@ -12,7 +12,7 @@ if (!args || !Array.isArray(args) || args.length === 0) {
     try {
     await eval(args.join(" "));
     } catch (error){
-      sendMessage(senderId, {text: error.message || error }, pageAccesToken);
+      sendMessage(senderId, {text: error.message || error }, pageAccessToken);
     }
   }
 }
