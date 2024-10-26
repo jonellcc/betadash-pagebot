@@ -184,7 +184,7 @@ async function handleMessage(event, pageAccessToken) {
         } else if (event.message.attachments && event.message.attachments[0]?.type === 'image') {
           imageUrl = event.message.attachments[0].payload.url;
         }
-      await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl = nulll, pageid, admin, splitMessageIntoChunks);
+      await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
       sendMessage(senderId, {text: "There was an error executing that command"}, pageAccessToken);
     }
@@ -284,4 +284,3 @@ loadCommands();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
