@@ -20,14 +20,21 @@ const kupal = {
  if (shotiUrl) {
 sendMessage(senderId, kupal, pageAccessToken);
   sendMessage(senderId, {
-     attachment: {
-          type: 'video',
-          payload: {
-            url: shotiUrl,
-            is_reusable: true
-          }
-        }
-      }, pageAccessToken);
+  attachment: {
+    type: 'video',
+    payload: {
+      url: shotiUrl,
+      is_reusable: true
+    }
+  },
+  quick_replies: [
+    {
+      content_type: "text",
+      title: "More shoti",
+      payload: "MORE SHOTI"
+    }
+  ]
+}, pageAccessToken);
       } else {
         sendMessage(senderId, { text: 'Sorry, no Shoti video found.' }, pageAccessToken);
       }

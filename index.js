@@ -23,6 +23,7 @@ const commandList = [];
 const descriptions = [];
 const commands = new Map();
 
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "page.html"));
 });
@@ -146,6 +147,12 @@ async function sendMessage(senderId, message, pageAccessToken) {
   }
 }
 
+const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+  const command = require(`./commands/${file}`);
+  commands.set(command.name, command);
+}
+
 
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
@@ -155,6 +162,8 @@ async function handleMessage(event, pageAccessToken) {
 
   const senderId = event.sender.id;
   const messageText = event.message.text;
+  let imageUrl = null;
+  let jb = "More shoti";
 
   if (event.message && event.message.attachments) {
     const imageAttachment = event.message.attachments.find(att => att.type === 'image');
@@ -191,7 +200,7 @@ async function handleMessage(event, pageAccessToken) {
     } catch (error) {
       sendMessage(senderId, { text: "There was an error executing that command" }, pageAccessToken);
     }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText)) {
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && jb !== messageText)  {
     try {
       const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4-turbo-2024-04-09?ask=${encodeURIComponent(messageText)}`;
       const response = await axios.get(apiUrl);
@@ -251,7 +260,7 @@ async function handleMessage(event, pageAccessToken) {
     }
   } else if (regEx_tiktok.test(messageText)) {
     try {
-      sendMessage(senderId, { text: 'Downloading Tiktok, please wait...' },      pageAccessToken);
+      sendMessage(senderId, { text: 'Downloading Tiktok, please wait...' },  pageAccessToken);
       const response = await axios.post(`https://www.tikwm.com/api/`, { url: messageText });
       const data = response.data.data;
       const shotiUrl = data.play;
@@ -269,7 +278,28 @@ async function handleMessage(event, pageAccessToken) {
       console.error();
     }
   }
+
+if (messageText && messageText.includes("More shoti")) {
+  const shotiCommand = commands.get('shoti');
+  if (shotiCommand) {
+    await shotiCommand.execute(senderId, [], pageAccessToken, sendMessage, pageAccessToken);
+  }
+  return;
 }
+
+  if (imageUrl) {
+    const geminiCommand = commands.get('gemini');
+    if (geminiCommand) {
+      try {
+        await geminiCommand.execute(senderId, [], pageAccessToken, imageUrl);
+      } catch (error) {
+        sendMessage(senderId, { text: 'There was an error processing your image.' }, pageAccessToken);
+      }
+    }
+  }
+}
+
+
 
 async function getAttachments(mid, pageAccessToken) {
   if (!mid) {

@@ -13,7 +13,7 @@ function generateRandomId() {
 }
 
 module.exports = {
-  name: 'tempm',
+  name: 'tempmail',
   description: 'Generate temporary email (auto get inbox)',
   author: 'Deku',
   async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
@@ -48,3 +48,4 @@ module.exports = {
     }
   }
 };
+
