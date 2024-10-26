@@ -139,10 +139,6 @@ if (event.message && event.message.attachments) {
       messagePayload.message.text = message.text;
     }
 
-   if (event) {
-      senderId  = event.sender.id;
-    }
-
     if (message.attachment) {
       messagePayload.message.attachment = message.attachment;
     }
