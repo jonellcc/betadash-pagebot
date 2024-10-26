@@ -130,10 +130,6 @@ async function sendMessage(senderId, message, pageAccessToken) {
       messagePayload.message.quick_replies = message.quick_replies;
     }
 
-   if (event && event.sender && event.sender.id) {
-    messagePayload.senderId = event.sender.id;
-  }
-
     const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
 
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
