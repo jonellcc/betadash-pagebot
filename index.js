@@ -101,27 +101,10 @@ sendMessage(senderId, welcomeMessage, pageAccessToken);
   }
 };
 
-
-
-async function sendMessage(senderId, event, message, pageAccessToken) {
+async function sendMessage(senderId, message, pageAccessToken) {
   if (!message || (!message.text && !message.attachment)) {
     console.error();
     return;
-  }
-
-if (event.message && event.message.attachments) {
-    const imageAttachment = event.message.attachments.find(att => att.type === 'image');
-    if (imageAttachment) {
-      imageUrl = imageAttachment.payload.url;
-    }
-  }
-
-  if (event.message && event.message.reply_to && event.message.reply_to.mid) {
-    try {
-      imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken); 
-    } catch (error) {
-      console.error();
-    }
   }
 
   try {
