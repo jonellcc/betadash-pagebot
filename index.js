@@ -211,7 +211,7 @@ async function handleMessage(event, pageAccessToken) {
     }
   } else if (instagramLinkRegex.test(messageText)) {
     try {
-      sendMessage(senderId, { text: 'Downloading, please wait...' }, pageAccessToken);
+      sendMessage(senderId, { text: 'Downloading Instagram, please wait...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/insta?url=${encodeURIComponent(messageText)}`;
       const response = await axios.get(apiUrl);
       const videoUrl = response.data.result[0]._url;
@@ -232,7 +232,7 @@ async function handleMessage(event, pageAccessToken) {
     }
   } else if (facebookLinkRegex.test(messageText)) {
     try {
-      sendMessage(senderId, { text: 'Downloading please wait...' }, pageAccessToken);
+      sendMessage(senderId, { text: 'Downloading Facebook, please wait...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/fbdl?url=${encodeURIComponent(messageText)}`;
 
       if (apiUrl) {
@@ -251,6 +251,7 @@ async function handleMessage(event, pageAccessToken) {
     }
   } else if (regEx_tiktok.test(messageText)) {
     try {
+      sendMessage(senderId, { text: 'Downloading Tiktok, please wait...' },      pageAccessToken);
       const response = await axios.post(`https://www.tikwm.com/api/`, { url: messageText });
       const data = response.data.data;
       const shotiUrl = data.play;
@@ -269,9 +270,6 @@ async function handleMessage(event, pageAccessToken) {
     }
   }
 }
-
-
-
 
 async function getAttachments(mid, pageAccessToken) {
   if (!mid) {
