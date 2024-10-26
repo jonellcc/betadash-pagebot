@@ -4,6 +4,8 @@ const fs = require('fs');
 const request = require('request');
 const path = require('path');
 const axios = require('axios');
+const kupal = require('./kupal2');
+const kupal3 = require('./kupal3');
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,7 +16,7 @@ const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "61567757543707";
 const admin = ["8786755161388846", "8376765705775283", "8552967284765085"];
-const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBOZBooZAKPamQey5dC7e5ahG8tDiyGBBmJ1ERQOZCaTZA69OpLJCv9EdZAjbg6N1krS3w6z0kvaWxJEAPZBZCKxDS78lHSLMRdPhZCmSNvqGKhc96qZCUcgpWKCGVyU4mhHKufyq3FWHoZAIgDqCWZAl7Ac621ZBai4d1lTDflz07Y9GZAidKpuZB6MnHzyZBwZDZD";
+const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBOZCfTh21aZBMyQvL93sHVvfAWIT7V06ngnzdpAZAp0Xonj8i217EtbKXay4snDZAW6bMA5zn5i3SDVmYxZCQbJfOx76ZCQBkO9ks5oLoArKIpgOLF4gqGbXiPjw9NebTD9PQRJlVfUZCN26YAKiyDZCLG3n4WtMgixFtuhH6uwAGbEAkvytXUZAEwlAZDZD";
 
 const commandList = [];
 const descriptions = [];
@@ -53,14 +55,13 @@ app.post('/webhook', (req, res) => {
           handleMessage(event, PAGE_ACCESS_TOKEN);
         } else if (event.sender.id) {
           handleMessage(event, PAGE_ACCESS_TOKEN);
-        } else if (event.postback) {
+       } else if (event.postback) {
           handlePostback(event, PAGE_ACCESS_TOKEN);
         } else if (GET_STARTED_PAYLOAD) {
           handlePostback(event, PAGE_ACCESS_TOKEN);
         }
       });
     });
-
     res.status(200).send('EVENT_RECEIVED');
   } else {
     res.sendStatus(404);
@@ -104,10 +105,29 @@ sendMessage(senderId, welcomeMessage, pageAccessToken);
 
 
 
-async function sendMessage(senderId, message, mid = null, pageAccessToken) {
+async function sendMessage(senderId, event, message, mid = null, pageAccessToken) {
   if (!message || (!message.text && !message.attachment)) {
     console.error();
     return;
+  }
+
+if (!mid) {
+reply_to = mid;
+}
+
+if (event.message && event.message.attachments) {
+    const imageAttachment = event.message.attachments.find(att => att.type === 'image');
+    if (imageAttachment) {
+      imageUrl = imageAttachment.payload.url;
+    }
+  }
+
+  if (event.message && event.message.reply_to && event.message.reply_to.mid) {
+    try {
+      imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken); 
+    } catch (error) {
+      console.error();
+    }
   }
 
   try {
@@ -125,6 +145,10 @@ async function sendMessage(senderId, message, mid = null, pageAccessToken) {
       messagePayload.message.text = message.text;
     }
 
+   if (event) {
+      senderId  = event.sender.id;
+    }
+
     if (message.attachment) {
       messagePayload.message.attachment = message.attachment;
     }
@@ -132,6 +156,10 @@ async function sendMessage(senderId, message, mid = null, pageAccessToken) {
     if (message.quick_replies) {
       messagePayload.message.quick_replies = message.quick_replies;
     }
+
+   if (event && event.sender && event.sender.id) {
+    messagePayload.senderId = event.sender.id;
+  }
 
     const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
 
@@ -288,3 +316,4 @@ loadCommands();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+

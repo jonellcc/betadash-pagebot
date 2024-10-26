@@ -1,5 +1,5 @@
 module.exports = {
-  name: 'admin',
+  name: 'contact',
   description: 'Admin page bot',
   author: 'Cliff',
   execute(senderId, args, pageAccessToken, sendMessage, pageid, splitMessageIntoChunks, admin, message, event) {

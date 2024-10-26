@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const { sendMessage } = require('./kupal');
 const axios = require('axios');
+const { sendMessage } = require('./kupal');
+
 const commands = new Map();
 
 const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
@@ -10,81 +11,73 @@ for (const file of commandFiles) {
   commands.set(command.name.toLowerCase(), command);
 }
 
-async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.sender.id) return;
+async function kupal(event, pageAccessToken) {
+  if (!event || !event.sender || !event.sender.id) {
+    return;
+  }
 
   const senderId = event.sender.id;
-  let imageUrl = null;
-
-  // Auto detect image to
-  if (event.message && event.message.attachments) {
-    const imageAttachment = event.message.attachments.find(att => att.type === 'image');
-    if (imageAttachment) {
-      imageUrl = imageAttachment.payload.url;
-    }
-  }
-
-  if (event.message && event.message.reply_to && event.message.reply_to.mid) {
-    try {
-      imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken); // Fetch image from replied message
-    } catch (error) {
-      console.error('Error fetching image from replied message:', error.message);
-    }
-  }
 
   if (event.message && event.message.text) {
     const messageText = event.message.text.trim();
-    let commandName, args;
 
-    if (messageText.startsWith() {
-      const argsArray = messageText.slice(prefix.length).split(' ');
-      commandName = argsArray.shift().toLowerCase();
-      args = argsArray;
-    } else {
-      const words = messageText.split(' ');
-      commandName = words.shift().toLowerCase();
-      args = words;
-    }
+    let commandName, args;
+    const words = messageText.split(' ');
+    commandName = words.shift().toLowerCase();
+    args = words;
 
     if (commands.has(commandName)) {
       const command = commands.get(commandName);
       try {
-        if (commandName === 'gemini') {
-          await command.execute(senderId, args, pageAccessToken, imageUrl);
-        } else {
-          await command.execute(senderId, args, pageAccessToken, sendMessage, imageUrl);
-        }
-      } catch (error) {
-        sendMessage(senderId, { text: 'There was an error executing that command.' }, pageAccessToken);
-      }
-      return;
-    }
-}
+        let imageUrl = '';
 
-  if (imageUrl) {
-    const geminiCommand = commands.get('gemini');
-    if (geminiCommand) {
-      try {
-        await geminiCommand.execute(senderId, [], pageAccessToken, imageUrl);
+        if (event.message.reply_to && event.message.reply_to.mid) {
+          try {
+            imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
+          } catch (error) {
+            imageUrl = '';
+          }
+        } else if (event.message.attachments && event.message.attachments[0]?.type === 'image') {
+          imageUrl = event.message.attachments[0].payload.url;
+        }
+
+        await command.execute(senderId, args, pageAccessToken, event, imageUrl);
       } catch (error) {
-        sendMessage(senderId, { text: 'There was an error processing your image.' }, pageAccessToken);
+        sendMessage(senderId, { text: `There was an error executing the command "${commandName}". Please try again later.` }, pageAccessToken);
       }
+    } else {
+      sendMessage(senderId, {
+        text: `Unknown command: "${commandName}". Type "help" or click help below for a list of available commands.`,
+        quick_replies: [
+          {
+            content_type: "text",
+            title: "Help",
+            payload: "HELP_PAYLOAD"
+          }
+        ]
+      }, pageAccessToken);
     }
   }
 }
 
 async function getAttachments(mid, pageAccessToken) {
-  if (!mid) throw new Error("No message ID provided.");
+  if (!mid) {
+    throw new Error("No message ID provided.");
+  }
 
-  const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-    params: { access_token: pageAccessToken }
-  });
+  try {
+    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+      params: { access_token: pageAccessToken }
+    });
 
-  if (data && data.data.length > 0 && data.data[0].image_data) {
-    return data.data[0].image_data.url;
-  } else {
-    throw new Error("No image found in the replied message.");
+    if (data && data.data.length > 0 && data.data[0].image_data) {
+      return data.data[0].image_data.url;
+    } else {
+      throw new Error("No image found in the replied message.");
+    }
+  } catch (error) {
+    throw new Error("Failed to fetch attachments.");
   }
 }
 
-module.exports = { handleMessage };
+module.exports = { kupal };
