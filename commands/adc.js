@@ -10,12 +10,13 @@ module.exports = {
   author: 'Cliff Vincent',
   async execute(senderId, args, pageAccessToken, sendMessage, pageid) {
     const PASTEBIN_API_KEY = "R02n6-lNPJqKQCd5VtL4bKPjuK6ARhHb";
-    const OWNER_ID = ["8786755161388846", "8376765705775283", "8552967284765085"];
+    const kupal = ["8786755161388846", "8376765705775283", "8552967284765085"];
 
-    if (!OWNER_ID.includes(senderId)) {
-      sendMessage(senderId, { text: "This command is only for pagebot owner." }, pageAccessToken);
-       return;
-    }
+if (!kupal.some(kupal_ka => kupal_ka === senderId)) {
+  sendMessage(senderId, { text: "This command is only for pagebot owner." }, pageAccessToken);
+  return;
+}
+
 
     const filename = args[0];  
     const urlOrText = args[1]; 

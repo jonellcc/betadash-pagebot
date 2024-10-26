@@ -4,6 +4,9 @@ const fs = require('fs');
 const request = require('request');
 const path = require('path');
 const axios = require('axios');
+const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
+const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
+const instagramLinkRegex = /https:\/\/www\.instagram\.com\/reel\/[a-zA-Z0-9_-]+\/\?igsh=[a-zA-Z0-9_=-]+$/;
 
 const app = express();
 app.use(bodyParser.json());
@@ -143,6 +146,7 @@ async function sendMessage(senderId, message, pageAccessToken) {
   }
 }
 
+
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
     console.error();
@@ -161,48 +165,113 @@ async function handleMessage(event, pageAccessToken) {
 
   if (event.message && event.message.reply_to && event.message.reply_to.mid) {
     try {
-      imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken); 
+      imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
     } catch (error) {
       console.error();
     }
   }
 
-  const args = messageText.split(' ');
-  const commandName = args.shift().toLowerCase();
+  const args = messageText ? messageText.split(' ') : [];
+  const commandName = args.shift()?.toLowerCase();
 
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-     let imageUrl = '';
-        if (event.message.reply_to && event.message.reply_to.mid) {
-          try {
-            imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
-          } catch (error) {
-            imageUrl = '';
-          }
-        } else if (event.message.attachments && event.message.attachments[0]?.type === 'image') {
-          imageUrl = event.message.attachments[0].payload.url;
+      let imageUrl = '';
+      if (event.message.reply_to && event.message.reply_to.mid) {
+        try {
+          imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
+        } catch (error) {
+          imageUrl = '';
         }
+      } else if (event.message.attachments && event.message.attachments[0]?.type === 'image') {
+        imageUrl = event.message.attachments[0].payload.url;
+      }
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
-      sendMessage(senderId, {text: "There was an error executing that command"}, pageAccessToken);
+      sendMessage(senderId, { text: "There was an error executing that command" }, pageAccessToken);
     }
-  } else {
-    const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4-turbo-2024-04-09?ask=${encodeURIComponent(messageText)}`;
-    const response = await axios.get(apiUrl);
-    const text = response.data.message;
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText)) {
+    try {
+      const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4-turbo-2024-04-09?ask=${encodeURIComponent(messageText)}`;
+      const response = await axios.get(apiUrl);
+      const text = response.data.message;
 
-    const maxMessageLength = 2000;
-    if (text.length > maxMessageLength) {
-      const messages = splitMessageIntoChunks(text, maxMessageLength);
-      for (const message of messages) {
-        sendMessage(senderId, { text: message }, pageAccessToken);
+      const maxMessageLength = 2000;
+      if (text.length > maxMessageLength) {
+        const messages = splitMessageIntoChunks(text, maxMessageLength);
+        for (const message of messages) {
+          sendMessage(senderId, { text: message }, pageAccessToken);
+        }
+      } else {
+        sendMessage(senderId, { text }, pageAccessToken);
       }
-    } else {
-      sendMessage(senderId, { text }, pageAccessToken);
-    } 
+    } catch (error) {
+      console.error();
+    }
+  } else if (instagramLinkRegex.test(messageText)) {
+    try {
+      sendMessage(senderId, { text: 'Downloading, please wait...' }, pageAccessToken);
+      const apiUrl = `https://betadash-search-download.vercel.app/insta?url=${encodeURIComponent(messageText)}`;
+      const response = await axios.get(apiUrl);
+      const videoUrl = response.data.result[0]._url;
+
+      if (videoUrl) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'video',
+            payload: {
+              url: videoUrl,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
+      }
+    } catch (error) {
+      console.error();
+    }
+  } else if (facebookLinkRegex.test(messageText)) {
+    try {
+      sendMessage(senderId, { text: 'Downloading please wait...' }, pageAccessToken);
+      const apiUrl = `https://betadash-search-download.vercel.app/fbdl?url=${encodeURIComponent(messageText)}`;
+
+      if (apiUrl) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'video',
+            payload: {
+              url: apiUrl,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
+      }
+    } catch (error) {
+      console.error();
+    }
+  } else if (regEx_tiktok.test(messageText)) {
+    try {
+      const response = await axios.post(`https://www.tikwm.com/api/`, { url: messageText });
+      const data = response.data.data;
+      const shotiUrl = data.play;
+
+      sendMessage(senderId, {
+        attachment: {
+          type: 'video',
+          payload: {
+            url: shotiUrl,
+            is_reusable: true
+          }
+        }
+      }, pageAccessToken);
+    } catch (error) {
+      console.error();
+    }
   }
 }
+
+
+
 
 async function getAttachments(mid, pageAccessToken) {
   if (!mid) {
