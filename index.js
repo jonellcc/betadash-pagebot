@@ -174,7 +174,6 @@ async function handleMessage(event, pageAccessToken) {
     const command = commands.get(commandName);
     try {
      let imageUrl = '';
-
         if (event.message.reply_to && event.message.reply_to.mid) {
           try {
             imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
@@ -202,9 +201,8 @@ async function handleMessage(event, pageAccessToken) {
     } else {
       sendMessage(senderId, { text }, pageAccessToken);
     } 
-   }
- }
-
+  }
+}
 
 async function getAttachments(mid, pageAccessToken) {
   if (!mid) {
