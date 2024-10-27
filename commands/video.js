@@ -1,8 +1,12 @@
 const axios = require("axios");
+const headers = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+  'Content-Type': 'application/json'
+};
 
 module.exports = {
   name: "video",
-  description: "search video from YouTube",
+  description: "Search video from YouTube",
   author: "Cliff",
   async execute(senderId, args, pageAccessToken, sendMessage) {
     const search = args.join(" ");
@@ -14,20 +18,35 @@ module.exports = {
     sendMessage(senderId, { text: `⏱️ | Searching for '${search}', please wait...` }, pageAccessToken);
 
     try {
-      const response = await axios.get(`https://betadash-search-download.vercel.app/video?search=${encodeURIComponent(search)}`);
+      const response = await axios.get(`https://betadash-search-download.vercel.app/video?search=${encodeURIComponent(search)}`, { headers} );
       const { downloadUrl: videoUrl, title } = response.data;
 
-  const headResponse = await axios.head(videoUrl);
-      const contentLength = headResponse.headers['content-length'];
-      const sizeMb = contentLength / (1024 * 1024);
+  const head = await axios.head(videoUrl, { headers });
+      const length = head.headers['content-length'];
+      const size = length / (1024 * 1024);
 
-      if (sizeMb > 25) {
-        sendMessage(senderId, { text: "Error: The video exceeds the 25 MB limit and cannot be sent." }, pageAccessToken);
+      if (size > 25) {
+        sendMessage(senderId, {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗨𝗿𝗹: ${videoUrl}`,
+            buttons: [
+              {
+                type: 'web_url',
+                url: videoUrl,
+                title: 'Watch Video'
+              }
+            ]
+          }
+        }
+      }, pageAccessToken);
         return;
       } 
 
-      const messageText = `Video found\n𝗧𝗶𝘁𝗹𝗲: ${title}\n\nSending video please wait a minutes...`;
-      sendMessage(senderId, { text: messageText }, pageAccessToken);
+      const message = `Video found\n𝗧𝗶𝘁𝗹𝗲: ${title}\n\nSending video please wait a minutes...`;
+      sendMessage(senderId, { text: message }, pageAccessToken);
 
       sendMessage(senderId, {
         attachment: {
@@ -43,4 +62,3 @@ module.exports = {
     }
   }
 };
-

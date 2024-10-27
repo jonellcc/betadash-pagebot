@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 3000;
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "61567757543707";
 const admin = ["8786755161388846", "8376765705775283", "8552967284765085"];
-const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBOZCfTh21aZBMyQvL93sHVvfAWIT7V06ngnzdpAZAp0Xonj8i217EtbKXay4snDZAW6bMA5zn5i3SDVmYxZCQbJfOx76ZCQBkO9ks5oLoArKIpgOLF4gqGbXiPjw9NebTD9PQRJlVfUZCN26YAKiyDZCLG3n4WtMgixFtuhH6uwAGbEAkvytXUZAEwlAZDZD";
+const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO7Ftdp0C9fauNZBC3jhG8e1v3p32NAWrdQ9C8L1igMw98lkaZBPLsQr6WFxg5iVtfhyZCM8nZAmgZAaHreq075NIgu7KrgDrJh7HVXiwZCZAOFEtgYkisIlGCxYXct1DixR59h1dXKN0p18o4ZBGziT0MZA58g3NNi8At0Xcmw9hjW5V2EZCMx63nD7QZDZD";
 
 const commandList = [];
 const descriptions = [];
@@ -169,7 +169,7 @@ async function handleMessage(event, pageAccessToken) {
   }
 
   const senderId = event.sender.id;
-  const messageText = event.message.text;
+  const messageText = event.message.text; 
 const dg = event.message.attachments &&
            (event.message.attachments[0]?.type === 'image' || event.message.attachments[0]?.type === 'video') && messageText;
   let imageUrl = null;
@@ -192,6 +192,33 @@ const dg = event.message.attachments &&
 
   const args = messageText ? messageText.split(' ') : [];
   const commandName = args.shift()?.toLowerCase();
+
+const bannedKeywords = [
+  'gay', 'pussy', 'dick', 'nude', 'without', 'clothes', 'sugar', 'fuck', 'fucked', 'step',
+  'shit', 'bitch', 'hentai', 'nigg', 'nigga', 'niga', 'sex', 'boobs', 'cute girl undressed', 'undressed', 
+  'naked', 'underwear', 'sexy', 'panty', 'fuckers', 'fck', 'fucking', 'vagina', 'intercourse', 
+  'penis', 'gae', 'panties', 'fellatio', 'blow job', 'blow', 'skin', 'segs', 'porn', 'loli', 'kantutan','lulu', 'kayat', 'bilat',
+  'ahegao', 'dildo', 'vibrator', 'ass', 'asses', 'butt', 'asshole', 'cleavage', 'arse', 'dic', 'puss'
+];
+
+
+function escapeRegex(keyword) {
+  return keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+const containsBannedKeyword = bannedKeywords.some(keyword => {
+  const pattern = new RegExp(`\\b${escapeRegex(keyword)}\\b`, 'i');
+  return pattern.test(args);
+});
+
+if (containsBannedKeyword) {
+  await sendMessage(
+    senderId,
+    { text: '🚫 Your prompt contains inappropriate content. Please try again with a different prompt.' },
+    pageAccessToken
+  );
+  return;
+}
 
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
