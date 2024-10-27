@@ -3,20 +3,20 @@ const fs = require('fs');
 const request = require('request');
 const cheerio = require('cheerio');
 const { PasteClient } = require('pastebin-api');
+const { sendMessage } = require("../kupal");
 
 module.exports = {
   name: 'adc',
   description: 'Upload or apply code from Pastebin/BuildToolDev',
   author: 'Cliff Vincent',
-  async execute(senderId, args, pageAccessToken, sendMessage, pageid) {
+  async execute(senderId, args, pageAccessToken, pageid) {
     const PASTEBIN_API_KEY = "R02n6-lNPJqKQCd5VtL4bKPjuK6ARhHb";
-    const kupal = ["8786755161388846", "8376765705775283", "8552967284765085"];
+    const kupal = ["8505900689447357", "8269473539829237", "7913024942132935"];
 
 if (!kupal.some(kupal_ka => kupal_ka === senderId)) {
   sendMessage(senderId, { text: "This command is only for pagebot owner." }, pageAccessToken);
   return;
 }
-
 
     const filename = args[0];  
     const urlOrText = args[1]; 

@@ -1,17 +1,18 @@
+const { sendMessage} = require("../kupal");
+
 module.exports = {
   name: "delete",
-  description: 'Undefined',
+  description: 'delete file',
   author: 'CLIFF',
-  async execute(senderId, args, pageAccessToken, sendMessage) {
+  async execute(senderId, args, pageAccessToken) {
     const fs = require('fs');
     const path = require('path');
-const kupal = ["8786755161388846", "8376765705775283", "8552967284765085"];
+const kupal = ["8505900689447357", "8269473539829237", "7913024942132935"];
 
-if (!kupal.some(kupal_ka => kupal_ka === senderId)) {
-  sendMessage(senderId, { text: "This command is only for pagebot owner." }, pageAccessToken);
+   if (!kupal.some(kupal_ka => kupal_ka === senderId)) {
+    sendMessage(senderId, { text: "This command is only for pagebot owner." }, pageAccessToken);
   return;
 }
-
 
     const fileName = args[0];
 

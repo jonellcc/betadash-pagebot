@@ -1,82 +1,84 @@
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios');
 const { sendMessage } = require('./kupal');
-
+const axios = require('axios');
 const commands = new Map();
+const lastImageByUser = new Map();
+const lastVideoByUser = new Map();
+const admin = ["8505900689447357", "8269473539829237", "7913024942132935"];
 
+// Load all command files
 const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
-  commands.set(command.name.toLowerCase(), command);
+  commands.set(command.name, command);
 }
 
+// Main function to handle incoming events
 async function kupal(event, pageAccessToken) {
-  if (!event || !event.sender || !event.sender.id) {
-    return;
-  }
+  if (!event || !event.sender || !event.sender.id) return;
 
   const senderId = event.sender.id;
+  let imageUrl = null;
+  let videoUrl = null;
 
+  // Check for attachments in the message
+  if (event.message && event.message.attachments) {
+    const imageAttachment = event.message.attachments.find(att => att.type === 'image');
+    const videoAttachment = event.message.attachments.find(att => att.type === 'video');
+
+    if (imageAttachment) {
+      imageUrl = imageAttachment.payload.url;
+      lastImageByUser.set(senderId, imageUrl);
+    }
+    if (videoAttachment) {
+      videoUrl = videoAttachment.payload.url;
+      lastVideoByUser.set(senderId, videoUrl);
+    }
+  }
+
+  // Process command if there is a text message
   if (event.message && event.message.text) {
     const messageText = event.message.text.trim();
-
-    let commandName, args;
     const words = messageText.split(' ');
-    commandName = words.shift().toLowerCase();
-    args = words;
+    const commandName = words.shift().toLowerCase();
+    const args = words;
 
-    if (commands.has(commandName)) {
-      const command = commands.get(commandName);
-      try {
-        let imageUrl = '';
+    if (commandName === 'imgur') {
+      const lastImage = lastImageByUser.get(senderId);
+      const lastVideo = lastVideoByUser.get(senderId);
 
-        if (event.message.reply_to && event.message.reply_to.mid) {
-          try {
-            imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
-          } catch (error) {
-            imageUrl = '';
-          }
-        } else if (event.message.attachments && event.message.attachments[0]?.type === 'image') {
-          imageUrl = event.message.attachments[0].payload.url;
+      if (lastImage || lastVideo) {
+        try {
+          const mediaToUpload = lastImage || lastVideo;
+          await commands.get('imgur').execute(senderId, args, pageAccessToken, mediaToUpload, admin);
+
+          // Clear the last media after use
+          if (lastImage) lastImageByUser.delete(senderId);
+          if (lastVideo) lastVideoByUser.delete(senderId);
+        } catch (error) {
+          await sendMessage(senderId, { text: 'An error occurred while uploading the media to Imgur.' }, pageAccessToken);
         }
-
-        await command.execute(senderId, args, pageAccessToken, event, imageUrl);
-      } catch (error) {
-        sendMessage(senderId, { text: `There was an error executing the command "${commandName}". Please try again later.` }, pageAccessToken);
+      } else {
+        await sendMessage(senderId, { text: 'Please send an image or video first and then use the "imgur" command.' }, pageAccessToken);
       }
-    } else {
-      sendMessage(senderId, {
-        text: `Unknown command: "${commandName}". Type "help" or click help below for a list of available commands.`,
-        quick_replies: [
-          {
-            content_type: "text",
-            title: "Help",
-            payload: "HELP_PAYLOAD"
-          }
-        ]
-      }, pageAccessToken);
+      return;
     }
   }
 }
 
+// Function to get attachments from a message ID
 async function getAttachments(mid, pageAccessToken) {
-  if (!mid) {
-    throw new Error("No message ID provided.");
-  }
+  if (!mid) throw new Error("No message ID provided.");
 
-  try {
-    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-      params: { access_token: pageAccessToken }
-    });
+  const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+    params: { access_token: pageAccessToken }
+  });
 
-    if (data && data.data.length > 0 && data.data[0].image_data) {
-      return data.data[0].image_data.url;
-    } else {
-      throw new Error("No image found in the replied message.");
-    }
-  } catch (error) {
-    throw new Error("Failed to fetch attachments.");
+  if (data && data.data.length > 0 && data.data[0].image_data) {
+    return data.data[0].image_data.url;
+  } else {
+    throw new Error("No image found in the replied message.");
   }
 }
 

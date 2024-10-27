@@ -9,10 +9,19 @@ async function typingIndicator(senderId, pageAccessToken) {
     }, {
       params: { access_token: pageAccessToken },
     });
+
+    await axios.post(`https://graph.facebook.com/v13.0/me/messages`, {
+      recipient: { id: senderId },
+      sender_action: 'typing_off',
+    }, {
+      params: { access_token: pageAccessToken },
+    });
+
   } catch (error) {
-    console.error('Error sending typing indicator:', error.message);
+    console.error();
   }
 }
+
 
 function sendMessage(senderId, message, pageAccessToken, mid = null) {
   if (!message || (!message.text && !message.attachment)) {
@@ -24,10 +33,6 @@ function sendMessage(senderId, message, pageAccessToken, mid = null) {
     recipient: { id: senderId },
     message: {}
   };
-
-  if (!mid) {
-reply_to = mid;
-  }
 
   if (message.text) {
     payload.message.text = message.text;
@@ -50,11 +55,11 @@ reply_to = mid;
     json: payload,
   }, (error, response, body) => {
     if (error) {
-      console.error('Error sending message:', error);
+      console.error();
     } else if (response.body.error) {
-      console.error('Error response:', response.body.error);
+      console.error();
     } else {
-      console.log('Message sent successfully:', body);
+      console.log();
     }
   });
 }

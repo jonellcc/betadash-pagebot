@@ -4,9 +4,14 @@ const fs = require('fs');
 const request = require('request');
 const path = require('path');
 const axios = require('axios');
+const { kupal } = require("./kupal2");
 const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
 const instagramLinkRegex = /https:\/\/www\.instagram\.com\/reel\/[a-zA-Z0-9_-]+\/\?igsh=[a-zA-Z0-9_=-]+$/;
+const headers = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+  'Content-Type': 'application/json'
+};
 
 const app = express();
 app.use(bodyParser.json());
@@ -22,7 +27,6 @@ const PAGE_ACCESS_TOKEN = "EAAVaXRD3OroBOZCfTh21aZBMyQvL93sHVvfAWIT7V06ngnzdpAZA
 const commandList = [];
 const descriptions = [];
 const commands = new Map();
-
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "page.html"));
@@ -56,10 +60,14 @@ app.post('/webhook', (req, res) => {
         if (event.message) {
           handleMessage(event, PAGE_ACCESS_TOKEN);
         } else if (event.sender.id) {
-          handleMessage(event, PAGE_ACCESS_TOKEN);
+           handleMessage(event, PAGE_ACCESS_TOKEN);
+        } else if (event.message) {
+            kupal(event, PAGE_ACCESS_TOKEN);
+        } else if (event.sender.id) {
+           kupal(event, PAGE_ACCESS_TOKEN);
        } else if (event.postback) {
           handlePostback(event, PAGE_ACCESS_TOKEN);
-        } else if (GET_STARTED_PAYLOAD) {
+       } else if (GET_STARTED_PAYLOAD) {
           handlePostback(event, PAGE_ACCESS_TOKEN);
         }
       });
@@ -162,6 +170,8 @@ async function handleMessage(event, pageAccessToken) {
 
   const senderId = event.sender.id;
   const messageText = event.message.text;
+const dg = event.message.attachments &&
+           (event.message.attachments[0]?.type === 'image' || event.message.attachments[0]?.type === 'video') && messageText;
   let imageUrl = null;
   let jb = "More shoti";
 
@@ -198,22 +208,26 @@ async function handleMessage(event, pageAccessToken) {
       }
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
-const kupall = {
- text: "❌ There was an error executing that command type 'help' to see more usefull commands",
- quick_replies: [
-    {
-      content_type: "text",
-      title: "help",
-      payload: "HELP"
-    }
-  ]
-};
-      sendMessage(senderId, kupall, pageAccessToken);
-    }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && jb !== messageText)  {
-    try {
+  const kupall = {
+     text: "❌ There was an error executing that command type 'help' to see more usefull commands",
+    quick_replies: [
+         {
+          content_type: "text",
+         title: "help",
+         payload: "HELP"
+        }
+      ]
+   };
+    sendMessage(senderId, kupall, pageAccessToken);
+   }
+} else if (
+    !regEx_tiktok.test(messageText) &&
+    !facebookLinkRegex.test(messageText) &&
+    !instagramLinkRegex.test(messageText) &&
+    jb !== messageText && dg) {
+      try {
       const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4-turbo-2024-04-09?ask=${encodeURIComponent(messageText)}`;
-      const response = await axios.get(apiUrl);
+      const response = await axios.get(apiUrl, { headers } );
       const text = response.data.message;
 
       const maxMessageLength = 2000;
@@ -232,7 +246,7 @@ const kupall = {
     try {
       sendMessage(senderId, { text: 'Downloading Instagram, please wait...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/insta?url=${encodeURIComponent(messageText)}`;
-      const response = await axios.get(apiUrl);
+      const response = await axios.get(apiUrl, { headers } );
       const videoUrl = response.data.result[0]._url;
 
       if (videoUrl) {
@@ -271,7 +285,7 @@ const kupall = {
   } else if (regEx_tiktok.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Tiktok, please wait...' },  pageAccessToken);
-      const response = await axios.post(`https://www.tikwm.com/api/`, { url: messageText });
+      const response = await axios.post(`https://www.tikwm.com/api/`, { url: messageText }, { headers } );
       const data = response.data.data;
       const shotiUrl = data.play;
 

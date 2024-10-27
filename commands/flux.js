@@ -1,10 +1,8 @@
-const axios = require('axios');
-
 module.exports = {
-  name: 'imagine',
+  name: 'flux',
   description: 'Generate images via prompt',
-  usage: '-imagine <prompt>',
-  author: 'coffee => Mark sombra',
+  usage: 'flux <prompt>',
+  author: 'Cliff', // api by neth
   async execute(senderId, args, pageAccessToken, sendMessage) {
     if (!args || !Array.isArray(args) || args.length === 0) {
       await sendMessage(senderId, { text: 'Please provide a prompt for image generation.' }, pageAccessToken);
@@ -14,7 +12,8 @@ module.exports = {
     const prompt = args.join(' ');
 
     try {
-      const apiUrl = `https://ccprojectapis.ddns.net/api/generate-art?prompt=${encodeURIComponent(prompt)}`;
+       sendMessage(senderId, { text: "֎ | Generating Please Wait...."}, pageAccessToken);
+      const apiUrl = `https://echavie3.nethprojects.workers.dev/flux?q=${encodeURIComponent(prompt)}`;
 
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: apiUrl } } }, pageAccessToken);
 
