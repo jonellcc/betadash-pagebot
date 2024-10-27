@@ -18,7 +18,7 @@ module.exports = {
     sendMessage(senderId, { text: `⏱️ | Searching for '${search}', please wait...` }, pageAccessToken);
 
     try {
-      const response = await axios.get(`https://betadash-search-download.vercel.app/video?search=${encodeURIComponent(search)}`, { headers} );
+      const response = await axios.get(`https://yt-video-production.up.railway.app/video?search=${encodeURIComponent(search)}`, { headers} );
       const { downloadUrl: videoUrl, title } = response.data;
 
   const head = await axios.head(videoUrl, { headers });
@@ -57,6 +57,29 @@ module.exports = {
           }
         }
       }, pageAccessToken);
+     let videoSent = false;
+     setTimeout(() => {
+  if (!videoSent) {
+    sendMessage(senderId, {
+      attachment: {
+        type: 'template',
+        payload: {
+          template_type: 'button',
+          text: `The video is too long; I can't send it. You can warch the video clicl the button Below\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗨𝗿𝗹: ${videoUrl}`,
+          buttons: [
+            {
+              type: 'web_url',
+              url: videoUrl,
+              title: 'Watch Video'
+            }
+          ]
+        }
+      }
+    }, pageAccessToken);
+  }
+}, 120000);
+videoSent = true;
+return;
     } catch (error) {
       sendMessage(senderId, { text: `Error: ${error.message}` }, pageAccessToken);
     }

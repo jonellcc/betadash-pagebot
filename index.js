@@ -194,7 +194,7 @@ const dg = event.message.attachments &&
   const commandName = args.shift()?.toLowerCase();
 
 const bannedKeywords = [
-  'gay', 'pussy', 'dick', 'nude', 'without', 'clothes', 'sugar', 'fuck', 'fucked', 'step',
+  'gay', 'pussy', 'dick', 'nude', 'xnxx', 'pornhub', 'hot', 'clothes', 'sugar', 'fuck', 'fucked', 'step',
   'shit', 'bitch', 'hentai', 'nigg', 'nigga', 'niga', 'sex', 'boobs', 'cute girl undressed', 'undressed', 
   'naked', 'underwear', 'sexy', 'panty', 'fuckers', 'fck', 'fucking', 'vagina', 'intercourse', 
   'penis', 'gae', 'panties', 'fellatio', 'blow job', 'blow', 'skin', 'segs', 'porn', 'loli', 'kantutan','lulu', 'kayat', 'bilat',
@@ -253,10 +253,9 @@ if (containsBannedKeyword) {
     !instagramLinkRegex.test(messageText) &&
     jb !== messageText && dg) {
       try {
-      const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt-4-turbo-2024-04-09?ask=${encodeURIComponent(messageText)}`;
+      const apiUrl = `https://rest-api-production-5054.up.railway.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
       const response = await axios.get(apiUrl, { headers } );
       const text = response.data.message;
-
       const maxMessageLength = 2000;
       if (text.length > maxMessageLength) {
         const messages = splitMessageIntoChunks(text, maxMessageLength);
