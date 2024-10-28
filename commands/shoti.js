@@ -40,8 +40,8 @@ sendMessage(senderId, kupal, pageAccessToken);
     },
     {
       content_type: "text",
-      title: "privacy",
-      payload: "PRIVACY"
+      title: "Privacy Policy",
+      payload: "PRIVACY POLICY"
     }
   ]
 }, pageAccessToken);

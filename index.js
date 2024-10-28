@@ -4,7 +4,6 @@ const fs = require('fs');
 const request = require('request');
 const path = require('path');
 const axios = require('axios');
-const { kupal } = require("./kupal2");
 const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
 const instagramLinkRegex = /https:\/\/www\.instagram\.com\/reel\/[a-zA-Z0-9_-]+\/\?igsh=[a-zA-Z0-9_=-]+$/;
@@ -27,6 +26,7 @@ const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO7Ftdp0C9fauNZBC3jhG8e1v3p32NAWrdQ9C8L1i
 const commandList = [];
 const descriptions = [];
 const commands = new Map();
+
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "page.html"));
@@ -60,14 +60,10 @@ app.post('/webhook', (req, res) => {
         if (event.message) {
           handleMessage(event, PAGE_ACCESS_TOKEN);
         } else if (event.sender.id) {
-           handleMessage(event, PAGE_ACCESS_TOKEN);
-        } else if (event.message) {
-            kupal(event, PAGE_ACCESS_TOKEN);
-        } else if (event.sender.id) {
-           kupal(event, PAGE_ACCESS_TOKEN);
+          handleMessage(event, PAGE_ACCESS_TOKEN);
        } else if (event.postback) {
           handlePostback(event, PAGE_ACCESS_TOKEN);
-       } else if (GET_STARTED_PAYLOAD) {
+        } else if (GET_STARTED_PAYLOAD) {
           handlePostback(event, PAGE_ACCESS_TOKEN);
         }
       });
@@ -169,11 +165,11 @@ async function handleMessage(event, pageAccessToken) {
   }
 
   const senderId = event.sender.id;
-  const messageText = event.message.text; 
-const dg = event.message.attachments &&
-           (event.message.attachments[0]?.type === 'image' || event.message.attachments[0]?.type === 'video') && messageText;
+  const messageText = event.message.text;
   let imageUrl = null;
   let jb = "More shoti";
+  const dg = event.message.attachments &&
+           (event.message.attachments[0]?.type === 'image' || event.message.attachments[0]?.type === 'video');
 
   if (event.message && event.message.attachments) {
     const imageAttachment = event.message.attachments.find(att => att.type === 'image');
@@ -191,7 +187,6 @@ const dg = event.message.attachments &&
   }
 
   const args = messageText ? messageText.split(' ') : [];
-  const commandName = args.shift()?.toLowerCase();
 
 const bannedKeywords = [
   'gay', 'pussy', 'dick', 'nude', 'xnxx', 'pornhub', 'hot', 'clothes', 'sugar', 'fuck', 'fucked', 'step',
@@ -200,7 +195,6 @@ const bannedKeywords = [
   'penis', 'gae', 'panties', 'fellatio', 'blow job', 'blow', 'skin', 'segs', 'porn', 'loli', 'kantutan','lulu', 'kayat', 'bilat',
   'ahegao', 'dildo', 'vibrator', 'ass', 'asses', 'butt', 'asshole', 'cleavage', 'arse', 'dic', 'puss'
 ];
-
 
 function escapeRegex(keyword) {
   return keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -220,6 +214,8 @@ if (containsBannedKeyword) {
   return;
 }
 
+  const commandName = args.shift()?.toLowerCase();
+
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
@@ -235,8 +231,8 @@ if (containsBannedKeyword) {
       }
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
-  const kupall = {
-     text: "❌ There was an error executing that command type 'help' to see more usefull commands",
+      const kupall = {
+     text: "❌ There was an error executing that command\ntype 'help' to see more usefull commands",
     quick_replies: [
          {
           content_type: "text",
@@ -246,16 +242,13 @@ if (containsBannedKeyword) {
       ]
    };
     sendMessage(senderId, kupall, pageAccessToken);
-   }
-} else if (
-    !regEx_tiktok.test(messageText) &&
-    !facebookLinkRegex.test(messageText) &&
-    !instagramLinkRegex.test(messageText) &&
-    jb !== messageText && dg) {
-      try {
+    }
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && jb !== messageText && dg !== messageText)  {
+    try {
       const apiUrl = `https://rest-api-production-5054.up.railway.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
-      const response = await axios.get(apiUrl, { headers } );
+      const response = await axios.get(apiUrl, { headers });
       const text = response.data.message;
+
       const maxMessageLength = 2000;
       if (text.length > maxMessageLength) {
         const messages = splitMessageIntoChunks(text, maxMessageLength);
@@ -272,8 +265,32 @@ if (containsBannedKeyword) {
     try {
       sendMessage(senderId, { text: 'Downloading Instagram, please wait...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/insta?url=${encodeURIComponent(messageText)}`;
-      const response = await axios.get(apiUrl, { headers } );
+      const response = await axios.get(apiUrl, { headers });
       const videoUrl = response.data.result[0]._url;
+
+const head = await axios.head(videoUrl, { headers });
+      const length = head.headers['content-length'];
+      const size = length / (1024 * 1024);
+
+      if (size > 25) {
+        sendMessage(senderId, {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: `Error: The Instagram video exceeds the 25 MB limit and cannot be sent\n\n𝗨𝗿𝗹: ${videoUrl}`,
+            buttons: [
+              {
+                type: 'web_url',
+                url: videoUrl,
+                title: 'Watch Video'
+              }
+            ]
+          }
+        }
+      }, pageAccessToken);
+        return;
+      } 
 
       if (videoUrl) {
         sendMessage(senderId, {
@@ -311,9 +328,33 @@ if (containsBannedKeyword) {
   } else if (regEx_tiktok.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Tiktok, please wait...' },  pageAccessToken);
-      const response = await axios.post(`https://www.tikwm.com/api/`, { url: messageText }, { headers } );
+      const response = await axios.post(`https://www.tikwm.com/api/`, { url: messageText }, { headers });
       const data = response.data.data;
       const shotiUrl = data.play;
+
+/** const h = await axios.head(videoUrl);
+      const lengths = h.headers['content-length'];
+      const sizemb = lengths / (1024 * 1024);
+
+  if (sizemb > 25) {
+        sendMessage(senderId, {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: `Error: The Tiktok video exceeds the 25 MB limit and cannot be sent\n\n𝗨𝗿𝗹: ${shotiUrl}`,
+            buttons: [
+              {
+                type: 'web_url',
+                url: shotiUrl,
+                title: 'Watch Tiktok'
+              }
+            ]
+          }
+        }
+      }, pageAccessToken);
+        return;
+      } **/
 
       sendMessage(senderId, {
         attachment: {
@@ -348,7 +389,6 @@ if (messageText && messageText.includes("More shoti")) {
     }
   }
 }
-
 
 
 async function getAttachments(mid, pageAccessToken) {
