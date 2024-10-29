@@ -169,7 +169,7 @@ async function handleMessage(event, pageAccessToken) {
   let imageUrl = null;
   let jb = "More shoti";
   const dg = event.message.attachments &&
-           (event.message.attachments[0]?.type === 'image' || event.message.attachments[0]?.type === 'video' || event.message.attachments[0]?.type === 'sticker' || event.message.attachments[0]?.type === 'audio');
+           (event.message.attachments[0]?.type === 'image' || event.message.attachments[0]?.type === 'video');
 
   if (event.message && event.message.attachments) {
     const imageAttachment = event.message.attachments.find(att => att.type === 'image');

@@ -17,12 +17,12 @@ module.exports = {
 
     try {
       sendMessage(senderId, { text: `🔍 | Searching music: ${query}` }, pageAccessToken);
-      const apiUrl = `https://kaiz-audiomp3.vercel.app/ytmp3?q=${encodeURIComponent(query)}`;
+      const apiUrl = `https://yt-video-production.up.railway.app/video?search=${encodeURIComponent(query)}`;
       const response = await axios.get(apiUrl, { headers });
 
-      const { mp3Link, title, duration, thumbnail } = response.data;
+      const { downloadUrl, title, time, thumbnail } = response.data;
 
-const kupal = `💽 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${duration}\n\nSending music wait a seconds...`;
+const kupal = `💽 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${time}\n\nSending music wait a seconds...`;
 sendMessage(senderId, {text: kupal}, pageAccessToken);
     sendMessage(senderId, {
           attachment: {
@@ -34,12 +34,12 @@ sendMessage(senderId, {text: kupal}, pageAccessToken);
           }
         }, pageAccessToken);
 
-      if (mp3Link) {
+      if (downloadUrl) {
         sendMessage(senderId, {
           attachment: {
             type: 'audio',
             payload: {
-              url: mp3Link,
+              url: downloadUrl,
               is_reusable: true
             }
           }
