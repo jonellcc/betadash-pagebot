@@ -24,7 +24,7 @@ module.exports = {
       const text = response.data.message;
 
 
-      const formattedResponse = `${symbol} | 𝗕𝗟𝗔𝗖𝗞𝗕𝗢𝗫 𝗔𝗜\n━━━━━━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━━━━━━`;
+      const formattedResponse = `${symbol} | 𝗕𝗟𝗔𝗖𝗞𝗕𝗢𝗫 𝗔𝗜\n━━━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━━━`;
 
       const maxMessageLength = 2000;
       if (formattedResponse.length > maxMessageLength) {

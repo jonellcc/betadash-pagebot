@@ -169,7 +169,7 @@ async function handleMessage(event, pageAccessToken) {
   let imageUrl = null;
   let jb = "More shoti";
   const dg = event.message.attachments &&
-           (event.message.attachments[0]?.type === 'image' || event.message.attachments[0]?.type === 'video');
+           (event.message.attachments[0]?.type === 'image' || event.message.attachments[0]?.type === 'video' || event.message.attachments[0]?.type === 'sticker' || event.message.attachments[0]?.type === 'audio');
 
   if (event.message && event.message.attachments) {
     const imageAttachment = event.message.attachments.find(att => att.type === 'image');
@@ -232,7 +232,8 @@ if (containsBannedKeyword) {
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
       const kupall = {
-     text: "❌ There was an error executing that command\ntype 'help' to see more usefull commands",
+     text: "❌ There was an error processing that command.
+Type 'help' to see more useful commands",
     quick_replies: [
          {
           content_type: "text",
@@ -376,20 +377,8 @@ if (messageText && messageText.includes("More shoti")) {
     await shotiCommand.execute(senderId, [], pageAccessToken, sendMessage, pageAccessToken);
   }
   return;
-}
-
-  if (imageUrl) {
-    const geminiCommand = commands.get('gemini');
-    if (geminiCommand) {
-      try {
-        await geminiCommand.execute(senderId, [], pageAccessToken, imageUrl);
-      } catch (error) {
-        sendMessage(senderId, { text: 'There was an error processing your image.' }, pageAccessToken);
-      }
-    }
+   }
   }
-}
-
 
 async function getAttachments(mid, pageAccessToken) {
   if (!mid) {
