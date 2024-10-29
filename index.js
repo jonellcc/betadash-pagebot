@@ -232,8 +232,7 @@ if (containsBannedKeyword) {
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
       const kupall = {
-     text: "❌ There was an error processing that command.
-Type 'help' to see more useful commands",
+     text: "❌ There was an error processing that command\nType 'help' to see more useful commands",
     quick_replies: [
          {
           content_type: "text",
