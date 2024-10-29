@@ -12,9 +12,9 @@ if (!prompt) {
     }
 
     try {
-      const apiUrl = `https://akhiro-tech.vercel.app/api?model=beshv2&q=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://betadash-api-swordslush.vercel.app/besh?ask=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
-      const text = response.data.message;
+      const text = response.data.reply;
 
       const maxMessageLength = 2000;
       if (text.length > maxMessageLength) {
