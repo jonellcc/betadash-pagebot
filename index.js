@@ -243,54 +243,7 @@ if (containsBannedKeyword) {
   return;
 }
 
-  const commandName = args.shift()?.toLowerCase();
-
-  if (commands.has(commandName)) {
-    const command = commands.get(commandName);
-    try {
-      let imageUrl = '';
-      if (event.message.reply_to && event.message.reply_to.mid) {
-        try {
-          imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
-        } catch (error) {
-          imageUrl = '';
-        }
-      } else if (event.message.attachments && event.message.attachments[0]?.type === 'image' || event.message.attachments[0]?.type === 'video') {
-        imageUrl = event.message.attachments[0].payload.url;
-      }
-      await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, admin, splitMessageIntoChunks);
-    } catch (error) {
-      const kupall = {
-     text: "❌ There was an error processing that command\nType 'help' to see more useful commands",
-    quick_replies: [
-         {
-          content_type: "text",
-         title: "help",
-         payload: "HELP"
-        }
-      ]
-   };
-    sendMessage(senderId, kupall, pageAccessToken);
-    }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && jb !== messageText)  {
-    try {
-      const apiUrl = `https://rest-api-production-5054.up.railway.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}` + (imageUrl ? `&file_url=${encodeURIComponent(imageUrl)}` : '');
-      const response = await axios.get(apiUrl, { headers });
-      const text = response.data.message;
-
-      const maxMessageLength = 2000;
-      if (text.length > maxMessageLength) {
-        const messages = splitMessageIntoChunks(text, maxMessageLength);
-        for (const message of messages) {
-          sendMessage(senderId, { text: message }, pageAccessToken);
-        }
-      } else {
-        sendMessage(senderId, { text }, pageAccessToken);
-      }
-    } catch (error) {
-      console.error();
-    }
-   if (messageText && messageText.includes("imgur")) {
+if (messageText && messageText.includes("imgur")) {
     try {
         const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl);
@@ -303,6 +256,7 @@ if (containsBannedKeyword) {
      }
     return;
   } 
+
 if (messageText && messageText.includes("removebg")) {
     try {
         const bg = `https://ccprojectapis.ddns.net/api/removebg?url=${encodeURIComponent(imageUrl)}`;
@@ -311,6 +265,53 @@ if (messageText && messageText.includes("removebg")) {
      }
     return;
   }
+
+
+  const commandName = args.shift()?.toLowerCase();
+
+  if (commands.has(commandName)) {
+    const command = commands.get(commandName);
+    try {
+      await command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, splitMessageIntoChunks);
+    } catch (error) {
+      const kupall = {
+     text: "❌ There was an error processing that command\n\nType 'help' to see more useful commands",
+    quick_replies: [
+         {
+          content_type: "text",
+         title: "Help",
+         payload: "HELP"
+        }
+      ]
+   };
+    sendMessage(senderId, kupall, pageAccessToken);
+    }
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && jb !== messageText)  {
+   try {
+  let text;
+
+  if (imageUrl) {
+    const apiUrl = `https://rest-api-production-5054.up.railway.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&file_url=${encodeURIComponent(imageUrl)}`;
+    const response = await axios.get(apiUrl, { headers });
+    text = response.data.message;
+  } else {
+    const apiUrl = `https://rest-api-production-5054.up.railway.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
+    const response = await axios.get(apiUrl, { headers });
+    text = response.data.message;
+  }
+
+  const maxMessageLength = 2000;
+  if (text.length > maxMessageLength) {
+    const messages = splitMessageIntoChunks(text, maxMessageLength);
+    for (const message of messages) {
+      sendMessage(senderId, { text: message }, pageAccessToken);
+    }
+  } else {
+    sendMessage(senderId, { text }, pageAccessToken);
+  }
+} catch (error) {
+  console.error();
+}
 } else if (instagramLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Instagram, please wait...' }, pageAccessToken);
