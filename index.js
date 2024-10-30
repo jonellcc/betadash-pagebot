@@ -151,6 +151,27 @@ async function sendMessage(senderId, message, pageAccessToken) {
   }
 }
 
+
+async function getAttachments(mid, pageAccessToken) {
+  if (!mid) {
+    throw new Error("No message ID provided.");
+  }
+
+  try {
+    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+      params: { access_token: pageAccessToken }
+    });
+
+    if (data && data.data.length > 0 && data.data[0].image_data) {
+      return data.data[0].image_data.url;
+    } else {
+      throw new Error("No image found in the replied message.");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
@@ -164,25 +185,33 @@ async function handleMessage(event, pageAccessToken) {
     return;
   }
 
-  const senderId = event.sender.id;
-  const messageText = event.message.text;
-  let imageUrl = null;
-  let jb = "More shoti";
-  const dg = event.message.attachments &&
-           (event.message.attachments[0]?.type === 'image' || event.message.attachments[0]?.type === 'video');
+const image = event.message.attachments &&
+           (event.message.attachments[0]?.type === 'image');
+const video = event.message.attachments &&
+           (event.message.attachments[0]?.type === 'video');
+const gif = event.message.attachments &&
+           (event.message.attachments[0]?.type === 'gif');
 
-  if (event.message && event.message.attachments) {
-    const imageAttachment = event.message.attachments.find(att => att.type === 'image');
-    if (imageAttachment) {
-      imageUrl = imageAttachment.payload.url;
-    }
+   const senderId = event.sender.id;
+  const messageText = event.message.text;
+  let jb = ["More shoti", "imgur", "removebg"];
+
+ let imageUrl = '';
+
+if (event.message && event.message.attachments) {
+  const imageAttachment = event.message.attachments.find(att => att.type === 'image') 
+    || event.message.attachments.find(att => att.type === 'video');
+
+  if (imageAttachment) {
+    imageUrl = mediaAttachment.payload.url;
   }
+}
 
   if (event.message && event.message.reply_to && event.message.reply_to.mid) {
     try {
       imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
     } catch (error) {
-      console.error();
+      imageUrl = ''; 
     }
   }
 
@@ -226,7 +255,7 @@ if (containsBannedKeyword) {
         } catch (error) {
           imageUrl = '';
         }
-      } else if (event.message.attachments && event.message.attachments[0]?.type === 'image') {
+      } else if (event.message.attachments && event.message.attachments[0]?.type === 'image' || event.message.attachments[0]?.type === 'video') {
         imageUrl = event.message.attachments[0].payload.url;
       }
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, imageUrl, pageid, admin, splitMessageIntoChunks);
@@ -243,9 +272,9 @@ if (containsBannedKeyword) {
    };
     sendMessage(senderId, kupall, pageAccessToken);
     }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && jb !== messageText && dg !== messageText)  {
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && jb !== messageText)  {
     try {
-      const apiUrl = `https://rest-api-production-5054.up.railway.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
+      const apiUrl = `https://rest-api-production-5054.up.railway.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}` + (imageUrl ? `&file_url=${encodeURIComponent(imageUrl)}` : '');
       const response = await axios.get(apiUrl, { headers });
       const text = response.data.message;
 
@@ -261,7 +290,28 @@ if (containsBannedKeyword) {
     } catch (error) {
       console.error();
     }
-  } else if (instagramLinkRegex.test(messageText)) {
+   if (messageText && messageText.includes("imgur")) {
+    try {
+        const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
+        const imgurResponse = await axios.get(imgurApiUrl);
+        const imgurLink = imgurResponse.data.uploaded.image;
+        const h = {
+            text: `Here is the Imgur link for the image you provided:\n\n${imgurLink}`
+        };
+        sendMessage(senderId, h, pageAccessToken);
+    } catch (error) {
+     }
+    return;
+  } 
+if (messageText && messageText.includes("removebg")) {
+    try {
+        const bg = `https://ccprojectapis.ddns.net/api/removebg?url=${encodeURIComponent(imageUrl)}`;
+      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
+    } catch (error) {
+     }
+    return;
+  }
+} else if (instagramLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Instagram, please wait...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/insta?url=${encodeURIComponent(messageText)}`;
@@ -377,28 +427,7 @@ if (messageText && messageText.includes("More shoti")) {
   }
   return;
    }
-  }
-
-async function getAttachments(mid, pageAccessToken) {
-  if (!mid) {
-    throw new Error("No message ID provided.");
-  }
-
-  try {
-    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-      params: { access_token: pageAccessToken }
-    });
-
-    if (data && data.data.length > 0 && data.data[0].image_data) {
-      return data.data[0].image_data.url;
-    } else {
-      throw new Error("No image found in the replied message.");
-    }
-  } catch (error) {
-    throw new Error("Failed to fetch attachments.");
-  }
 }
-
 
 function splitMessageIntoChunks(message, chunkSize) {
   const chunks = [];
@@ -407,7 +436,6 @@ function splitMessageIntoChunks(message, chunkSize) {
   }
   return chunks;
 }
-
 
 
 function loadCommands() {
