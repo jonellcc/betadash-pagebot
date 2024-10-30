@@ -203,7 +203,7 @@ if (event.message && event.message.attachments) {
     || event.message.attachments.find(att => att.type === 'video');
 
   if (imageAttachment) {
-    imageUrl = mediaAttachment.payload.url;
+    imageUrl = imageAttachment.payload.url;
   }
 }
 
