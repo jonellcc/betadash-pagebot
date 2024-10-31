@@ -74,40 +74,69 @@ app.post('/webhook', (req, res) => {
   }
 });
 
+
 function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
-if (senderId && payload) {
+
+  try {
     if (payload === 'GET_STARTED_PAYLOAD') {
-  const welcomeMessage = {
-  attachment: {
-    type: "template",
-    payload: {
-      template_type: "button",
-      text: "Hi {{user_first_name}}, welcome to our page!\nThank you for visiting. We hope you enjoy using our page bot. If you encounter any issues with commands, feel free to click below to contact the page owner for assistance.\nWe've received your message and appreciate you reaching out.",
-      buttons: [
-        {
-          type: "web_url",
-          url: "https://www.facebook.com/swordigo.swordslush",
-          title: "Contact"
-        },
-        {
-          type: "web_url",
-          url: "https://m.me/swordigo.swordslush",
-          title: "Message"
-        }
-      ]
-    }
-  }
-};
-sendMessage(senderId, welcomeMessage, pageAccessToken);
+      const greetingMessage = {
+        greeting: [
+          {
+            locale: "default",
+            text: "Hello, I'm BELUGA! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving. \n\nType 'help' below 👇 to see available commands."
+          }
+        ],
+        quick_replies: [
+          {
+            content_type: "text",
+            title: "Help",
+            payload: "HELP"
+          },
+          {
+            content_type: "text",
+            title: "Privacy Policy",
+            payload: "PRIVACY_POLICY"
+          }
+        ]
+      };
+
+      sendMessage(senderId, greetingMessage, pageAccessToken);
     } else {
-       sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
+      sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
     }
-  } else {
+  } catch (err) {
     console.error();
   }
-};
+}
+
+async function setMessageReaction(reaction, messageId) {
+  try {
+    return await Graph(reaction, messageId);
+  } catch (error) {
+    return null;
+  }
+}
+
+function Graph(reaction, messageId) {
+  return new Promise((resolve, reject) => {
+    const payload = {
+      access_token: `${PAGE.ACCESS_TOKEN}`,
+      reaction: reaction,
+    };
+
+    axios
+      .post(`https://graph.facebook.com/v21.0/${messageId}/reactions`, payload)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err.response ? err.response.data : err.message);
+      });
+  });
+}
+
 
 async function sendMessage(senderId, message, pageAccessToken) {
   if (!message || (!message.text && !message.attachment)) {
@@ -138,25 +167,19 @@ async function sendMessage(senderId, message, pageAccessToken) {
       messagePayload.message.quick_replies = message.quick_replies;
     }
 
-const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${pageAccessToken}`, messagePayload);
-    const messageID = res.data.message_id;
-
-const feedbackPayload = {
-      sender: { id: senderId },
-      recipient: { id: "8269473539829237" },
-      timestamp: Date.now(),
-      response_feedback: {
-        feedback: "good_response || bad_response",
-        mid: messageID
-      }
-    };
-
-await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${pageAccessToken}`, feedbackPayload);
+    const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
 
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
       recipient: { id: senderId },
       sender_action: "typing_off"
     });
+
+   const latestMessageRes = await axios.get(`https://graph.facebook.com/v21.0/${senderId}/messages?access_token=${PAGE_ACCESS_TOKEN}&limit=1`);
+    const messageId = latestMessageRes.data.data[0].id;
+
+    if (messageId) {
+      await setMessageReaction("heart", messageId);
+    }
 
     return res.data;
   } catch (error) {
@@ -185,6 +208,7 @@ async function getAttachments(mid, pageAccessToken) {
   }
 }
 
+
 const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
@@ -207,7 +231,7 @@ const gif = event.message.attachments &&
 
    const senderId = event.sender.id;
   const messageText = event.message.text;
-  let jb = ["More shoti", "imgur", "removebg"];
+  let jb = ["More shoti", "imgur", "removebg", "remini"];
 
  let imageUrl = '';
 
@@ -232,7 +256,7 @@ if (event.message && event.message.attachments) {
 
 const bannedKeywords = [
   'gay', 'pussy', 'dick', 'nude', 'xnxx', 'pornhub', 'hot', 'clothes', 'sugar', 'fuck', 'fucked', 'step',
-  'shit', 'bitch', 'hentai', 'nigg', 'nigga', 'niga', 'sex', 'boobs', 'cute girl undressed', 'undressed', 
+  'shit', 'bitch', 'hentai', 'sex', 'boobs', 'cute girl undressed', 'undressed', 
   'naked', 'underwear', 'sexy', 'panty', 'fuckers', 'fck', 'fucking', 'vagina', 'intercourse', 
   'penis', 'gae', 'panties', 'fellatio', 'blow job', 'blow', 'skin', 'segs', 'porn', 'loli', 'kantutan','lulu', 'kayat', 'bilat',
   'ahegao', 'dildo', 'vibrator', 'ass', 'asses', 'butt', 'asshole', 'cleavage', 'arse', 'dic', 'puss'
@@ -274,6 +298,39 @@ if (messageText && messageText.includes("removebg")) {
     try {
         const bg = `https://ccprojectapis.ddns.net/api/removebg?url=${encodeURIComponent(imageUrl)}`;
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
+    } catch (error) {
+     }
+    return;
+  }
+
+if (messageText && messageText.includes("Get started")) {
+  try {
+    const kumag = {
+       text: "Hello, I'm BELUGA! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving. \n\nType 'help' below to see available commands",
+      quick_replies: [
+        {
+          "content_type": "text",
+          "title": "Help",
+          "payload": "HELP"
+        },
+        {
+          "content_type": "text",
+          "title": "Privacy Policy",
+          "payload": "PRIVACY_POLICY"
+        }
+      ]
+    };
+    await sendMessage(senderId, kumag, pageAccessToken);
+  } catch (error) {
+    console.error();
+  }
+  return;
+}
+
+if (messageText && messageText.includes("remini")) {
+    try {
+        const rem = `https://xnilnew404.onrender.com/xnil/remini?imageUrl=${encodeURIComponent(imageUrl)}&method=enhance`;
+      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: rem } } }, pageAccessToken);
     } catch (error) {
      }
     return;
