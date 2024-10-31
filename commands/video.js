@@ -18,8 +18,8 @@ module.exports = {
     sendMessage(senderId, { text: `⏱️ | Searching for '${search}', please wait...` }, pageAccessToken);
 
     try {
-      const response = await axios.get(`https://yt-video-production.up.railway.app/video?search=${encodeURIComponent(search)}`, { headers} );
-      const { downloadUrl: videoUrl, title } = response.data;
+      const response = await axios.get(`https://betadash-search-download.vercel.app/videov2?search=${encodeURIComponent(search)}`, { headers} );
+      const { downloadUrl: videoUrl, title, time, views } = response.data;
 
   const head = await axios.head(videoUrl, { headers });
       const length = head.headers['content-length'];
@@ -45,7 +45,7 @@ module.exports = {
         return;
       } 
 
-      const message = `Video found\n𝗧𝗶𝘁𝗹𝗲: ${title}\n\nSending video please wait a minutes...`;
+      const message = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${time}\n𝗩𝗶𝗲𝘄𝘀: ${views}\n\nSending video please wait a sec...`;
       sendMessage(senderId, { text: message }, pageAccessToken);
 
       sendMessage(senderId, {

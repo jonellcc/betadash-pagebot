@@ -7,6 +7,7 @@ const axios = require('axios');
 const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
 const instagramLinkRegex = /https:\/\/www\.instagram\.com\/reel\/[a-zA-Z0-9_-]+\/\?igsh=[a-zA-Z0-9_=-]+$/;
+const youtubeLinkRegex = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
 const headers = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   'Content-Type': 'application/json'
@@ -283,7 +284,7 @@ if (containsBannedKeyword) {
 if (messageText && messageText.includes("imgur")) {
     try {
         const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
-        const imgurResponse = await axios.get(imgurApiUrl);
+        const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
         const h = {
             text: `Here is the Imgur link for the image you provided:\n\n${imgurLink}`
@@ -356,7 +357,7 @@ if (messageText && messageText.includes("remini")) {
    };
     sendMessage(senderId, kupall, pageAccessToken);
     }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && jb !== messageText)  {
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && jb !== messageText)  {
    try {
   let text;
 
@@ -489,7 +490,55 @@ const head = await axios.head(videoUrl, { headers });
     } catch (error) {
       console.error();
     }
-  }
+  } else if (youtubeLinkRegex.test(messageText)) {
+    try {
+      sendMessage(senderId, { text: 'Downloading Youtube, please wait...' }, pageAccessToken);
+      const yts = `https://betadash-search-download.vercel.app/videov2?search=${encodeURIComponent(messageText)}`;
+     const yu = await axios.get(yts, { headers });
+      const vid = yu.data.downloadUrl;
+
+const h = await axios.head(vid, { headers } );
+      const lengths = h.headers['content-length'];
+      const sizemb = lengths / (1024 * 1024);
+
+        if (sizemb > 25) {
+        sendMessage(senderId, {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: `Error: The youtube video exceeds the 25 MB limit and cannot be sent\n\n𝗨𝗿𝗹: ${vid}`,
+            buttons: [
+              {
+                type: 'web_url',
+                url: vid,
+                title: 'Watch Video'
+              }
+            ]
+          }
+        }
+      }, pageAccessToken);
+        return;
+     }
+
+const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.data.title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${yu.data.time}\n\nSending video please a sec...`;
+      sendMessage(senderId, { text: kupal }, pageAccessToken);
+
+      if (vid) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'video',
+            payload: {
+              url: vid,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
+      }
+    } catch (error) {
+      console.error();
+    }
+}
 
 if (messageText && messageText.includes("More shoti")) {
   const shotiCommand = commands.get('shoti');
