@@ -17,7 +17,7 @@ module.exports = {
 
     try {
       sendMessage(senderId, { text: `🔍 | Searching music: ${query}` }, pageAccessToken);
-      const apiUrl = `https://yt-video-production.up.railway.app/video?search=${encodeURIComponent(query)}`;
+      const apiUrl = `https://dlvc.vercel.app/yt-audio?search=${encodeURIComponent(query)}`;
       const response = await axios.get(apiUrl, { headers });
       const { downloadUrl, title, time, thumbnail } = response.data;
 
@@ -92,3 +92,4 @@ module.exports = {
     }
   },
 };
+
