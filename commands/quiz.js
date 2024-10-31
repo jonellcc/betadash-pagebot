@@ -47,22 +47,30 @@ module.exports = {
     const options = [question.correct_answer, ...question.incorrect_answers].sort(() => Math.random() - 0.5);
 
     const questionMessage = {
-      text: `Difficulty: ${capitalizeFirstLetter(decodeURIComponent(question.difficulty))}\nCategory: ${decodeURIComponent(question.category)}\n\n${decodeURIComponent(question.question)}\n\n${options.map((option, index) => `${String.fromCharCode(65 + index)}. ${decodeURIComponent(option)}`).join('\n')}`,
-      buttons: options.map((option, index) => ({
-        type: "postback",
-        title: `${String.fromCharCode(65 + index)}. ${decodeURIComponent(option)}`,
-        payload: `ANSWER_${index}`
-      }))
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: `Difficulty: ${capitalizeFirstLetter(decodeURIComponent(question.difficulty))}\nCategory: ${decodeURIComponent(question.category)}\n\n${decodeURIComponent(question.question)}`,
+          buttons: options.map((option, index) => ({
+            type: "postback",
+            title: `${String.fromCharCode(65 + index)}. ${decodeURIComponent(option)}`,
+            payload: `ANSWER_${index}`
+          }))
+        }
+      }
     };
 
     sendMessage(senderId, questionMessage, pageAccessToken);
 
+    // Store the correct answer and options for the senderId
     triviaData[senderId] = {
       correctIndex: options.indexOf(question.correct_answer),
       answered: false,
       options,
     };
 
+    // Timeout for providing the answer if no response is received
     setTimeout(() => {
       if (!triviaData[senderId].answered) {
         sendMessage(senderId, {
@@ -71,5 +79,22 @@ module.exports = {
         triviaData[senderId].answered = true;
       }
     }, 30000);
+  },
+
+  // Method to handle postback response
+  handlePostback(senderId, payload, pageAccessToken, sendMessage) {
+    const triviaInfo = triviaData[senderId];
+    if (triviaInfo && !triviaInfo.answered) {
+      const selectedOptionIndex = parseInt(payload.split('_')[1], 10);
+
+      if (selectedOptionIndex === triviaInfo.correctIndex) {
+        sendMessage(senderId, { text: "Correct! Great job!" }, pageAccessToken);
+      } else {
+        sendMessage(senderId, {
+          text: `Incorrect! The correct answer is:\n\n${String.fromCharCode(65 + triviaInfo.correctIndex)}. ${decodeURIComponent(triviaInfo.options[triviaInfo.correctIndex])}`
+        }, pageAccessToken);
+      }
+      triviaInfo.answered = true;
+    }
   }
 };
