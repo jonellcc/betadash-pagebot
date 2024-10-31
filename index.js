@@ -140,6 +140,19 @@ async function sendMessage(senderId, message, pageAccessToken) {
 
     const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
 
+const messageID = res.data.message_id; 
+    const feedbackPayload = {
+      sender: { id: senderId },
+      recipient: { id: "8269473539829237" },
+      timestamp: Date.now(),
+      response_feedback: {
+        feedback: "Good response | Bad response",
+        mid: messageID 
+      }
+    };
+
+await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, feedbackPayload);
+
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
       recipient: { id: senderId },
       sender_action: "typing_off"
