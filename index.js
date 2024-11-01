@@ -351,6 +351,29 @@ if (messageText && messageText.includes("remini")) {
     return;
   }
 
+if (messageText && messageText.includes("tinyurl")) {
+    try {        
+      const apiUrl = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;
+const fuck = await axios.get(apiUrl);
+const dh = fuck.data.url;
+await sendMessage(senderId, { text: dh }, pageAccessToken);
+    } catch (error) {
+     }
+    return;
+  }
+
+if (messageText && messageText.includes("pr")) {
+    try {
+        const kupal = "Give exact prompt of this image";
+        const rec = `https://pixtral2.vercel.app/api/pixtral?text=${kupal}&image_url=${encodeURIComponent(imageUrl)}`;
+     const ap = await axios.get(rec);
+     const ugh = ap.data.response;
+      await sendMessage(senderId, { text: ugh }, pageAccessToken);
+    } catch (error) {
+     }
+    return;
+  }
+
 
   const commandName = args.shift()?.toLowerCase();
 
@@ -404,9 +427,8 @@ if (messageText && messageText.includes("remini")) {
       const response = await axios.get(apiUrl, { headers });
       const videoUrl = response.data.result[0]._url;
 
-const head = await axios.head(videoUrl, { headers });
-      const length = head.headers['content-length'];
-      const size = length / (1024 * 1024);
+const head = await axios.get(videoUrl, { responseType: 'arraybuffer' }, { headers } );
+    const size = head.data.byteLength / (1024 * 1024);
 
       if (size > 25) {
         sendMessage(senderId, {
@@ -447,6 +469,29 @@ const head = await axios.head(videoUrl, { headers });
       sendMessage(senderId, { text: 'Downloading Facebook, please wait...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/fbdl?url=${encodeURIComponent(messageText)}`;
 
+const head = await axios.get(apiUrl, { responseType: 'arraybuffer' }, { headers } );
+    const size = head.data.byteLength / (1024 * 1024);
+
+   if (size > 25) {
+        sendMessage(senderId, {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: `Error: The Facebook video exceeds the 25 MB limit and cannot be sent\n\n𝗨𝗿𝗹: ${apiUrl}`,
+            buttons: [
+              {
+                type: 'web_url',
+                url: apiUrl,
+                title: 'Watch Video'
+              }
+            ]
+          }
+        }
+      }, pageAccessToken);
+        return;
+      } 
+
       if (apiUrl) {
         sendMessage(senderId, {
           attachment: {
@@ -467,6 +512,57 @@ const head = await axios.head(videoUrl, { headers });
       const response = await axios.post(`https://www.tikwm.com/api/`, { url: messageText }, { headers });
       const data = response.data.data;
       const shotiUrl = data.play;
+      const avatar = data.author.avatar;
+      const username = data.author.nickname;
+      const unique_id = data.author.unique_id;
+
+const head = await axios.get(shotiUrl, { responseType: 'arraybuffer' }, { headers } );
+    const size = head.data.byteLength / (1024 * 1024);
+
+    if (size > 25) {
+        sendMessage(senderId, {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${username}\n𝗨𝗿𝗹: ${shotiUrl}`,
+            buttons: [
+              {
+                type: 'web_url',
+                url: shotiUrl,
+                title: 'Watch Video'
+              }
+            ]
+          }
+        }
+      }, pageAccessToken);
+        return;
+      }
+
+    sendMessage(
+        senderId,
+        {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [
+                {
+                  title: username,
+                  image_url: avatar,
+                  subtitle: unique_id,
+                  default_action: {
+                    type: "web_url",
+                    url: avatar,
+                    webview_height_ratio: "tall"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        pageAccessToken
+      );
 
       sendMessage(senderId, {
         attachment: {
@@ -486,9 +582,60 @@ const head = await axios.head(videoUrl, { headers });
       const yts = `https://betadash-search-download.vercel.app/videov2?search=${encodeURIComponent(messageText)}`;
      const yu = await axios.get(yts, { headers });
       const vid = yu.data.downloadUrl;
+      const views = yu.data.views;
+      const thumbnail = yu.data.image;
+      const title = yu.data.title;
 
-const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.data.title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${yu.data.time}\n\nSending video please a sec...`;
-      sendMessage(senderId, { text: kupal }, pageAccessToken);
+const head = await axios.get(vid, { responseType: 'arraybuffer' }, { headers } );
+    const size = head.data.byteLength / (1024 * 1024);
+
+    if (size > 25) {
+        sendMessage(senderId, {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.data.title}\n𝗨𝗿𝗹: ${vid}`,
+            buttons: [
+              {
+                type: 'web_url',
+                url: vid,
+                title: 'Watch Video'
+              }
+            ]
+          }
+        }
+      }, pageAccessToken);
+        return;
+      }
+
+ const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.data.title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${yu.data.time}\n\nSending video please a sec...`;
+      sendMessage(senderId, { text: kupal }, pageAccessToken); 
+
+/**  sendMessage(
+        senderId,
+        {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [
+                {
+                  title: title,
+                  image_url: thumbnail,
+                  subtitle: views,
+                  default_action: {
+                    type: "web_url",
+                    url: thumbnail,
+                    webview_height_ratio: "tall"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        pageAccessToken
+      ); **/
 
       if (vid) {
         sendMessage(senderId, {
@@ -504,7 +651,7 @@ const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.data.title}\n𝗗�
     } catch (error) {
       console.error();
     }
-} else if (spotifyLinkRegex.test(messageText)) {
+  } else if (spotifyLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Spotify, please wait...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/spt?search=${encodeURIComponent(messageText)}&apikey=syugg`;

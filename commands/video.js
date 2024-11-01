@@ -21,9 +21,8 @@ module.exports = {
       const response = await axios.get(`https://betadash-search-download.vercel.app/videov2?search=${encodeURIComponent(search)}`, { headers} );
       const { downloadUrl: videoUrl, title, time, views } = response.data;
 
-  const head = await axios.head(videoUrl, { headers });
-      const length = head.headers['content-length'];
-      const size = length / (1024 * 1024);
+  const head = await axios.get(videoUrl, { responseType: 'arraybuffer' }, { headers } );
+    const size = head.data.byteLength / (1024 * 1024);
 
       if (size > 25) {
         sendMessage(senderId, {
@@ -57,31 +56,8 @@ module.exports = {
           }
         }
       }, pageAccessToken);
-     let videoSent = false;
-     setTimeout(() => {
-  if (!videoSent) {
-    sendMessage(senderId, {
-      attachment: {
-        type: 'template',
-        payload: {
-          template_type: 'button',
-          text: `The video is too long; I can't send it. You can warch the video clicl the button Below\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗨𝗿𝗹: ${videoUrl}`,
-          buttons: [
-            {
-              type: 'web_url',
-              url: videoUrl,
-              title: 'Watch Video'
-            }
-          ]
-        }
-      }
-    }, pageAccessToken);
-  }
-}, 120000);
-videoSent = true;
-return;
     } catch (error) {
-      sendMessage(senderId, { text: `Error: ${error.message}` }, pageAccessToken);
+      sendMessage(senderId, { text: `Error: video bot found` }, pageAccessToken);
     }
   }
 };

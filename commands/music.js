@@ -26,10 +26,6 @@ module.exports = {
         return;
       }
 
-      const head = await axios.head(downloadUrl, { headers });
-      const length = parseInt(head.headers['content-length'], 10);
-      const size = length / (1024 * 1024);
-
 
 sendMessage(
   senderId,
@@ -56,8 +52,6 @@ sendMessage(
   pageAccessToken
 );
 
-
-      if (size <= 25) {
         sendMessage(
           senderId,
           {
@@ -70,29 +64,7 @@ sendMessage(
             },
           },
           pageAccessToken
-        );
-      } else {
-        sendMessage(
-          senderId,
-          {
-            attachment: {
-              type: 'template',
-              payload: {
-                template_type: 'button',
-                text: `Error: The video exceeds the 25 MB limit and cannot be sent.\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗨𝗿𝗹: ${downloadUrl}`,
-                buttons: [
-                  {
-                    type: 'web_url',
-                    url: downloadUrl,
-                    title: 'Watch Video',
-                  },
-                ],
-              },
-            },
-          },
-          pageAccessToken
-        );
-      }
+        );  
     } catch (error) {
       sendMessage(
         senderId,

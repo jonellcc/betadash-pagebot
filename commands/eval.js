@@ -1,4 +1,4 @@
-const { sendMessage} = require("../kupal");
+const { sendMessage } = require("../kupal");
 
 module.exports = {
   name: 'eval',
