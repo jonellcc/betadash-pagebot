@@ -11,7 +11,7 @@ module.exports = {
           elements: [
             {
               title: "Contact me for issues",
-              image_url: "https://imgur.com/Tr4sEdl",
+              image_url: "https://i.imgur.com/Tr4sEdl.jpeg",
               subtitle: "Contact us for any assistance.",
               default_action: {
                 type: "web_url",
@@ -38,3 +38,4 @@ module.exports = {
     sendMessage(senderId, kupal, pageAccessToken);
   }
 };
+
