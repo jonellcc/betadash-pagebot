@@ -19,7 +19,7 @@ module.exports = {
       sendMessage(senderId, { text: `🔍 | Searching music: ${query}` }, pageAccessToken);
       const apiUrl = `https://dlvc.vercel.app/yt-audio?search=${encodeURIComponent(query)}`;
       const response = await axios.get(apiUrl, { headers });
-      const { downloadUrl, title, time, thumbnail } = response.data;
+      const { downloadUrl, title, time, thumbnail, views } = response.data;
 
       if (!downloadUrl) {
         sendMessage(senderId, { text: `Sorry, no download link found for "${query}"` }, pageAccessToken);
@@ -30,22 +30,32 @@ module.exports = {
       const length = parseInt(head.headers['content-length'], 10);
       const size = length / (1024 * 1024);
 
-      const kupal = `💽 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${time}\n\nSending music, please wait a moment...`;
-      sendMessage(senderId, { text: kupal }, pageAccessToken);
 
-      sendMessage(
-        senderId,
-        {
-          attachment: {
-            type: 'image',
-            payload: {
+sendMessage(
+  senderId,
+  {
+    attachment: {
+      type: "template",
+      payload: {
+        template_type: "generic",
+        elements: [
+          {
+            title: title,
+            image_url: thumbnail,
+            subtitle: views,
+            default_action: {
+              type: "web_url",
               url: thumbnail,
-              is_reusable: true,
-            },
-          },
-        },
-        pageAccessToken
-      );
+              webview_height_ratio: "tall"
+            }
+          }
+        ]
+      }
+    }
+  },
+  pageAccessToken
+);
+
 
       if (size <= 25) {
         sendMessage(
@@ -92,4 +102,3 @@ module.exports = {
     }
   },
 };
-

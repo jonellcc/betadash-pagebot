@@ -8,6 +8,7 @@ const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
 const instagramLinkRegex = /https:\/\/www\.instagram\.com\/reel\/[a-zA-Z0-9_-]+\/\?igsh=[a-zA-Z0-9_=-]+$/;
 const youtubeLinkRegex = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+const spotifyLinkRegex = /^https?:\/\/open\.spotify\.com\/track\/[a-zA-Z0-9]+$/;
 const headers = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   'Content-Type': 'application/json'
@@ -307,23 +308,36 @@ if (messageText && messageText.includes("removebg")) {
 if (messageText && messageText.includes("Get started")) {
   try {
     const kumag = {
-       text: "Hello, I'm BELUGA! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving. \n\nType 'help' below to see available commands",
-      quick_replies: [
+  attachment: {
+    type: "template",
+    payload: {
+      template_type: "button",
+      text: "Hello, I'm BELUGA! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving, so please bear with me if ever I make any mistakes. I'm excited to work with you and make your day a little brighter.\n\nType 'help' below to see available commands",
+      buttons: [
         {
-          "content_type": "text",
-          "title": "Help",
-          "payload": "HELP"
-        },
-        {
-          "content_type": "text",
-          "title": "Privacy Policy",
-          "payload": "PRIVACY_POLICY"
+          type: "web_url",
+          url: "https://www.facebook.com/profile.php?id=61567757543707",
+          title: "LIKE/FOLLOW"
         }
       ]
-    };
-    await sendMessage(senderId, kumag, pageAccessToken);
-  } catch (error) {
-    console.error();
+    }
+  },
+  quick_replies: [
+    {
+      content_type: "text",
+      title: "Help",
+      payload: "HELP"
+    },
+    {
+      content_type: "text",
+      title: "Privacy Policy",
+      payload: "PRIVACY_POLICY"
+    }
+  ]
+};
+  await sendMessage(senderId, kumag, pageAccessToken);
+ } catch (error) {
+   console.error();
   }
   return;
 }
@@ -357,7 +371,7 @@ if (messageText && messageText.includes("remini")) {
    };
     sendMessage(senderId, kupall, pageAccessToken);
     }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && jb !== messageText)  {
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && jb !== messageText)  {
    try {
   let text;
 
@@ -454,30 +468,6 @@ const head = await axios.head(videoUrl, { headers });
       const data = response.data.data;
       const shotiUrl = data.play;
 
-/** const h = await axios.head(videoUrl);
-      const lengths = h.headers['content-length'];
-      const sizemb = lengths / (1024 * 1024);
-
-  if (sizemb > 25) {
-        sendMessage(senderId, {
-        attachment: {
-          type: 'template',
-          payload: {
-            template_type: 'button',
-            text: `Error: The Tiktok video exceeds the 25 MB limit and cannot be sent\n\n𝗨𝗿𝗹: ${shotiUrl}`,
-            buttons: [
-              {
-                type: 'web_url',
-                url: shotiUrl,
-                title: 'Watch Tiktok'
-              }
-            ]
-          }
-        }
-      }, pageAccessToken);
-        return;
-      } **/
-
       sendMessage(senderId, {
         attachment: {
           type: 'video',
@@ -497,30 +487,6 @@ const head = await axios.head(videoUrl, { headers });
      const yu = await axios.get(yts, { headers });
       const vid = yu.data.downloadUrl;
 
-const h = await axios.head(vid, { headers } );
-      const lengths = h.headers['content-length'];
-      const sizemb = lengths / (1024 * 1024);
-
-        if (sizemb > 25) {
-        sendMessage(senderId, {
-        attachment: {
-          type: 'template',
-          payload: {
-            template_type: 'button',
-            text: `Error: The youtube video exceeds the 25 MB limit and cannot be sent\n\n𝗨𝗿𝗹: ${vid}`,
-            buttons: [
-              {
-                type: 'web_url',
-                url: vid,
-                title: 'Watch Video'
-              }
-            ]
-          }
-        }
-      }, pageAccessToken);
-        return;
-     }
-
 const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.data.title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${yu.data.time}\n\nSending video please a sec...`;
       sendMessage(senderId, { text: kupal }, pageAccessToken);
 
@@ -538,6 +504,27 @@ const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.data.title}\n𝗗�
     } catch (error) {
       console.error();
     }
+} else if (spotifyLinkRegex.test(messageText)) {
+    try {
+      sendMessage(senderId, { text: 'Downloading Spotify, please wait...' }, pageAccessToken);
+      const apiUrl = `https://betadash-search-download.vercel.app/spt?search=${encodeURIComponent(messageText)}&apikey=syugg`;
+      const response = await axios.get(apiUrl);
+      const spotifyLink = response.data.spotify[0].result;
+
+      if (spotifyLink) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'audio',
+            payload: {
+              url: spotifyLink,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
+      }
+    } catch (error) {
+      console.error();
+    }
 }
 
 if (messageText && messageText.includes("More shoti")) {
@@ -546,7 +533,7 @@ if (messageText && messageText.includes("More shoti")) {
     await shotiCommand.execute(senderId, [], pageAccessToken, sendMessage, pageAccessToken);
   }
   return;
-   }
+  }
 }
 
 function splitMessageIntoChunks(message, chunkSize) {
