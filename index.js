@@ -362,7 +362,7 @@ await sendMessage(senderId, { text: dh }, pageAccessToken);
     return;
   }
 
-if (messageText && messageText.includes("pr")) {
+if (messageText && messageText.includes("prompt")) {
     try {
         const kupal = "Give exact prompt of this image";
         const rec = `https://pixtral2.vercel.app/api/pixtral?text=${kupal}&image_url=${encodeURIComponent(imageUrl)}`;
@@ -375,6 +375,21 @@ if (messageText && messageText.includes("pr")) {
   }
 
 
+if (messageText && messageText.includes("gdrive")) {
+    try {
+        const rec = `https://ccprojectapis.ddns.net/api/gdrive?url=${encodeURIComponent(imageUrl)}`;
+     const ap = await axios.get(rec);
+     const ugh = ap.data;
+      await sendMessage(senderId, { text: ugh }, pageAccessToken);
+    } catch (error) {
+     }
+    return;
+  }
+
+
+
+
+
   const commandName = args.shift()?.toLowerCase();
 
   if (commands.has(commandName)) {
@@ -383,7 +398,7 @@ if (messageText && messageText.includes("pr")) {
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
       const kupall = {
-     text: "❌ There was an error processing that command\n\nType 'help' to see more useful commands",
+     text: "❌ There was an error processing that command\n\nType 'Help' to see more useful commands",
     quick_replies: [
          {
           content_type: "text",

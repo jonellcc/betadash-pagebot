@@ -14,7 +14,7 @@ module.exports = {
     const text = args.join(' ');
 
     try {
-      const apiUrl = `https://apiv2.kenliejugarap.com/kahi?text=${encodedURIComponent(text)}`;
+      const apiUrl = `https://apiv2.kenliejugarap.com/kahi?text=${text}`;
 
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: apiUrl } } }, pageAccessToken);
 
