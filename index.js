@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const request = require('request');
 const path = require('path');
 const axios = require('axios');
 const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
@@ -385,22 +384,10 @@ if (messageText && messageText.includes("prompt")) {
     return;
   } **/
 
-const COOLDOWN_TIME = 10000;
-const cooldowns = {};
-
   const commandName = args.shift()?.toLowerCase();
 
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
-if (cooldowns[senderId] && (Date.now() - cooldowns[senderId]) < COOLDOWN_TIME) {
-        const remainingTime = Math.ceil((COOLDOWN_TIME - (Date.now() - cooldowns[senderId])) / 1000);
-    const t = {
-       text: `Please wait ${remainingTime}    seconds before using this command    again.`
-};
-        sendMessage(senderId, t, pageAccessToken);
-    }
-cooldowns[senderId] = Date.now();
-command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, splitMessageIntoChunks);
     try {
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
@@ -416,7 +403,7 @@ command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, adm
    };
     sendMessage(senderId, kupall, pageAccessToken);
     }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && jb !== messageText)  {
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText))  {
    try {
   let text;
 
