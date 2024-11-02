@@ -14,7 +14,7 @@ module.exports = {
         return sendMessage(senderId, { text: "Invalid Usage: Use phub <text1> <name> <uid>" }, pageAccessToken);
       }
 
-      const apiUrl = `https://api-canvass.vercel.app/bbm?text=${one}&name=${two}&id${three}`;
+      const apiUrl = `https://api-canvass.vercel.app/phub?text=${one}&name=${two}&id${three}`;
 
       await sendMessage(senderId, {
         attachment: {
