@@ -12,7 +12,7 @@ if (!prompt) {
     }
 
     try {
-      const apiUrl = `https://apis-markdevs69v2.onrender.com/api/simv2/get/${encodedURIComponent(prompt)}`;
+      const apiUrl = `https://apis-markdevs69v2.onrender.com/api/simv2/get/${prompt}`;
       const response = await axios.get(apiUrl);
       const text = response.data.reply;
     } catch (error) {

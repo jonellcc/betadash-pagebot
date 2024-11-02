@@ -374,8 +374,7 @@ if (messageText && messageText.includes("prompt")) {
     return;
   }
 
-
-if (messageText && messageText.includes("gdrive")) {
+/** if (messageText && messageText.includes("gdrive")) {
     try {
         const rec = `https://ccprojectapis.ddns.net/api/gdrive?url=${encodeURIComponent(imageUrl)}`;
      const ap = await axios.get(rec);
@@ -384,7 +383,7 @@ if (messageText && messageText.includes("gdrive")) {
     } catch (error) {
      }
     return;
-  }
+  } **/
 
 const COOLDOWN_TIME = 10000;
 const cooldowns = {};
@@ -401,6 +400,7 @@ if (cooldowns[senderId] && (Date.now() - cooldowns[senderId]) < COOLDOWN_TIME) {
         sendMessage(senderId, t, pageAccessToken);
     }
 cooldowns[senderId] = Date.now();
+command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, splitMessageIntoChunks);
     try {
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, splitMessageIntoChunks);
     } catch (error) {

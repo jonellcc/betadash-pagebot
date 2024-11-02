@@ -107,7 +107,7 @@ module.exports = {
       return `│ ✧ ${command.name}`;
     });
 
-const huys = "\t「 𝗛𝗜𝗗𝗘𝗡 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦 」\n● Autodownloader - Insta, Tiktok, Facebook, Youtube.\n● imgur - Reply to an image to upload in imgur.\n● prompt - Reply image to get the exact prompt.\n● tinyurl - Reply to image to shorter url.\n● gdrive - Reply to image to upload in gdrive.\n● removebg - Reply a photo to Remove background image.\n● remini - Reply a photo to Enhancing image.";
+const huys = "\t「 𝗛𝗜𝗗𝗘𝗡 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦 」\n● Autodownloader - Insta, Tiktok, Facebook, Youtube.\n● imgur - Reply to an image to upload in imgur.\n● prompt - Reply image to get the exact prompt.\n● tinyurl - Reply to image to shorter url.\n● removebg - Reply a photo to Remove background image.\n● remini - Reply a photo to Enhancing image.";
 
     const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commandsList.join('\n')}\n╰───────────◊\n\n${huys}\n\n» 𝗣𝗮𝗴𝗲: <${pageNumber}/${Math.ceil(totalCommands / commandsPerPage)}>\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${totalCommands} ]\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
 
@@ -171,8 +171,8 @@ const kupal = {
           },
             {
             content_type: "text",
-            title: "maloi",
-            payload: "MALOI"
+            title: "mistal",
+            payload: "MISTRAL"
           },
           {
             content_type: "text",
