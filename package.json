@@ -17,14 +17,13 @@
     "body-parser": "^1.20.2",
     "cheerio": "^1.0.0",
     "express": "^4.19.2",
+    "fs": "^0.0.1-security",
     "javascript-obfuscator": "^4.1.1",
     "os": "^0.1.2",
     "pastebin-api": "^7.0.0",
+    "path": "^0.12.7",
     "pidusage": "^3.0.2",
     "request": "^2.88.2",
     "winston": "^3.13.0"
-  },
-  "engines": {
-    "node": "20.x"
   }
 }
