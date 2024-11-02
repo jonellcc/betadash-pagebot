@@ -16,7 +16,18 @@ module.exports = {
     try {
       const apiUrl = `https://api-canvass.vercel.app/blink?userid=${uid}`;
 
-      await sendMessage(senderId, { attachment: { type: 'gif', payload: { url: apiUrl } } }, pageAccessToken);
+      await sendMessage(senderId,
+ { 
+attachment:
+ { 
+ type: 'image',
+ payload:
+     { 
+      url: apiUrl,
+      is_reusable: true
+   }
+ } 
+}, pageAccessToken);
 
     } catch (error) {
       await sendMessage(senderId, { text: 'Error: Could not generate image.' }, pageAccessToken);

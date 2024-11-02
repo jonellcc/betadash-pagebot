@@ -257,7 +257,7 @@ if (event.message && event.message.attachments) {
   const args = messageText ? messageText.split(' ') : [];
 
 const bannedKeywords = [
-  'gay', 'pussy', 'dick', 'nude', 'xnxx', 'pornhub', 'hot', 'clothes', 'sugar', 'fuck', 'fucked', 'step',
+  'pussy', 'dick', 'nude', 'xnxx', 'pornhub', 'hot', 'clothes', 'sugar', 'fuck', 'fucked', 'step',
   'shit', 'bitch', 'hentai', 'sex', 'boobs', 'cute girl undressed', 'undressed', 
   'naked', 'underwear', 'sexy', 'panty', 'fuckers', 'fck', 'fucking', 'vagina', 'intercourse', 
   'penis', 'gae', 'panties', 'fellatio', 'blow job', 'blow', 'skin', 'segs', 'porn', 'loli', 'kantutan','lulu', 'kayat', 'bilat',
@@ -386,14 +386,21 @@ if (messageText && messageText.includes("gdrive")) {
     return;
   }
 
-
-
-
+const COOLDOWN_TIME = 10000;
+const cooldowns = {};
 
   const commandName = args.shift()?.toLowerCase();
 
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
+if (cooldowns[senderId] && (Date.now() - cooldowns[senderId]) < COOLDOWN_TIME) {
+        const remainingTime = Math.ceil((COOLDOWN_TIME - (Date.now() - cooldowns[senderId])) / 1000);
+    const t = {
+       text: `Please wait ${remainingTime}    seconds before using this command    again.`
+};
+        sendMessage(senderId, t, pageAccessToken);
+    }
+cooldowns[senderId] = Date.now();
     try {
       await command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, splitMessageIntoChunks);
     } catch (error) {
