@@ -11,10 +11,7 @@ module.exports = {
       return;
     }
 
-    const languageToSay = detectLanguage(content);
-    const msg = content.slice(languageToSay.length).trim();
-
-    const downloadUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${msg}&tl=${languageToSay}&client=tw-ob`;
+    const downloadUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodedURIConponent(content)}&tl=tl&client=tw-ob`;
 
     sendMessage(
       senderId,
@@ -31,13 +28,3 @@ module.exports = {
     );
   }
 };
-
-function detectLanguage(content) {
-  const supportedLanguages = ["ru", "en", "ko", "ja", "tl"];
-  for (const lang of supportedLanguages) {
-    if (content.startsWith(lang)) {
-      return lang;
-    }
-  }
-  return "tl";
-}
