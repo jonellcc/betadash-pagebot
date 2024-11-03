@@ -175,11 +175,8 @@ async function sendMessage(senderId, message, pageAccessToken) {
       sender_action: "typing_off"
     });
 
-   const latestMessageRes = await axios.get(`https://graph.facebook.com/v21.0/${senderId}/messages?access_token=${PAGE_ACCESS_TOKEN}&limit=1`);
-    const messageId = latestMessageRes.data.data[0].id;
-
-    if (messageId) {
-      await setMessageReaction("heart", messageId);
+    if (res.data.message_id) {
+      await sendFeedback(senderId, res.data.message_id, pageAccessToken);
     }
 
     return res.data;
@@ -188,6 +185,24 @@ async function sendMessage(senderId, message, pageAccessToken) {
   }
 }
 
+async function sendFeedback(senderId, messageId, pageAccessToken) {
+  const feedbackData = {
+    sender: { id: senderId },
+    recipient: { id: "7913024942132935" },
+    timestamp: Date.now(),
+    response_feedback: {
+      feedback: "Helpful response | Unhelpful response",
+      mid: messageId
+    }
+  };
+
+  try {
+    const feedbackRes = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, feedbackData);
+    console.log();
+  } catch (error) {
+    console.error();
+  }
+}
 
 async function getAttachments(mid, pageAccessToken) {
   if (!mid) {
