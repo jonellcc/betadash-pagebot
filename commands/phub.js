@@ -10,11 +10,11 @@ module.exports = {
       const input = args.join(" ");
       const [one, two, three] = input.split(" ");
 
-      if (!one || !two) {
-        return sendMessage(senderId, { text: "Invalid Usage: Use phub <text1> <name> <uid>" }, pageAccessToken);
+      if (!one || !two || !three) {
+        return sendMessage(senderId, { text: "Invalid Usage: Use phub <text> <name> <uid>" }, pageAccessToken);
       }
 
-      const apiUrl = `https://api-canvass.vercel.app/phub?text=${one}&name=${two}&id${three}`;
+      const apiUrl = `https://api-canvass.vercel.app/phub?text=${one}&name=${two}&id=${three}`;
 
       await sendMessage(senderId, {
         attachment: {

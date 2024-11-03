@@ -10,8 +10,8 @@ sendMessage(senderId, {
     type: "template",
     payload: {
       template_type: "customer_feedback",
-      title: "Rate your experience with PageBot",
-      subtitle: "Let us know how Belugabot is performing by answering two questions", 
+      title: "Rate your experience with Beluga cat",
+      subtitle: "Let us know how belugabot is performing by answering two questions", 
       button_title: "Rate Experience", 
       feedback_screens: [
         {
