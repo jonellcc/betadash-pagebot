@@ -359,6 +359,11 @@ if (messageText && messageText.includes("Get started")) {
       content_type: "text",
       title: "Privacy Policy",
       payload: "PRIVACY_POLICY"
+    },
+     {
+      content_type: "text",
+      title: "Feedback",
+      payload: "FEEDBACK"
     }
   ]
 };
@@ -402,7 +407,7 @@ if (messageText && messageText.includes("prompt")) {
   }
 
 
-if (messageText && messageText.includes("zombie")) {
+/** if (messageText && messageText.includes("zombie")) {
     try {
         const rec = `https://www.samirxpikachu.run.place/zombie?imgurl=${encodeURIComponent(imageUrl)}`;
      await sendMessage(senderId, { 
@@ -419,7 +424,7 @@ attachment: {
     return;
   }
 
-/** if (messageText && messageText.includes("gdrive")) {
+if (messageText && messageText.includes("gdrive")) {
     try {
         const rec = `https://ccprojectapis.ddns.net/api/gdrive?url=${encodeURIComponent(imageUrl)}`;
      const ap = await axios.get(rec);

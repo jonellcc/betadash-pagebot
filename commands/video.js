@@ -15,13 +15,13 @@ module.exports = {
       return;
     }
 
-    sendMessage(senderId, { text: `⏱️ | Searching for '${search}', please wait...` }, pageAccessToken);
+    sendMessage(senderId, { text: `🔍 Searching for '${search}', please wait...` }, pageAccessToken);
 
     try {
       const response = await axios.get(`https://betadash-search-download.vercel.app/videov2?search=${encodeURIComponent(search)}`, { headers} );
       const { downloadUrl: videoUrl, title, time, views } = response.data;
 
-  const head = await axios.get(videoUrl, { responseType: 'arraybuffer' }, { headers } );
+/**  const head = await axios.get(videoUrl, { responseType: 'arraybuffer' }, { headers } );
     const size = head.data.byteLength / (1024 * 1024);
 
       if (size > 25) {
@@ -42,7 +42,7 @@ module.exports = {
         }
       }, pageAccessToken);
         return;
-      } 
+      } **/
 
       const message = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${time}\n𝗩𝗶𝗲𝘄𝘀: ${views}\n\nSending video please wait a sec...`;
       sendMessage(senderId, { text: message }, pageAccessToken);
@@ -57,7 +57,7 @@ module.exports = {
         }
       }, pageAccessToken);
     } catch (error) {
-      sendMessage(senderId, { text: `Error: video bot found` }, pageAccessToken);
+      sendMessage(senderId, { text: 'Error: video Not found' + error }, pageAccessToken);
     }
   }
 };

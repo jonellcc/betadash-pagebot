@@ -35,13 +35,18 @@ sendMessage(senderId, kupal, pageAccessToken);
     },
     {
       content_type: "text",
-      title: "help",
+      title: "Help",
       payload: "HELP"
     },
     {
       content_type: "text",
       title: "Privacy Policy",
       payload: "PRIVACY POLICY"
+    },
+    {
+      content_type: "text",
+      title: "Feedback",
+      payload: "FEEDBACK"
     }
   ]
 }, pageAccessToken);
