@@ -381,7 +381,7 @@ const fonts = {
 function generateText(text, font) {
   const selectedFont = fonts[font];
   if (!selectedFont) {
-    return `The font '${font}' was not found. Use '/Artify list' to see available fonts.`;
+    return `The font '${font}' was not found. Use 'font list' to see available fonts.`;
   }
   const formattedText = text
     .split("")
@@ -405,7 +405,7 @@ module.exports = {
       for (const name in fonts) {
         message += `   ⦿ ${name}\n`;
       }
-      message += "\n𝗨𝗦𝗔𝗚𝗘:\n\n   ⦿ /Artify [ASCII art name]\n    Example: /Artify luffy\n\n   ⦿ /Artify [font name] [text]\n    Example: /Artify mathsans\n    Artificial Intelligence";
+      message += "\n𝗨𝗦𝗔𝗚𝗘:\n\n   ⦿ font [ASCII art name]\n    Example: font luffy\n\n   ⦿ font [font name] [text]\n    Example: font mathsans\n Artificial Intelligence";
       return sendMessage(senderId, { text: message }, pageAccessToken);
     }
 
@@ -437,6 +437,6 @@ module.exports = {
       return sendMessage(senderId, { text: `Here's the "${fontOrArt}" ASCII art:\n\n${selectedArt}\n\nYou can copy the ${fontOrArt} art and paste it into https://pastebin.com/ to see it more clearly.` }, pageAccessToken);
     }
 
-    return sendMessage(senderId, { text: "Invalid command. Use '/Artify list' to see available fonts and text arts." }, pageAccessToken);
+    return sendMessage(senderId, { text: "Invalid command. Use 'font list' to see available fonts and text arts." }, pageAccessToken);
   }
 };

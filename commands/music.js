@@ -16,7 +16,6 @@ module.exports = {
     }
 
     try {
-      sendMessage(senderId, { text: `🔍 | Searching music: ${query}` }, pageAccessToken);
       const apiUrl = `https://dlvc.vercel.app/yt-audio?search=${encodeURIComponent(query)}`;
       const response = await axios.get(apiUrl, { headers });
       const { downloadUrl, title, time, thumbnail, views } = response.data;
@@ -25,7 +24,6 @@ module.exports = {
         sendMessage(senderId, { text: `Sorry, no download link found for "${query}"` }, pageAccessToken);
         return;
       }
-
 
 sendMessage(
   senderId,
@@ -51,9 +49,8 @@ sendMessage(
   },
   pageAccessToken
 );
-
-        sendMessage(
-          senderId,
+ sendMessage(
+       senderId,
           {
             attachment: {
               type: 'audio',

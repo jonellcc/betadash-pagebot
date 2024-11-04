@@ -161,11 +161,11 @@ async function sendMessage(senderId, message, pageAccessToken) {
     }
 
     if (message.attachment) {
-      messagePayload.message.attachment = message.attachment;
+  messagePayload.message.attachment = message.attachment;
     }
 
     if (message.quick_replies) {
-      messagePayload.message.quick_replies = message.quick_replies;
+  messagePayload.message.quick_replies = message.quick_replies;
     }
 
     const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
@@ -188,7 +188,7 @@ async function sendMessage(senderId, message, pageAccessToken) {
 async function sendFeedback(senderId, messageId, pageAccessToken) {
   const feedbackData = {
     sender: { id: senderId },
-    recipient: { id: "7913024942132935" },
+    recipient: { id: 7913024942132935 },
     timestamp: Date.now(),
     response_feedback: {
       feedback: "Helpful response | Unhelpful response",
@@ -290,8 +290,21 @@ const containsBannedKeyword = bannedKeywords.some(keyword => {
 if (containsBannedKeyword) {
   await sendMessage(
     senderId,
-    { text: '🚫 Your prompt contains inappropriate content. Please try again with a different prompt.' },
-    pageAccessToken
+    { text: '🚫 Your prompt contains inappropriate content. Please try again with a different prompt.',
+    quick_replies: [
+    {
+      content_type: "text",
+      title: "Feedback",
+      payload: "FEEDBACK"
+    },
+    {
+      content_type: "text",
+      title: "Privacy Policy",
+      payload: "PRIVACY_POLICY"
+    }
+   ]
+  },
+   pageAccessToken
   );
   return;
 }
@@ -388,6 +401,24 @@ if (messageText && messageText.includes("prompt")) {
     return;
   }
 
+
+if (messageText && messageText.includes("zombie")) {
+    try {
+        const rec = `https://www.samirxpikachu.run.place/zombie?imgurl=${encodeURIComponent(imageUrl)}`;
+     await sendMessage(senderId, { 
+attachment: { 
+    type: 'image', 
+    payload: { 
+        url: rec,
+        is_reusable: true
+      } 
+     } 
+    }, pageAccessToken);
+    } catch (error) {
+   }
+    return;
+  }
+
 /** if (messageText && messageText.includes("gdrive")) {
     try {
         const rec = `https://ccprojectapis.ddns.net/api/gdrive?url=${encodeURIComponent(imageUrl)}`;
@@ -413,7 +444,12 @@ if (messageText && messageText.includes("prompt")) {
           content_type: "text",
          title: "Help",
          payload: "HELP"
-        }
+        },
+        {
+          content_type: "text",
+         title: "Feedback",
+         payload: "FEEDBACK"
+        }       
       ]
    };
     sendMessage(senderId, kupall, pageAccessToken);
@@ -451,7 +487,7 @@ if (messageText && messageText.includes("prompt")) {
       const response = await axios.get(apiUrl, { headers });
       const videoUrl = response.data.result[0]._url;
 
-const head = await axios.get(videoUrl, { responseType: 'arraybuffer' }, { headers } );
+/** const head = await axios.get(videoUrl, { responseType: 'arraybuffer' }, { headers } );
     const size = head.data.byteLength / (1024 * 1024);
 
       if (size > 25) {
@@ -472,7 +508,7 @@ const head = await axios.get(videoUrl, { responseType: 'arraybuffer' }, { header
         }
       }, pageAccessToken);
         return;
-      } 
+      } **/
 
       if (videoUrl) {
         sendMessage(senderId, {
@@ -493,7 +529,7 @@ const head = await axios.get(videoUrl, { responseType: 'arraybuffer' }, { header
       sendMessage(senderId, { text: 'Downloading Facebook, please wait...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/fbdl?url=${encodeURIComponent(messageText)}`;
 
-const head = await axios.get(apiUrl, { responseType: 'arraybuffer' }, { headers } );
+/** const head = await axios.get(apiUrl, { responseType: 'arraybuffer' }, { headers } );
     const size = head.data.byteLength / (1024 * 1024);
 
    if (size > 25) {
@@ -514,7 +550,7 @@ const head = await axios.get(apiUrl, { responseType: 'arraybuffer' }, { headers 
         }
       }, pageAccessToken);
         return;
-      } 
+      } **/
 
       if (apiUrl) {
         sendMessage(senderId, {
@@ -540,7 +576,7 @@ const head = await axios.get(apiUrl, { responseType: 'arraybuffer' }, { headers 
       const username = data.author.nickname;
       const unique_id = data.author.unique_id;
 
-const head = await axios.get(shotiUrl, { responseType: 'arraybuffer' }, { headers } );
+/** const head = await axios.get(shotiUrl, { responseType: 'arraybuffer' }, { headers } );
     const size = head.data.byteLength / (1024 * 1024);
 
     if (size > 25) {
@@ -586,7 +622,7 @@ const head = await axios.get(shotiUrl, { responseType: 'arraybuffer' }, { header
           }
         },
         pageAccessToken
-      );
+      ); **/
 
       sendMessage(senderId, {
         attachment: {
@@ -610,7 +646,7 @@ const head = await axios.get(shotiUrl, { responseType: 'arraybuffer' }, { header
       const thumbnail = yu.data.image;
       const title = yu.data.title;
 
-const head = await axios.get(vid, { responseType: 'arraybuffer' }, { headers } );
+/** const head = await axios.get(vid, { responseType: 'arraybuffer' }, { headers } );
     const size = head.data.byteLength / (1024 * 1024);
 
     if (size > 25) {
@@ -619,7 +655,7 @@ const head = await axios.get(vid, { responseType: 'arraybuffer' }, { headers } )
           type: 'template',
           payload: {
             template_type: 'button',
-            text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.data.title}\n𝗨𝗿𝗹: ${vid}`,
+            text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.title}\n𝗨𝗿𝗹: ${vid}`,
             buttons: [
               {
                 type: 'web_url',
@@ -631,9 +667,9 @@ const head = await axios.get(vid, { responseType: 'arraybuffer' }, { headers } )
         }
       }, pageAccessToken);
         return;
-      }
+      } **/
 
- const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.data.title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${yu.data.time}\n\nSending video please a sec...`;
+ const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.data.title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${yu.data.time}\n\n\n𝗡𝗢𝗧𝗘: if The video exceeds the 25 MB limit and cannot be sent`;
       sendMessage(senderId, { text: kupal }, pageAccessToken); 
 
 /**  sendMessage(
