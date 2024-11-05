@@ -25,66 +25,67 @@ module.exports = {
         return;
       }
 
-sendMessage(
-  senderId,
-  {
-    attachment: {
-      type: "template",
-      payload: {
-        template_type: "generic",
-        elements: [
-          {
-            title: title,
-            image_url: thumbnail,
-            subtitle: views,
-            default_action: {
-              type: "web_url",
-              url: thumbnail,
-              webview_height_ratio: "tall"
+      sendMessage(
+        senderId,
+        {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [
+                {
+                  title: title,
+                  image_url: thumbnail,
+                  subtitle: `Views: ${views} - Duration: ${time}`,
+                  default_action: {
+                    type: "web_url",
+                    url: thumbnail,
+                    webview_height_ratio: "tall"
+                  }
+                }
+              ]
             }
           }
-        ]
-      }
-    }
-  },
-  pageAccessToken
-);
+        },
+        pageAccessToken
+      );
 
-const fileSize = parseInt(videoUrl.headers['content-length'], 10);
+      const headResponse = await axios.head(downloadUrl, { headers });
+      const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
-if (fileSize <= 25 * 1024 * 1024) {
-  sendMessage(senderId, {
-    attachment: {
-      type: 'template',
-      payload: {
-        template_type: 'button',
-        text: `Error: The Audio exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗨𝗿𝗹: ${downloadUrl}`,
-        buttons: [
-          {
-            type: 'web_url',
-            url: downloadUrl,
-            title: 'Download Url'
+      if (fileSize > 25 * 1024 * 1024) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: `Error: The audio file exceeds the 25 MB limit and cannot be sent.\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗨𝗿𝗹: ${downloadUrl}`,
+              buttons: [
+                {
+                  type: 'web_url',
+                  url: downloadUrl,
+                  title: 'Download URL'
+                }
+              ]
+            }
           }
-        ]
+        }, pageAccessToken);
+      } else {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'audio',
+            payload: {
+              url: downloadUrl,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
       }
-    }
-  }, pageAccessToken);
-  return;
-} else {
-  sendMessage(senderId, {
-    attachment: {
-      type: 'video',
-      payload: {
-        url: videoUrl,
-        is_reusable: true
-      }
-    }
-  }, pageAccessToken);
-      }
+
     } catch (error) {
       sendMessage(
         senderId,
-        { text: 'Music not found please try again ' },
+        { text: 'Music not found. Please try again.' },
         pageAccessToken
       );
     }

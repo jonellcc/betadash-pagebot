@@ -492,37 +492,38 @@ if (messageText && messageText.includes("gdrive")) {
       const response = await axios.get(apiUrl, { headers });
       const videoUrl = response.data.result[0]._url;
 
-      const fileSize = parseInt(videoUrl.headers['content-length'], 10);
 
-if (fileSize <= 25 * 1024 * 1024) {
-  sendMessage(senderId, {
-    attachment: {
-      type: 'template',
-      payload: {
-        template_type: 'button',
-        text: `Error: The Instagram video exceeds the 25 MB limit and cannot be sent\n\n𝗨𝗿𝗹: ${videoUrl}`,
-        buttons: [
-          {
-            type: 'web_url',
-            url: videoUrl,
-            title: 'Watch Video'
+const headResponse = await axios.head(videoUrl, { headers });
+      const fileSize = parseInt(headResponse.headers['content-length'], 10);
+
+      if (fileSize > 25 * 1024 * 1024) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: `Error: The Instagram video exceeds the 25 MB limit and cannot be sent.`,
+              buttons: [
+                {
+                  type: 'web_url',
+                  url: videoUrl,
+                  title: 'Watch Video'
+                }
+              ]
+            }
           }
-        ]
-      }
-    }
-  }, pageAccessToken);
-  return;
-} else {
-  sendMessage(senderId, {
-    attachment: {
-      type: 'video',
-      payload: {
-        url: videoUrl,
-        is_reusable: true
-      }
-    }
-  }, pageAccessToken);
-      }
+        }, pageAccessToken);
+      } else {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'video',
+            payload: {
+              url: videoUrl,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
+      }   
     } catch (error) {
       console.error();
     }
@@ -531,36 +532,36 @@ if (fileSize <= 25 * 1024 * 1024) {
       sendMessage(senderId, { text: 'Downloading Facebook, please wait...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/fbdl?url=${encodeURIComponent(messageText)}`;
 
-const fileSize = parseInt(apiUrl.headers['content-length'], 10);
+const headResponse = await axios.head(apiUrl, { headers });
+      const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
-if (fileSize <= 25 * 1024 * 1024) {
-  sendMessage(senderId, {
-    attachment: {
-      type: 'template',
-      payload: {
-        template_type: 'button',
-        text: `Error: The video exceeds the 25 MB limit and cannot be sent`,
-        buttons: [
-          {
-            type: 'web_url',
-            url: apiUrl,
-            title: 'Watch Video'
+      if (fileSize > 25 * 1024 * 1024) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: `Error: The Facebook video exceeds the 25 MB limit and cannot be sent.`,
+              buttons: [
+                {
+                  type: 'web_url',
+                  url: apiUrl,
+                  title: 'Watch Video'
+                }
+              ]
+            }
           }
-        ]
-      }
-    }
-  }, pageAccessToken);
-  return;
-} else {
-  sendMessage(senderId, {
-    attachment: {
-      type: 'video',
-      payload: {
-        url: apiUrl,
-        is_reusable: true
-      }
-    }
-  }, pageAccessToken);
+        }, pageAccessToken);
+      } else {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'video',
+            payload: {
+              url: apiUrl,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
       }
     } catch (error) {
       console.error();
@@ -575,36 +576,36 @@ if (fileSize <= 25 * 1024 * 1024) {
       const username = data.author.nickname;
       const unique_id = data.author.unique_id;
 
-const fileSize = parseInt(shotiUrl.headers['content-length'], 10);
+const headResponse = await axios.head(shotiUrl, { headers });
+      const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
-if (fileSize <= 25 * 1024 * 1024) {
-  sendMessage(senderId, {
-    attachment: {
-      type: 'template',
-      payload: {
-        template_type: 'button',
-        text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${data.title}\n𝗨𝗿𝗹: ${shotiUrl}`,
-        buttons: [
-          {
-            type: 'web_url',
-            url: shotiUrl,
-            title: 'Watch Video'
+      if (fileSize > 25 * 1024 * 1024) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: `Error: The Tiktok video exceeds the 25 MB limit and cannot be sent.`,
+              buttons: [
+                {
+                  type: 'web_url',
+                  url: shotiUrl,
+                  title: 'Watch Video'
+                }
+              ]
+            }
           }
-        ]
-      }
-    }
-  }, pageAccessToken);
-  return;
-} else {
-  sendMessage(senderId, {
-    attachment: {
-      type: 'video',
-      payload: {
-        url: shotiUrl,
-        is_reusable: true
-      }
-    }
-  }, pageAccessToken);
+        }, pageAccessToken);
+      } else {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'video',
+            payload: {
+              url: shotiUrl,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
       }
     } catch (error) {
       console.error();
@@ -647,36 +648,36 @@ if (fileSize <= 25 * 1024 * 1024) {
         pageAccessToken
       ); **/
 
-      const fileSize = parseInt(vid.headers['content-length'], 10);
+ const headResponse = await axios.head(vid, { headers });
+      const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
-if (fileSize <= 25 * 1024 * 1024) {
-  sendMessage(senderId, {
-    attachment: {
-      type: 'template',
-      payload: {
-        template_type: 'button',
-        text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗨𝗿𝗹: ${vid}`,
-        buttons: [
-          {
-            type: 'web_url',
-            url: vid,
-            title: 'Watch Video'
+      if (fileSize > 25 * 1024 * 1024) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: `Error: The YouTube video exceeds the 25 MB limit and cannot be sent.`,
+              buttons: [
+                {
+                  type: 'web_url',
+                  url: vid,
+                  title: 'Watch Video'
+                }
+              ]
+            }
           }
-        ]
-      }
-    }
-  }, pageAccessToken);
-  return;
-} else {
-  sendMessage(senderId, {
-    attachment: {
-      type: 'video',
-      payload: {
-        url: vid,
-        is_reusable: true
-      }
-    }
-  }, pageAccessToken);
+        }, pageAccessToken);
+      } else {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'video',
+            payload: {
+              url: vid,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
       }
     } catch (error) {
       console.error();
