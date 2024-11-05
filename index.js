@@ -492,39 +492,36 @@ if (messageText && messageText.includes("gdrive")) {
       const response = await axios.get(apiUrl, { headers });
       const videoUrl = response.data.result[0]._url;
 
-/** const head = await axios.get(videoUrl, { responseType: 'arraybuffer' }, { headers } );
-    const size = head.data.byteLength / (1024 * 1024);
+      const fileSize = parseInt(videoUrl.headers['content-length'], 10);
 
-      if (size > 25) {
-        sendMessage(senderId, {
-        attachment: {
-          type: 'template',
-          payload: {
-            template_type: 'button',
-            text: `Error: The Instagram video exceeds the 25 MB limit and cannot be sent\n\n𝗨𝗿𝗹: ${videoUrl}`,
-            buttons: [
-              {
-                type: 'web_url',
-                url: videoUrl,
-                title: 'Watch Video'
-              }
-            ]
+if (fileSize <= 25 * 1024 * 1024) {
+  sendMessage(senderId, {
+    attachment: {
+      type: 'template',
+      payload: {
+        template_type: 'button',
+        text: `Error: The Instagram video exceeds the 25 MB limit and cannot be sent\n\n𝗨𝗿𝗹: ${videoUrl}`,
+        buttons: [
+          {
+            type: 'web_url',
+            url: videoUrl,
+            title: 'Watch Video'
           }
-        }
-      }, pageAccessToken);
-        return;
-      } **/
-
-      if (videoUrl) {
-        sendMessage(senderId, {
-          attachment: {
-            type: 'video',
-            payload: {
-              url: videoUrl,
-              is_reusable: true
-            }
-          }
-        }, pageAccessToken);
+        ]
+      }
+    }
+  }, pageAccessToken);
+  return;
+} else {
+  sendMessage(senderId, {
+    attachment: {
+      type: 'video',
+      payload: {
+        url: videoUrl,
+        is_reusable: true
+      }
+    }
+  }, pageAccessToken);
       }
     } catch (error) {
       console.error();
@@ -534,39 +531,36 @@ if (messageText && messageText.includes("gdrive")) {
       sendMessage(senderId, { text: 'Downloading Facebook, please wait...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/fbdl?url=${encodeURIComponent(messageText)}`;
 
-/** const head = await axios.get(apiUrl, { responseType: 'arraybuffer' }, { headers } );
-    const size = head.data.byteLength / (1024 * 1024);
+const fileSize = parseInt(apiUrl.headers['content-length'], 10);
 
-   if (size > 25) {
-        sendMessage(senderId, {
-        attachment: {
-          type: 'template',
-          payload: {
-            template_type: 'button',
-            text: `Error: The Facebook video exceeds the 25 MB limit and cannot be sent\n\n𝗨𝗿𝗹: ${apiUrl}`,
-            buttons: [
-              {
-                type: 'web_url',
-                url: apiUrl,
-                title: 'Watch Video'
-              }
-            ]
+if (fileSize <= 25 * 1024 * 1024) {
+  sendMessage(senderId, {
+    attachment: {
+      type: 'template',
+      payload: {
+        template_type: 'button',
+        text: `Error: The video exceeds the 25 MB limit and cannot be sent`,
+        buttons: [
+          {
+            type: 'web_url',
+            url: apiUrl,
+            title: 'Watch Video'
           }
-        }
-      }, pageAccessToken);
-        return;
-      } **/
-
-      if (apiUrl) {
-        sendMessage(senderId, {
-          attachment: {
-            type: 'video',
-            payload: {
-              url: apiUrl,
-              is_reusable: true
-            }
-          }
-        }, pageAccessToken);
+        ]
+      }
+    }
+  }, pageAccessToken);
+  return;
+} else {
+  sendMessage(senderId, {
+    attachment: {
+      type: 'video',
+      payload: {
+        url: apiUrl,
+        is_reusable: true
+      }
+    }
+  }, pageAccessToken);
       }
     } catch (error) {
       console.error();
@@ -581,63 +575,37 @@ if (messageText && messageText.includes("gdrive")) {
       const username = data.author.nickname;
       const unique_id = data.author.unique_id;
 
-/** const head = await axios.get(shotiUrl, { responseType: 'arraybuffer' }, { headers } );
-    const size = head.data.byteLength / (1024 * 1024);
+const fileSize = parseInt(shotiUrl.headers['content-length'], 10);
 
-    if (size > 25) {
-        sendMessage(senderId, {
-        attachment: {
-          type: 'template',
-          payload: {
-            template_type: 'button',
-            text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${username}\n𝗨𝗿𝗹: ${shotiUrl}`,
-            buttons: [
-              {
-                type: 'web_url',
-                url: shotiUrl,
-                title: 'Watch Video'
-              }
-            ]
-          }
-        }
-      }, pageAccessToken);
-        return;
-      }
-
-    sendMessage(
-        senderId,
-        {
-          attachment: {
-            type: "template",
-            payload: {
-              template_type: "generic",
-              elements: [
-                {
-                  title: username,
-                  image_url: avatar,
-                  subtitle: unique_id,
-                  default_action: {
-                    type: "web_url",
-                    url: avatar,
-                    webview_height_ratio: "tall"
-                  }
-                }
-              ]
-            }
-          }
-        },
-        pageAccessToken
-      ); **/
-
-      sendMessage(senderId, {
-        attachment: {
-          type: 'video',
-          payload: {
+if (fileSize <= 25 * 1024 * 1024) {
+  sendMessage(senderId, {
+    attachment: {
+      type: 'template',
+      payload: {
+        template_type: 'button',
+        text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${data.title}\n𝗨𝗿𝗹: ${shotiUrl}`,
+        buttons: [
+          {
+            type: 'web_url',
             url: shotiUrl,
-            is_reusable: true
+            title: 'Watch Video'
           }
-        }
-      }, pageAccessToken);
+        ]
+      }
+    }
+  }, pageAccessToken);
+  return;
+} else {
+  sendMessage(senderId, {
+    attachment: {
+      type: 'video',
+      payload: {
+        url: shotiUrl,
+        is_reusable: true
+      }
+    }
+  }, pageAccessToken);
+      }
     } catch (error) {
       console.error();
     }
@@ -651,30 +619,7 @@ if (messageText && messageText.includes("gdrive")) {
       const thumbnail = yu.data.image;
       const title = yu.data.title;
 
-/** const head = await axios.get(vid, { responseType: 'arraybuffer' }, { headers } );
-    const size = head.data.byteLength / (1024 * 1024);
-
-    if (size > 25) {
-        sendMessage(senderId, {
-        attachment: {
-          type: 'template',
-          payload: {
-            template_type: 'button',
-            text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.title}\n𝗨𝗿𝗹: ${vid}`,
-            buttons: [
-              {
-                type: 'web_url',
-                url: vid,
-                title: 'Watch Video'
-              }
-            ]
-          }
-        }
-      }, pageAccessToken);
-        return;
-      } **/
-
- const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n\n𝗡𝗢𝗧𝗘: if The video exceeds the 25 MB limit cannot be sent`;
+ const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${title}`;
       sendMessage(senderId, { text: kupal }, pageAccessToken); 
 
 /**  sendMessage(
@@ -702,16 +647,36 @@ if (messageText && messageText.includes("gdrive")) {
         pageAccessToken
       ); **/
 
-      if (vid) {
-        sendMessage(senderId, {
-          attachment: {
-            type: 'video',
-            payload: {
-              url: vid,
-              is_reusable: true
-            }
+      const fileSize = parseInt(vid.headers['content-length'], 10);
+
+if (fileSize <= 25 * 1024 * 1024) {
+  sendMessage(senderId, {
+    attachment: {
+      type: 'template',
+      payload: {
+        template_type: 'button',
+        text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗨𝗿𝗹: ${vid}`,
+        buttons: [
+          {
+            type: 'web_url',
+            url: vid,
+            title: 'Watch Video'
           }
-        }, pageAccessToken);
+        ]
+      }
+    }
+  }, pageAccessToken);
+  return;
+} else {
+  sendMessage(senderId, {
+    attachment: {
+      type: 'video',
+      payload: {
+        url: vid,
+        is_reusable: true
+      }
+    }
+  }, pageAccessToken);
       }
     } catch (error) {
       console.error();

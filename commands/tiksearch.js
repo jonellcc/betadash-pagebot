@@ -13,7 +13,7 @@ module.exports = {
     const apiUrl = `https://betadash-search-download.vercel.app/tiksearch?search=${encodeURIComponent(searchTerm)}`; 
 
     try {
-      sendMessage(senderId, { text: 'Fetching video, please wait...' }, pageAccessToken);
+      sendMessage(senderId, { text: 'Searching video, please wait...' }, pageAccessToken);
 
       const response = await axios.get(apiUrl, { headers });
       const videoUrl = response.data.url; 

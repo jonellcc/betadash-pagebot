@@ -49,19 +49,38 @@ sendMessage(
   },
   pageAccessToken
 );
- sendMessage(
-       senderId,
+
+const fileSize = parseInt(videoUrl.headers['content-length'], 10);
+
+if (fileSize <= 25 * 1024 * 1024) {
+  sendMessage(senderId, {
+    attachment: {
+      type: 'template',
+      payload: {
+        template_type: 'button',
+        text: `Error: The Audio exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗨𝗿𝗹: ${downloadUrl}`,
+        buttons: [
           {
-            attachment: {
-              type: 'audio',
-              payload: {
-                url: downloadUrl,
-                is_reusable: true,
-              },
-            },
-          },
-          pageAccessToken
-        );  
+            type: 'web_url',
+            url: downloadUrl,
+            title: 'Download Url'
+          }
+        ]
+      }
+    }
+  }, pageAccessToken);
+  return;
+} else {
+  sendMessage(senderId, {
+    attachment: {
+      type: 'video',
+      payload: {
+        url: videoUrl,
+        is_reusable: true
+      }
+    }
+  }, pageAccessToken);
+      }
     } catch (error) {
       sendMessage(
         senderId,

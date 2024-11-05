@@ -71,6 +71,7 @@ function paginate(array, page_size, page_number) {
 module.exports = {
   name: 'help',
   description: 'Show available commands or details of a specific command',
+  usage: "help 1 to any pages | help name_command to see how to use command",
   author: 'Cliff',
   execute(senderId, args, pageAccessToken, sendMessage, pageid, splitMessageIntoChunks, admin, message, event, getAttachments) {
     const commandsDir = path.join(__dirname, '../commands');
@@ -86,8 +87,9 @@ module.exports = {
         const command = require(path.join(commandsDir, commandFile));
         const name = command.name ? `➟ Name: ${command.name}\n` : "";
         const author = command.author ? `➟ Author: ${command.author}\n` : "";
+       const usage = command.usage || usages ? `➟ Usage: ${command.usage || usages}\n` : "No Usage found";
         const description = command.description ? `➟ description: ${command.description}\n` : "";
-        const commandDetails = `${name}${author}${description}`;
+        const commandDetails = `${name}${author}${usage}${description}`;
 
         return sendMessage(senderId, { text: commandDetails }, pageAccessToken);
       } else {

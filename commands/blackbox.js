@@ -19,12 +19,12 @@ module.exports = {
     try {
       sendMessage(senderId, { text: '🔍 Searching, Please Wait....' }, pageAccessToken);
 
-      const apiUrl = `https://betadash-api-swordslush.vercel.app/llama-3.1-405b-instruct-free?ask=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://betadash-api-swordslush.vercel.app/blackbox?ask=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
-      const text = response.data.message;
+      const text = response.data.Response;
 
 
-      const formattedResponse = `${symbol} | 𝗕𝗟𝗔𝗖𝗞𝗕𝗢𝗫 𝗔𝗜\n━━━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━━━`;
+      const formattedResponse = `${symbol} | 𝗕𝗟𝗔𝗖𝗞𝗕𝗢𝗫 𝗔𝗜\n━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━`;
 
       const maxMessageLength = 2000;
       if (formattedResponse.length > maxMessageLength) {
