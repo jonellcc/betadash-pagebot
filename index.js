@@ -247,7 +247,7 @@ const gif = event.message.attachments &&
 
    const senderId = event.sender.id;
   const messageText = event.message.text;
-  let jb = ["More shoti", "imgur", "removebg", "remini"];
+  let jb = "👍";
 
  let imageUrl = '';
 
@@ -275,7 +275,7 @@ const bannedKeywords = [
   'shit', 'bitch', 'hentai', 'sex', 'boobs', 'cute girl undressed', 'undressed', 
   'naked', 'underwear', 'sexy', 'panty', 'fuckers', 'fck', 'fucking', 'vagina', 'intercourse', 
   'penis', 'gae', 'panties', 'fellatio', 'blow job', 'blow', 'skin', 'segs', 'porn', 'loli', 'kantutan','lulu', 'kayat', 'bilat',
-  'ahegao', 'dildo', 'vibrator', 'ass', 'asses', 'butt', 'asshole', 'cleavage', 'arse', 'dic', 'puss'
+  'ahegao', 'dildo', 'vibrator', 'asses', 'butt', 'asshole', 'cleavage', 'arse', 'dic', 'puss'
 ];
 
 function escapeRegex(keyword) {
@@ -459,7 +459,7 @@ if (messageText && messageText.includes("gdrive")) {
    };
     sendMessage(senderId, kupall, pageAccessToken);
     }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText))  {
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && jb !== messageText)  {
    try {
   let text;
 
@@ -644,9 +644,9 @@ if (messageText && messageText.includes("gdrive")) {
   } else if (youtubeLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Youtube, please wait...' }, pageAccessToken);
-      const yts = `https://betadash-search-download.vercel.app/videov2?search=${encodeURIComponent(messageText)}`;
+      const yts = `https://apiv2.kenliejugarap.com/video?url=${encodeURIComponent(messageText)}`;
      const yu = await axios.get(yts, { headers });
-      const vid = yu.data.downloadUrl;
+      const vid = yu.data.response;
       const views = yu.data.views;
       const thumbnail = yu.data.image;
       const title = yu.data.title;
@@ -674,7 +674,7 @@ if (messageText && messageText.includes("gdrive")) {
         return;
       } **/
 
- const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.data.title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${yu.data.time}\n\n\n𝗡𝗢𝗧𝗘: if The video exceeds the 25 MB limit and cannot be sent`;
+ const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.title}\n\n𝗡𝗢𝗧𝗘: if The video exceeds the 25 MB limit cannot be sent`;
       sendMessage(senderId, { text: kupal }, pageAccessToken); 
 
 /**  sendMessage(
