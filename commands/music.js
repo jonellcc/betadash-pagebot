@@ -59,7 +59,7 @@ module.exports = {
             type: 'template',
             payload: {
               template_type: 'button',
-              text: `Error: The audio file exceeds the 25 MB limit and cannot be sent.\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗨𝗿𝗹: ${downloadUrl}`,
+              text: `Error: The audio file exceeds the 25 MB limit and cannot be sent.`,
               buttons: [
                 {
                   type: 'web_url',

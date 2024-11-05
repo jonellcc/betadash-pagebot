@@ -25,7 +25,6 @@ module.exports = {
       sendMessage(senderId, { text: message }, pageAccessToken);
 
       if (videoUrl) {
-        // Make a HEAD request to get the content-length of the video file
         const headResponse = await axios.head(videoUrl, { headers });
         const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
@@ -45,7 +44,7 @@ module.exports = {
               type: 'template',
               payload: {
                 template_type: 'button',
-                text: `Error: The video exceeds the 25 MB limit and cannot be sent\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗨𝗿𝗹: ${videoUrl}`,
+                text: `Error: The video exceeds the 25 MB limit and cannot be sent.`,
                 buttons: [
                   {
                     type: 'web_url',
