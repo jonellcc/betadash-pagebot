@@ -674,7 +674,7 @@ if (messageText && messageText.includes("gdrive")) {
         return;
       } **/
 
- const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${yu.title}\n\n𝗡𝗢𝗧𝗘: if The video exceeds the 25 MB limit cannot be sent`;
+ const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${title}\n\n𝗡𝗢𝗧𝗘: if The video exceeds the 25 MB limit cannot be sent`;
       sendMessage(senderId, { text: kupal }, pageAccessToken); 
 
 /**  sendMessage(
