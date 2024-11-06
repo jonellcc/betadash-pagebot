@@ -8,6 +8,7 @@ const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
 const instagramLinkRegex = /https:\/\/www\.instagram\.com\/reel\/[a-zA-Z0-9_-]+\/\?igsh=[a-zA-Z0-9_=-]+$/;
 const youtubeLinkRegex = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
 const spotifyLinkRegex = /^https?:\/\/open\.spotify\.com\/track\/[a-zA-Z0-9]+$/;
+const soundcloudRegex = /^https?:\/\/soundcloud\.com\/([a-zA-Z0-9-]+)\/([a-zA-Z0-9-]+)(?:\/([a-zA-Z0-9-]+))?(?:\?.*)?$/;
 const headers = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   'Content-Type': 'application/json'
@@ -459,7 +460,7 @@ if (messageText && messageText.includes("gdrive")) {
    };
     sendMessage(senderId, kupall, pageAccessToken);
     }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && jb !== messageText)  {
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && jb !== messageText)  {
    try {
   let text;
 
@@ -492,7 +493,6 @@ if (messageText && messageText.includes("gdrive")) {
       const response = await axios.get(apiUrl, { headers });
       const videoUrl = response.data.result[0]._url;
 
-
 const headResponse = await axios.head(videoUrl, { headers });
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
@@ -502,7 +502,7 @@ const headResponse = await axios.head(videoUrl, { headers });
             type: 'template',
             payload: {
               template_type: 'button',
-              text: `Error: The Instagram video exceeds the 25 MB limit and cannot be sent.`,
+              text: `The Instagram video exceeds the 25 MB limit and cannot be sent.`,
               buttons: [
                 {
                   type: 'web_url',
@@ -541,7 +541,7 @@ const headResponse = await axios.head(apiUrl, { headers });
             type: 'template',
             payload: {
               template_type: 'button',
-              text: `Error: The Facebook video exceeds the 25 MB limit and cannot be sent.`,
+              text: `The Facebook video exceeds the 25 MB limit and cannot be sent.`,
               buttons: [
                 {
                   type: 'web_url',
@@ -585,7 +585,7 @@ const headResponse = await axios.head(shotiUrl, { headers });
             type: 'template',
             payload: {
               template_type: 'button',
-              text: `Error: The Tiktok video exceeds the 25 MB limit and cannot be sent.`,
+              text: `The Tiktok video exceeds the 25 MB limit and cannot be sent.`,
               buttons: [
                 {
                   type: 'web_url',
@@ -657,7 +657,7 @@ const headResponse = await axios.head(shotiUrl, { headers });
             type: 'template',
             payload: {
               template_type: 'button',
-              text: `Error: The YouTube video exceeds the 25 MB limit and cannot be sent.`,
+              text: `The YouTube video exceeds the 25 MB limit and cannot be sent.`,
               buttons: [
                 {
                   type: 'web_url',
@@ -685,9 +685,9 @@ const headResponse = await axios.head(shotiUrl, { headers });
   } else if (spotifyLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Spotify, please wait...' }, pageAccessToken);
-      const apiUrl = `https://betadash-search-download.vercel.app/spt?search=${encodeURIComponent(messageText)}&apikey=syugg`;
-      const response = await axios.get(apiUrl);
-      const spotifyLink = response.data.spotify[0].result;
+      const apiUrl = `https://betadash-search-download.vercel.app/spotifydl?url=${encodeURIComponent(messageText)}`;
+      const response = await axios.get(apiUrl, { headers });
+      const spotifyLink = response.data.result;
 
       if (spotifyLink) {
         sendMessage(senderId, {
@@ -701,6 +701,75 @@ const headResponse = await axios.head(shotiUrl, { headers });
         }, pageAccessToken);
       }
     } catch (error) {
+      console.error();
+    }
+} else if (soundcloudRegex.test(messageText)) {
+    try {
+      sendMessage(senderId, { text: 'Downloading SoundCloud, please wait...' }, pageAccessToken);
+      const sc = `https://betadash-search-download.vercel.app/soundcloud?url=${encodeURIComponent(messageText)}`;
+
+const response = await axios.get(sc, { headers });
+
+const { download, thumbnail, quality, duration, title } = response.data;
+
+
+      sendMessage(
+        senderId,
+        {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [
+                {
+                  title: title,
+                  image_url: thumbnail,
+                  subtitle: `Quality: ${quality} - Duration: ${duration}`,
+                  default_action: {
+                    type: "web_url",
+                    url: thumbnail,
+                    webview_height_ratio: "tall"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        pageAccessToken
+      );
+
+      const headResponse = await axios.head(download, { headers });
+      const fileSize = parseInt(headResponse.headers['content-length'], 10);
+
+      if (fileSize > 25 * 1024 * 1024) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: `The audio file exceeds the 25 MB limit and cannot be sent.`,
+              buttons: [
+                {
+                  type: 'web_url',
+                  url: download,
+                  title: 'Download URL'
+                }
+              ]
+            }
+          }
+        }, pageAccessToken);
+      } else {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'audio',
+            payload: {
+              url: download,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
+        }
+      } catch (error) {
       console.error();
     }
 }
