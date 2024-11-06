@@ -74,6 +74,7 @@ module.exports = {
   usage: "help 1 to any pages | help name_command to see how to use command",
   author: 'Cliff',
   execute(senderId, args, pageAccessToken, sendMessage) {
+const input = args.join(' ');
     const commandsDir = path.join(__dirname, '../commands');
     const commandFiles = fs.readdirSync(commandsDir).filter(file => file.endsWith('.js'));
     const totalCommands = commandFiles.length;
@@ -111,7 +112,20 @@ module.exports = {
 
 const huys = "\t「 𝗛𝗜𝗗𝗘𝗡 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦 」\n● Autodownloader - Insta, Tiktok, Facebook, Youtube, Capcut, SoundCloud, Spotify.\n● imgur - Reply to an image to upload in imgur.\n● prompt - Reply image to get the exact prompt.\n● tinyurl - Reply to image to shorter url.\n● removebg - Reply a photo to Remove background image.\n● remini - Reply a photo to Enhancing image.";
 
-    const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commandsList.join('\n')}\n╰───────────◊\n\n${huys}\n\n» 𝗣𝗮𝗴𝗲: <${pageNumber}/${Math.ceil(totalCommands / commandsPerPage)}>\n» 𝗚𝘂𝗶𝗱𝗲: "Type help 1 or any pages number or help <command_name> to view detailed usage instructions for a specific command"\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${totalCommands} ]\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
+    const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commandsList.join('\n')}\n╰───────────◊\n\n${huys}\n\n» 𝗣𝗮𝗴𝗲: <${pageNumber}/${Math.ceil(totalCommands / commandsPerPage)}>\n» 𝗚𝘂𝗶𝗱𝗲: "Type help 1 or any pages number || 'help all' | help <command_name> to view detailed usage instructions for a specific command"\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${totalCommands} ]\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
+
+if (input === 'all') {
+  let allCommandsList = '';
+  for (let i = 0; i < commandFiles.length; i++) {
+    const command = require(path.join(commandsDir, commandFiles[i]));
+    allCommandsList += `${i + 1}. 『 ${formatFont(command.name)} 』\n`;
+  }
+
+  const fullHelpMessage = `🛠️ ${formatFont("All Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${allCommandsList}╰───────────◊\n\n${huys}\n\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${totalCommands} ]\n» 𝗚𝘂𝗶𝗱𝗲: "Type help <command_name> to view detailed usage instructions for a specific command"\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
+
+  return sendMessage(senderId, { text: fullHelpMessage }, pageAccessToken);
+}
+
 
 const kupal = {
       text: helpMessage,
