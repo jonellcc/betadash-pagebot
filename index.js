@@ -9,6 +9,7 @@ const instagramLinkRegex = /https:\/\/www\.instagram\.com\/reel\/[a-zA-Z0-9_-]+\
 const youtubeLinkRegex = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
 const spotifyLinkRegex = /^https?:\/\/open\.spotify\.com\/track\/[a-zA-Z0-9]+$/;
 const soundcloudRegex = /^https?:\/\/soundcloud\.com\/([a-zA-Z0-9-]+)\/([a-zA-Z0-9-]+)(?:\/([a-zA-Z0-9-]+))?(?:\?.*)?$/;
+const capcutLinkRegex = /https:\/\/www\.capcut\.com\/t\/[A-Za-z0-9]+/;
 const headers = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   'Content-Type': 'application/json'
@@ -460,7 +461,7 @@ if (messageText && messageText.includes("gdrive")) {
    };
     sendMessage(senderId, kupall, pageAccessToken);
     }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && jb !== messageText)  {
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText) && jb !== messageText)  {
    try {
   let text;
 
@@ -772,7 +773,69 @@ const { download, thumbnail, quality, duration, title } = response.data;
       } catch (error) {
       console.error();
     }
-}
+} else if (capcutLinkRegex.test(messageText)) {
+    try {
+      sendMessage(senderId, { text: 'Downloading Capcut, please wait...' }, pageAccessToken);
+      const capct = `https://betadash-search-download.vercel.app/capcutdl?link=${encodeURIComponent(messageText)}`;
+     const response = await axios.get(capct, { headers });
+      const {title, description, digunakan, video_ori, author_profile, cover} = response.data.result;
+
+const headResponse = await axios.head(video_ori, { headers });
+      const fileSize = parseInt(headResponse.headers['content-length'], 10);
+
+const kupal = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻: ${description}\n𝗧𝗲𝗺𝗽𝗹𝗮𝘁𝗲-𝗨𝘀𝗲𝗱: ${digunakan}`;
+sendMessage(senderId, { text: kupal }, pageAccessToken); 
+
+    if (fileSize > 25 * 1024 * 1024) {
+          sendMessage(
+        senderId,
+        {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [
+                {
+                  title: title,
+                  image_url: cover,
+                  subtitle: `Description: ${description} Used: ${digunakan}`,
+                  default_action: {
+                    type: "web_url",
+                    url: cover,
+                    webview_height_ratio: "tall"
+                 },
+                 buttons: [
+                {
+                  type: "web_url",
+                  url: video_ori,
+                  title: "Download Video"
+                },
+                {
+                  type: "web_url",
+                  url: author_profile,
+                  title: "Author Profile"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }, pageAccessToken );
+    } else {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'video',
+            payload: {
+              url: video_ori,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
+      }
+    } catch (error) {
+      console.error();
+    }
+  }
 
 if (messageText && messageText.includes("More shoti")) {
   const shotiCommand = commands.get('shoti');

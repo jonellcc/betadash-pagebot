@@ -1,11 +1,18 @@
 const axios = require("axios");
+const { sendMessage } = require("../kupal");
 
 module.exports = {
   name: "blowjob",
   description: "Generate a canvas fuck",
   usage: "blowjob one two",
   author: "Cliff (Api-kenlie syugg)",
-  async execute(senderId, args, pageAccessToken, sendMessage) {
+  async execute(senderId, args, pageAccessToken) {
+const kupal = ["8505900689447357", "8269473539829237", "7913024942132935"];
+
+   if (!kupal.some(kupal_ka => kupal_ka === senderId)) {
+    sendMessage(senderId, { text: "This command is only for    pagebot owner." }, pageAccessToken);
+  return;
+}
     try {
       const input = args.join(" ");
       const [one, two] = input.split(" ");

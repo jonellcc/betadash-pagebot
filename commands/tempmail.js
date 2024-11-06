@@ -24,7 +24,7 @@ module.exports = {
 
         mail.autoFetch();
 
-        if (mail) reply("Your temporary email: " + mail.address);
+        if (mail) reply("Your temporary email: " + mail.address + "\n\nNote: the tempmail code is automatically  if you use the email to create an account in Facebook");
 
         const fetch = () => {
             mail.getMail().then((mails) => {
