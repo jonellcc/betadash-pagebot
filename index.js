@@ -60,14 +60,14 @@ app.post('/webhook', (req, res) => {
   if (body.object === 'page') {
     body.entry.forEach(entry => {
       entry.messaging.forEach(event => {
-        if (event.message) {
-          handleMessage(event);
+          if (event.message) {
+          handleMessage(event, PAGE_ACCESS_TOKEN);
         } else if (event.sender.id) {
-          handleMessage(event);
+          handleMessage(event, PAGE_ACCESS_TOKEN);
        } else if (event.postback) {
-          handlePostback(event);
-       } else if (GET_STARTED_PAYLOAD) {
-          handlePostback(event);
+          handlePostback(event, PAGE_ACCESS_TOKEN);
+        } else if (GET_STARTED_PAYLOAD) {
+         handlePostback(event, PAGE_ACCESS_TOKEN);
        } else if (event.response_feedback) {
         handleResponseFeedback(event);
         }
@@ -155,16 +155,15 @@ function Graph(reaction, messageId) {
 }
 
 async function sendMessage(senderId, message, pageAccessToken) {
-await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
-    recipient: { id: senderId },
-    sender_action: "mark_seen"
-  });
-
   if (!message || (!message.text && !message.attachment)) {
     console.error();
     return;
   }
 
+await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+    recipient: { id: senderId },
+    sender_action: "mark_seen"
+  });
 
   try {
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
@@ -237,7 +236,7 @@ async function handleMessage(event, pageAccessToken) {
   }
 
 const image = event.message.attachments &&
-           (event.message.attachments[0]?.type === 'image');
+  (event.message.attachments[0]?.type === 'image');
 const video = event.message.attachments &&
            (event.message.attachments[0]?.type === 'video');
 const gif = event.message.attachments &&
