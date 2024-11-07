@@ -141,15 +141,16 @@ function Graph(reaction, messageId) {
 }
 
 async function sendMessage(senderId, message, pageAccessToken) {
+await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+    recipient: { id: senderId },
+    sender_action: "mark_seen"
+  });
+
   if (!message || (!message.text && !message.attachment)) {
     console.error();
     return;
   }
 
-  await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
-    recipient: { id: senderId },
-    sender_action: "mark_seen"
-  });
 
   try {
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
@@ -167,7 +168,7 @@ async function sendMessage(senderId, message, pageAccessToken) {
     }
 
     if (message.attachment) {
-      messagePayload.message.attachment = message.attachment;
+   messagePayload.message.attachment = message.attachment;
     }
 
     if (message.quick_replies) {
@@ -181,54 +182,11 @@ async function sendMessage(senderId, message, pageAccessToken) {
       sender_action: "typing_off"
     });
 
-    if (res.data.message_id) {
-      await sendFeedback(senderId, res.data.message_id, pageAccessToken);
-    }
-
     return res.data;
   } catch (error) {
     console.error();
   }
 }
-
-async function sendFeedback(senderId, messageId, pageAccessToken) {
-  const feedbackData = {
-    sender: { id: senderId },
-    recipient: { id: 7913024942132935 },
-    timestamp: Date.now(),
-    response_feedback: {
-      feedback: "Helpful response | Unhelpful response",
-      mid: messageId
-    }
-  };
-
-  await axios.post(
-    'https://graph.facebook.com/v21.0/me/feedback',
-    {
-      feedback: 'POSITIVE',
-      access_token: pageAccessToken,
-    }
-  );
-
-
-  await axios.post(
-    'https://graph.facebook.com/v21.0/me/feedback',
-    {
-      feedback: 'NEGATIVE',
-      access_token: pageAccessToken,
-    }
-  );
-
-
-
-  try {
-    const feedbackRes = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, feedbackData);
-    console.log();
-  } catch (error) {
-    console.error();
-  }
-}
-
 
 async function getAttachments(mid, pageAccessToken) {
   if (!mid) {
