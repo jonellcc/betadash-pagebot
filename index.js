@@ -66,17 +66,33 @@ app.post('/webhook', (req, res) => {
           handleMessage(event, PAGE_ACCESS_TOKEN);
        } else if (event.postback) {
           handlePostback(event, PAGE_ACCESS_TOKEN);
+       } else if (event.response_feedback) {
+        handleResponseFeedback(event, PAGE_ACCESS_TOKEN);
         } else if (GET_STARTED_PAYLOAD) {
           handlePostback(event, PAGE_ACCESS_TOKEN);
         }
       });
-    });
-    res.status(200).send('EVENT_RECEIVED');
+    });     res.status(200).send('EVENT_RECEIVED');
   } else {
     res.sendStatus(404);
   }
 });
 
+
+function handleResponseFeedback(event) {
+  const feedback = event.response_feedback.feedback;
+  const messageId = event.response_feedback.mid;
+  const senderId = event.sender.id;
+
+  if (feedback === 'Good response') {
+    const shet = `User ${senderId} gave positive feedback for message ${messageId}`;
+sendMessage("7913024942132935", {text: shet}, pageAccessToken);
+
+  } else if (feedback === 'Bad response') {
+     const e = `User ${senderId} gave negative feedback for message ${messageId}`;
+    sendMessage("7913024942132935", {text: e}, pageAccessToken);    
+  }
+}
 
 function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
@@ -876,6 +892,33 @@ async function updateMessengerCommands() {
   }
 } 
 
+
+/** async function persistent_menu() {
+  const commandsPayload = {
+    persistent_menu: [
+      {
+        locale: "default",
+        composer_input_disabled: false,
+        call_to_actions: commandList.map((name, index) => ({
+          title: name,
+          type: "postback",
+          payload: `COMMAND_${name.toUpperCase()}`
+        }))
+      }
+    ]
+  };
+
+  try {
+    const response = await axios.post(`https://graph.facebook.com/v21.0/me/messenger_profile`, commandsPayload, {
+      params: { access_token: PAGE_ACCESS_TOKEN }
+    });
+    console.log("Commands updated:", response.data);
+  } catch (error) {
+    console.error("Failed to update commands:", error.response?.data || error.message);
+  }
+}
+
+persistent_menu(); **/
 loadCommands(); 
 updateMessengerCommands();
 
