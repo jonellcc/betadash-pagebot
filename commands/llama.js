@@ -12,10 +12,9 @@ if (!prompt) {
     }
 
     try {
-      sendMessage(senderId, { text: '🔍 Searching Please Wait....' }, pageAccessToken);
-      const apiUrl = `https://betadash-api-swordslush.vercel.app/llama-3.1-405b-instruct-free?ask=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://api.kenliejugarap.com/llama/?question=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
-      const text = response.data.message;
+      const text = response.data.response;
 
       const maxMessageLength = 2000;
       if (text.length > maxMessageLength) {

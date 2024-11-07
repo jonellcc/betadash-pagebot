@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = {
-  name: 'gpt4',
+  name: 'gpt4-arc',
   description: 'Ask a question to GPT-4',
   author: 'Cliff (rest api)',
   async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
@@ -12,10 +12,9 @@ if (!prompt) {
     }
 
     try {
-sendMessage(senderId, { text: '🔍 Searching Please Wait....' }, pageAccessToken);
-      const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt4?ask=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt4-turbo?message=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
-      const text = response.data.content;
+      const text = response.data.result;
 
       const maxMessageLength = 2000;
       if (text.length > maxMessageLength) {

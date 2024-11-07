@@ -172,7 +172,7 @@ await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PA
     }
 
     if (message.quick_replies) {
-      messagePayload.message.quick_replies = message.quick_replies;
+  messagePayload.message.quick_replies = message.quick_replies;
     }
 
     const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
