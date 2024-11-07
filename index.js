@@ -61,15 +61,13 @@ app.post('/webhook', (req, res) => {
     body.entry.forEach(entry => {
       entry.messaging.forEach(event => {
         if (event.message) {
-          handleMessage(event, PAGE_ACCESS_TOKEN);
+          handleMessage(event);
         } else if (event.sender.id) {
-          handleMessage(event, PAGE_ACCESS_TOKEN);
+          handleMessage(event);
        } else if (event.postback) {
-          handlePostback(event, PAGE_ACCESS_TOKEN);
+          handlePostback(event);
        } else if (event.response_feedback) {
-        handleResponseFeedback(event, PAGE_ACCESS_TOKEN);
-        } else if (GET_STARTED_PAYLOAD) {
-          handlePostback(event, PAGE_ACCESS_TOKEN);
+        handleResponseFeedback(event);
         }
       });
     });     res.status(200).send('EVENT_RECEIVED');
@@ -84,15 +82,13 @@ function handleResponseFeedback(event) {
   const messageId = event.response_feedback.mid;
   const senderId = event.sender.id;
 
-  if (feedback === 'Good response') {
-    const shet = `User ${senderId} gave positive feedback for message ${messageId}`;
-sendMessage("7913024942132935", {text: shet}, pageAccessToken);
+  const messageText = feedback === 'Good response'
+    ? `User ${senderId} gave positive feedback for message ${messageId}`
+    : `User ${senderId} gave negative feedback for message ${messageId}`;
 
-  } else if (feedback === 'Bad response') {
-     const e = `User ${senderId} gave negative feedback for message ${messageId}`;
-    sendMessage("7913024942132935", {text: e}, pageAccessToken);    
-  }
+  sendMessage("7913024942132935", { text: messageText });
 }
+
 
 function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
