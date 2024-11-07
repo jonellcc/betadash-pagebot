@@ -836,7 +836,7 @@ function splitMessageIntoChunks(message, chunkSize) {
   return chunks;
 }
 
-/** function loadCommands() {
+function loadCommands() {
   const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
 
   commandFiles.forEach(file => {
@@ -847,9 +847,7 @@ function splitMessageIntoChunks(message, chunkSize) {
     descriptions.push(description);
 console.log(`Command loaded: ${command.name}`); 
   });
-
-  updateMessengerCommands();
-} **/
+} 
 
 async function updateMessengerCommands() {
   const commandsPayload = commandList.map((name, index) => ({
@@ -878,7 +876,7 @@ async function updateMessengerCommands() {
   }
 } 
 
-/** loadCommands(); **/
+loadCommands(); 
 updateMessengerCommands();
 
 app.listen(PORT, () => {
