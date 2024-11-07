@@ -485,9 +485,9 @@ if (messageText && messageText.includes("gdrive")) {
 } else if (instagramLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Instagram, please wait...' }, pageAccessToken);
-      const apiUrl = `https://universaldownloader.zapto.org/download?url=${encodeURIComponent(messageText)}`;
+      const apiUrl = `https://betadash-search-download.vercel.app/insta?url=${encodeURIComponent(messageText)}`;
       const response = await axios.get(apiUrl, { headers });
-      const videoUrl = response.data.result;
+      const videoUrl = response.data.result[0]._url;
 
 const headResponse = await axios.head(videoUrl, { headers });
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
@@ -849,7 +849,7 @@ function splitMessageIntoChunks(message, chunkSize) {
   return chunks;
 }
 
-function loadCommands() {
+/** function loadCommands() {
   const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
 
   commandFiles.forEach(file => {
@@ -860,7 +860,7 @@ function loadCommands() {
     descriptions.push(description);
 console.log(`Command loaded: ${command.name}`); 
   });
-} 
+} **/
 
 async function updateMessengerCommands() {
   const commandsPayload = commandList.map((name, index) => ({
@@ -916,7 +916,7 @@ async function updateMessengerCommands() {
 }
 
 persistent_menu(); **/
-loadCommands(); 
+/** loadCommands(); **/
 updateMessengerCommands();
 
 app.listen(PORT, () => {
