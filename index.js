@@ -66,6 +66,8 @@ app.post('/webhook', (req, res) => {
           handleMessage(event);
        } else if (event.postback) {
           handlePostback(event);
+       } else if (GET_STARTED_PAYLOAD) {
+          handlePostback(event);
        } else if (event.response_feedback) {
         handleResponseFeedback(event);
         }
@@ -86,7 +88,7 @@ function handleResponseFeedback(event) {
     ? `User ${senderId} gave positive feedback for message ${messageId}`
     : `User ${senderId} gave negative feedback for message ${messageId}`;
 
-  sendMessage("7913024942132935", { text: messageText });
+  sendMessage("7913024942132935", { text: messageText }, pageAccessToken);
 }
 
 
