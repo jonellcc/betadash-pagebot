@@ -127,52 +127,49 @@ function handlePostback(event, pageAccessToken) {
   }
 }
 
-
 async function sendMessage(senderId, message) {
   if (!message || (!message.text && !message.attachment)) {
     return;
   }
 
-  try {
-    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
-      recipient: { id: senderId },
-      sender_action: "mark_seen"
-    });
+  await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+    recipient: { id: senderId },
+    sender_action: "mark_seen"
+  });
 
-    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
-      recipient: { id: senderId },
-      sender_action: "typing_on"
-    });
+  await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+    recipient: { id: senderId },
+    sender_action: "typing_on"
+  });
 
-    const messagePayload = {
-      recipient: { id: senderId },
-      message: message.text ? { text: message.text } : { attachment: message.attachment }
-    };
+  const messagePayload = {
+    recipient: { id: senderId },
+    message: message.text ? { text: message.text } : { attachment: message.attachment }
+  };
 
-    if (message.text) {
-      messagePayload.message.text = message.text;
-    }
-
-    if (message.attachment) {
-   messagePayload.message.attachment = message.attachment;
-    }
-
-    if (message.quick_replies) {
-      messagePayload.message.quick_replies = message.quick_replies;
-    }
-
-    const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
-
-    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
-      recipient: { id: senderId },
-      sender_action: "typing_off"
-    });
-
-    return res.data;
-  } catch (error) {
-    console.error();
+  if (message.text) {
+    messagePayload.message.text = message.text;
   }
+
+  if (message.attachment) {
+    messagePayload.message.attachment = message.attachment;
+  }
+
+  if (message.quick_replies) {
+    messagePayload.message.quick_replies = message.quick_replies;
+  }
+
+  const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
+
+  await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+    recipient: { id: senderId },
+    sender_action: "typing_off"
+  });
+
+  return res.data;
 }
+
+
 
 async function getAttachments(mid, pageAccessToken) {
   if (!mid) {
