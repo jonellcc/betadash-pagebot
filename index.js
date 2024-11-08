@@ -128,30 +128,34 @@ function handlePostback(event, pageAccessToken) {
 }
 
 
-async function sendMessage(senderId, message) {
+async function sendMessage(senderId, message, pageAccessToken) {
 
 if (!message || (!message.text && !message.attachment)) {
+console.error();
 return;
 }
 
 
-await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+try {
+await axios.post('https://graph.facebook.com/v21.0/me/messages', {
 recipient: { id: senderId },
-sender_action: "mark_seen"
+sender_action: 'mark_seen'
+}, {
+params: { access_token: pageAccessToken }
 });
 
 
-await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+await axios.post('https://graph.facebook.com/v21.0/me/messages', {
 recipient: { id: senderId },
-sender_action: "typing_on"
+sender_action: 'typing_on'
+}, {
+params: { access_token: pageAccessToken }
 });
-
 
 const messagePayload = {
 recipient: { id: senderId },
-message: message.text ? { text: message.text } : { attachment: message.attachment }
+message: {}
 };
-
 
 if (message.text) {
 messagePayload.message.text = message.text;
@@ -167,17 +171,20 @@ if (message.quick_replies) {
 messagePayload.message.quick_replies = message.quick_replies;
 }
 
-
-await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
-
-
-await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
-recipient: { id: senderId },
-sender_action: "typing_off"
+await axios.post('https://graph.facebook.com/v21.0/me/messages', messagePayload, {
+params: { access_token: pageAccessToken }
 });
 
+await axios.post('https://graph.facebook.com/v21.0/me/messages', {
+recipient: { id: senderId },
+sender_action: 'typing_off'
+}, {
+params: { access_token: pageAccessToken }
+});
+} catch (error) {
+console.error();
 }
-
+}
 
 
 
