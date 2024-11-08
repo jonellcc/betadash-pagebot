@@ -130,8 +130,6 @@ function handlePostback(event, pageAccessToken) {
 
  async function sendMessage(senderId, message, pageAccessToken) {
 
-if (message.is_echo) return;
-
 if (!message || (!message.text && !message.attachment)) {
 console.error();
 return;
