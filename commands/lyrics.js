@@ -18,12 +18,12 @@ if (!query) {
       const { lyrics, title, artist, image } = response.data;
 
       if (lyrics) {
-        const lyricsMessage = `Title: ${title}
-Artist: ${artist}
+        const lyricsMessage = `𝗧𝗶𝘁𝗹𝗲: ${title}
+𝗔𝗿𝘁𝗶𝘀𝘁: ${artist}
 
-𖢨°•°•——[ LYRICS ]——•°•°𖢨
+𖢨°•°•——[ 𝗟𝗬𝗥𝗜𝗖𝗦 ]——•°•°𖢨
 ${lyrics}
-𖢨°•°•——[ LYRICS ]——•°•°𖢨`;
+𖢨°•°•——[ 𝗟𝗬𝗥𝗜𝗖𝗦 ]——•°•°𖢨`;
 
         const maxMessageLength = 2000;
         if (lyricsMessage.length > maxMessageLength) {
@@ -50,7 +50,7 @@ ${lyrics}
         sendMessage(senderId, { text: 'Sorry, no lyrics were found for your query.' }, pageAccessToken);
       }
     } catch (error) {
-      sendMessage(senderId, { text: 'Sorry, there was an error processing your request.' }, pageAccessToken);
+      sendMessage(senderId, { text: `Sorry, no lyrics were found for your query. ${query}` }, pageAccessToken);
     }
   }
 };
