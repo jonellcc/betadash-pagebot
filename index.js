@@ -133,10 +133,10 @@ async function sendMessage(senderId, message, pageAccessToken) {
     return;
   }
 
-/** await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+ await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
     recipient: { id: senderId },
     sender_action: "mark_seen"
-  }); **/
+  }); 
 
   try {
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
