@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "61567757543707";
 const admin = ["8786755161388846", "8376765705775283", "8552967284765085"];
-const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO7Ftdp0C9fauNZBC3jhG8e1v3p32NAWrdQ9C8L1igMw98lkaZBPLsQr6WFxg5iVtfhyZCM8nZAmgZAaHreq075NIgu7KrgDrJh7HVXiwZCZAOFEtgYkisIlGCxYXct1DixR59h1dXKN0p18o4ZBGziT0MZA58g3NNi8At0Xcmw9hjW5V2EZCMx63nD7QZDZD";
+const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO39cZCWtulezE599r3wNa7hcPyHwqyN8EzfVaZAt1etXDwncdZB8MDHxLlY6ZCPdSs7BKhR6ujna8OWI56zJnQQPudShraMvR4PglQjqb5ijCWcdUOhU6SRreFoDYmlCoMqaRryG86CpncRQLI6PjYcgEk9I0dVZBvs6ANP5dV8xnWYUOzdp7uQZDZD";
 
 const commandList = [];
 const descriptions = [];
@@ -127,8 +127,7 @@ function handlePostback(event, pageAccessToken) {
   }
 }
 
-
- async function sendMessage(senderId, message, pageAccessToken) {
+async function sendMessage(senderId, message, pageAccessToken) {
 
 if (!message || (!message.text && !message.attachment)) {
 console.error();
@@ -184,7 +183,7 @@ params: { access_token: pageAccessToken }
 } catch (error) {
 console.error();
 }
-} 
+}
 
 
 
@@ -215,8 +214,7 @@ for (const file of commandFiles) {
 }
 
 
-async function handleMessage(event, message, pageAccessToken) {
-
+async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id)  {
     return;
   }
