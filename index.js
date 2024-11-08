@@ -2,6 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
+const http = require('http');
+const httpProxy = require('http-proxy');
+const proxy = httpProxy.createProxyServer({});
+const server = http.createServer((req, res) => {
+  proxy.web(req, res, { target: 'http://fred.hidencloud.com:25901' });
+});
+
 const axios = require('axios');
 const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
@@ -890,6 +897,10 @@ persistent_menu(); **/
 /** loadCommands(); **/
 updateMessengerCommands();
 
-app.listen(PORT, () => {
+/** app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+}); **/
+
+server.listen(8080, () => {
+  console.log('Proxy server is running on http://localhost:8080');
 });
