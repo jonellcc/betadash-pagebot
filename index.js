@@ -127,31 +127,6 @@ function handlePostback(event, pageAccessToken) {
   }
 }
 
-async function setMessageReaction(reaction, messageId) {
-  try {
-    return await Graph(reaction, messageId);
-  } catch (error) {
-    return null;
-  }
-}
-
-function Graph(reaction, messageId) {
-  return new Promise((resolve, reject) => {
-    const payload = {
-      access_token: `${PAGE.ACCESS_TOKEN}`,
-      reaction: reaction,
-    };
-
-    axios
-      .post(`https://graph.facebook.com/v21.0/${messageId}/reactions`, payload)
-      .then((res) => {
-        resolve(res.data);
-      })
-      .catch((err) => {
-        reject(err.response ? err.response.data : err.message);
-      });
-  });
-}
 
 async function sendMessage(senderId, message, pageAccessToken) {
   if (!message || (!message.text && !message.attachment)) {
