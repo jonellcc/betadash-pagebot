@@ -128,7 +128,9 @@ function handlePostback(event, pageAccessToken) {
 }
 
 
-async function sendMessage(senderId, message, pageAccessToken) {
+ async function sendMessage(senderId, message, pageAccessToken) {
+
+if (message.is_echo) return;
 
 if (!message || (!message.text && !message.attachment)) {
 console.error();
@@ -184,7 +186,7 @@ params: { access_token: pageAccessToken }
 } catch (error) {
 console.error();
 }
-}
+} 
 
 
 
@@ -216,7 +218,7 @@ for (const file of commandFiles) {
 
 
 async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.message || !event.sender.id) {
+  if (!event || !event.sender || !event.message || !event.sender.id || !event.is_echo)  {
     return;
   }
 
@@ -824,7 +826,7 @@ function splitMessageIntoChunks(message, chunkSize) {
   return chunks;
 }
 
-/** function loadCommands() {
+ function loadCommands() {
   const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
 
   commandFiles.forEach(file => {
@@ -835,7 +837,7 @@ function splitMessageIntoChunks(message, chunkSize) {
     descriptions.push(description);
 console.log(`Command loaded: ${command.name}`); 
   });
-} **/
+} 
 
 async function updateMessengerCommands() {
   const commandsPayload = commandList.map((name, index) => ({
@@ -903,7 +905,7 @@ async function updateMessengerCommands() {
 }
 
 persistent_menu(); **/
-/** loadCommands(); **/
+ loadCommands();
 updateMessengerCommands();
 
 app.listen(PORT, () => {
