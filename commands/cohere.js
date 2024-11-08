@@ -20,11 +20,11 @@ if (!prompt) {
       if (text.length > maxMessageLength) {
         const messages = splitMessageIntoChunks(text, maxMessageLength);
         for (const message of messages) {
-const kupal = `֎ | COHERE\n━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━`;
+const kupal = `֎ | COHERE\n━━━━━━━━━━━\n${message}\n━━━━━━━━━━━`;
           sendMessage(senderId, { text: kupal }, pageAccessToken);
         }
       } else {
-const kupal2 = `֎ | COHERE\n━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━`;
+const kupal2 = `֎ | COHERE\n━━━━━━━━━━━\n${text}\n━━━━━━━━━━━`;
         sendMessage(senderId, { text: kupal2 }, pageAccessToken);
       }
     } catch (error) {

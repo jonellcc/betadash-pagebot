@@ -124,7 +124,6 @@ function handlePostback(event, pageAccessToken) {
       sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
     }
   } catch (err) {
-    console.error();
   }
 }
 
@@ -156,7 +155,6 @@ function Graph(reaction, messageId) {
 
 async function sendMessage(senderId, message, pageAccessToken) {
   if (!message || (!message.text && !message.attachment)) {
-    console.error();
     return;
   }
 
@@ -197,7 +195,6 @@ await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PA
 
     return res.data;
   } catch (error) {
-    console.error();
   }
 }
 
@@ -217,7 +214,6 @@ async function getAttachments(mid, pageAccessToken) {
       throw new Error("No image found in the replied message.");
     }
   } catch (error) {
-    throw error;
   }
 }
 
@@ -366,7 +362,6 @@ if (messageText && messageText.includes("Get started")) {
 };
   await sendMessage(senderId, kumag, pageAccessToken);
  } catch (error) {
-   console.error();
   }
   return;
 }
@@ -480,8 +475,7 @@ if (messageText && messageText.includes("gdrive")) {
     sendMessage(senderId, { text }, pageAccessToken);
   }
 } catch (error) {
-  console.error();
-}
+  }
 } else if (instagramLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Instagram, please wait...' }, pageAccessToken);
@@ -521,7 +515,6 @@ const headResponse = await axios.head(videoUrl, { headers });
         }, pageAccessToken);
       }   
     } catch (error) {
-      console.error();
     }
   } else if (facebookLinkRegex.test(messageText)) {
     try {
@@ -560,7 +553,6 @@ const headResponse = await axios.head(apiUrl, { headers });
         }, pageAccessToken);
       }
     } catch (error) {
-      console.error();
     }
   } else if (regEx_tiktok.test(messageText)) {
     try {
@@ -604,7 +596,6 @@ const headResponse = await axios.head(shotiUrl, { headers });
         }, pageAccessToken);
       }
     } catch (error) {
-      console.error();
     }
   } else if (youtubeLinkRegex.test(messageText)) {
     try {
@@ -676,7 +667,6 @@ const headResponse = await axios.head(shotiUrl, { headers });
         }, pageAccessToken);
       }
     } catch (error) {
-      console.error();
     }
   } else if (spotifyLinkRegex.test(messageText)) {
     try {
@@ -697,7 +687,6 @@ const headResponse = await axios.head(shotiUrl, { headers });
         }, pageAccessToken);
       }
     } catch (error) {
-      console.error();
     }
 } else if (soundcloudRegex.test(messageText)) {
     try {
@@ -766,7 +755,6 @@ const { download, thumbnail, quality, duration, title } = response.data;
         }, pageAccessToken);
         }
       } catch (error) {
-      console.error();
     }
 } else if (capcutLinkRegex.test(messageText)) {
     try {
@@ -828,7 +816,6 @@ sendMessage(senderId, { text: kupal }, pageAccessToken);
         }, pageAccessToken);
       }
     } catch (error) {
-      console.error();
     }
   }
 
@@ -878,14 +865,26 @@ async function updateMessengerCommands() {
       return;
     }
 
-    const response = await axios.post(`https://graph.facebook.com/v21.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
-      { commands: [{ locale: 'default', commands: commandsPayload }] },
-      { headers: { 'Content-Type': 'application/json' } }
-    );
+    const response = await axios.post(
+  `https://graph.facebook.com/v21.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
+  { 
+    commands: [
+      { 
+        locale: 'default', 
+        commands: commandsPayload 
+      }
+    ] 
+  },
+  { 
+    headers: {
+      'Content-Type': 'application/json' 
+    }
+  }
+);
 
-    console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to load commands');
+
+    console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to load commands'); 
   } catch (error) {
-    console.error();
   }
 } 
 
