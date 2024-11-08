@@ -128,17 +128,17 @@ function handlePostback(event, pageAccessToken) {
 }
 
 
-async function sendMessage(senderId, message, pageAccessToken) {
+async function sendMessage(senderId, message) {
   if (!message || (!message.text && !message.attachment)) {
     return;
   }
 
- await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
-    recipient: { id: senderId },
-    sender_action: "mark_seen"
-  }); 
-
   try {
+    await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
+      recipient: { id: senderId },
+      sender_action: "mark_seen"
+    });
+
     await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, {
       recipient: { id: senderId },
       sender_action: "typing_on"
@@ -158,7 +158,7 @@ async function sendMessage(senderId, message, pageAccessToken) {
     }
 
     if (message.quick_replies) {
-  messagePayload.message.quick_replies = message.quick_replies;
+      messagePayload.message.quick_replies = message.quick_replies;
     }
 
     const res = await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, messagePayload);
@@ -167,8 +167,10 @@ async function sendMessage(senderId, message, pageAccessToken) {
       recipient: { id: senderId },
       sender_action: "typing_off"
     });
+
     return res.data;
   } catch (error) {
+    console.error();
   }
 }
 
