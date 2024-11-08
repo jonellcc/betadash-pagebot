@@ -4,7 +4,7 @@ module.exports = {
   name: 'lyrics',
   description: 'Fetch song lyrics',
   author: 'Cliff',
-  async execute(senderId, args, pageAccessToken, sendMessage) {
+  async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
     const query = args.join(' ');
 
 if (!query) {
@@ -13,12 +13,17 @@ if (!query) {
     }
 
     try {
-      const apiUrl = `https://api.popcat.xyz/lyrics?song=${encodeURIComponent(query)}`;
+      const apiUrl = `https://lyrist.vercel.app/api/${encodeURIComponent(query)}`;
       const response = await axios.get(apiUrl);
-      const result = response.data;
+      const { lyrics, title, artist, image } = response.data;
 
-      if (result && result.lyrics) {
-        const lyricsMessage = `Title: ${result.title}\nArtist: ${result.artist}\n\n${result.lyrics}`;
+      if (lyrics) {
+        const lyricsMessage = `Title: ${title}
+Artist: ${artist}
+
+𖢨°•°•——[ LYRICS ]——•°•°𖢨
+${lyrics}
+𖢨°•°•——[ LYRICS ]——•°•°𖢨`;
 
         const maxMessageLength = 2000;
         if (lyricsMessage.length > maxMessageLength) {
@@ -30,12 +35,12 @@ if (!query) {
           sendMessage(senderId, { text: lyricsMessage }, pageAccessToken);
         }
 
-        if (result.image) {
+        if (image) {
           sendMessage(senderId, {
             attachment: {
               type: 'image',
               payload: {
-                url: result.image,
+                url: image,
                 is_reusable: true
               }
             }
@@ -49,11 +54,3 @@ if (!query) {
     }
   }
 };
-
-function splitMessageIntoChunks(message, chunkSize) {
-  const chunks = [];
-  for (let i = 0; i < message.length; i += chunkSize) {
-    chunks.push(message.slice(i, i + chunkSize));
-  }
-  return chunks;
-}
