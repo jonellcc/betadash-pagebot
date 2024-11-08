@@ -118,18 +118,13 @@ const kupal = {
        quick_replies: [
           {
             content_type: "text",
-            title: "blackbox",
-            payload: "BLACKBOX"
+            title: "Ai",
+            payload: "AI"
           },
             {
             content_type: "text",
             title: "llama",
             payload: "LLAMA"
-          },
-           {
-            content_type: "text",
-            title: "cohere",
-            payload: "COHERE"
           },
           {
             content_type: "text",
@@ -155,16 +150,6 @@ const kupal = {
             content_type: "text",
             title: "font",
             payload: "FONT"
-          },
-           {
-            content_type: "text",
-            title: "davinci",
-            payload: "davinci"
-          },
-          {
-            content_type: "text",
-            title: "claude",
-            payload: "CLAUDE"
           },
             {
             content_type: "text",
