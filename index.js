@@ -215,8 +215,11 @@ for (const file of commandFiles) {
 }
 
 
-async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.message || !event.sender.id || !event.is_echo)  {
+async function handleMessage(event, message, pageAccessToken) {
+
+if (message.is_echo) return;
+
+  if (!event || !event.sender || !event.message || !event.message.is_echo || !event.sender.id)  {
     return;
   }
 
