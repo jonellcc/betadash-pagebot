@@ -1,4 +1,3 @@
-const request = require('request');
 const axios = require('axios');
 
 async function typingIndicator(senderId, pageAccessToken) {
@@ -18,12 +17,10 @@ async function typingIndicator(senderId, pageAccessToken) {
     });
 
   } catch (error) {
-    console.error();
   }
 }
 
-
-function sendMessage(senderId, message, pageAccessToken, mid = null) {
+async function sendMessage(senderId, message, pageAccessToken, mid = null) {
   if (!message || (!message.text && !message.attachment)) {
     console.error('Error: Message must provide valid text or attachment.');
     return;
@@ -46,22 +43,17 @@ function sendMessage(senderId, message, pageAccessToken, mid = null) {
     payload.message.quick_replies = message.quick_replies;
   }
 
-  typingIndicator(senderId, pageAccessToken);
+  await typingIndicator(senderId, pageAccessToken);
 
-  request({
-    url: 'https://graph.facebook.com/v13.0/me/messages',
-    qs: { access_token: pageAccessToken },
-    method: 'POST',
-    json: payload,
-  }, (error, response, body) => {
-    if (error) {
-      console.error();
-    } else if (response.body.error) {
-      console.error();
+  try {
+    const response = await axios.post(`https://graph.facebook.com/v13.0/me/messages`, payload, {
+      params: { access_token: pageAccessToken },
+    });
+    if (response.data.error) {
     } else {
-      console.log();
     }
-  });
+  } catch (error) {
+  }
 }
 
 module.exports = { sendMessage, typingIndicator };

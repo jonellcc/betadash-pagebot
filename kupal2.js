@@ -7,14 +7,13 @@ const lastImageByUser = new Map();
 const lastVideoByUser = new Map();
 const admin = ["8505900689447357", "8269473539829237", "7913024942132935"];
 
-// Load all command files
 const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
   commands.set(command.name, command);
 }
 
-// Main function to handle incoming events
+
 async function kupal(event, pageAccessToken) {
   if (!event || !event.sender || !event.sender.id) return;
 
@@ -22,7 +21,6 @@ async function kupal(event, pageAccessToken) {
   let imageUrl = null;
   let videoUrl = null;
 
-  // Check for attachments in the message
   if (event.message && event.message.attachments) {
     const imageAttachment = event.message.attachments.find(att => att.type === 'image');
     const videoAttachment = event.message.attachments.find(att => att.type === 'video');
@@ -37,7 +35,6 @@ async function kupal(event, pageAccessToken) {
     }
   }
 
-  // Process command if there is a text message
   if (event.message && event.message.text) {
     const messageText = event.message.text.trim();
     const words = messageText.split(' ');
@@ -53,7 +50,6 @@ async function kupal(event, pageAccessToken) {
           const mediaToUpload = lastImage || lastVideo;
           await commands.get('imgur').execute(senderId, args, pageAccessToken, mediaToUpload, admin);
 
-          // Clear the last media after use
           if (lastImage) lastImageByUser.delete(senderId);
           if (lastVideo) lastVideoByUser.delete(senderId);
         } catch (error) {
@@ -67,7 +63,6 @@ async function kupal(event, pageAccessToken) {
   }
 }
 
-// Function to get attachments from a message ID
 async function getAttachments(mid, pageAccessToken) {
   if (!mid) throw new Error("No message ID provided.");
 
@@ -78,7 +73,7 @@ async function getAttachments(mid, pageAccessToken) {
   if (data && data.data.length > 0 && data.data[0].image_data) {
     return data.data[0].image_data.url;
   } else {
-    throw new Error("No image found in the replied message.");
+    throw new Error();
   }
 }
 

@@ -192,7 +192,6 @@ await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PA
       recipient: { id: senderId },
       sender_action: "typing_off"
     });
-
     return res.data;
   } catch (error) {
   }
@@ -200,7 +199,7 @@ await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${PA
 
 async function getAttachments(mid, pageAccessToken) {
   if (!mid) {
-    throw new Error("No message ID provided.");
+    throw new Error();
   }
 
   try {
@@ -211,7 +210,7 @@ async function getAttachments(mid, pageAccessToken) {
     if (data && data.data.length > 0 && data.data[0].image_data) {
       return data.data[0].image_data.url;
     } else {
-      throw new Error("No image found in the replied message.");
+      throw new Error();
     }
   } catch (error) {
   }
@@ -227,7 +226,6 @@ for (const file of commandFiles) {
 
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id) {
-    console.error();
     return;
   }
 
@@ -454,7 +452,6 @@ if (messageText && messageText.includes("gdrive")) {
   } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText) && jb !== messageText)  {
    try {
   let text;
-
   if (imageUrl) {
     const apiUrl = `https://rest-api-production-5054.up.railway.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&file_url=${encodeURIComponent(imageUrl)}`;
     const response = await axios.get(apiUrl, { headers });
@@ -479,9 +476,9 @@ if (messageText && messageText.includes("gdrive")) {
 } else if (instagramLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Instagram, please wait...' }, pageAccessToken);
-      const apiUrl = `https://betadash-search-download.vercel.app/insta?url=${encodeURIComponent(messageText)}`;
+      const apiUrl = `https://universaldownloader.zapto.org/download?url=${encodeURIComponent(messageText)}`;
       const response = await axios.get(apiUrl, { headers });
-      const videoUrl = response.data.result[0]._url;
+      const videoUrl = response.data.result;
 
 const headResponse = await axios.head(videoUrl, { headers });
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
