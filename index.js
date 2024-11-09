@@ -443,11 +443,11 @@ if (messageText && messageText.includes("gdrive")) {
    try {
   let text;
   if (imageUrl) {
-    const apiUrl = `https://rest-api-production-5054.up.railway.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&file_url=${encodeURIComponent(imageUrl)}`;
+    const apiUrl = `https://haji-mix.vercel.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&file_url=${encodeURIComponent(imageUrl)}`;
     const response = await axios.get(apiUrl, { headers });
     text = response.data.message;
   } else {
-    const apiUrl = `https://rest-api-production-5054.up.railway.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
+    const apiUrl = `https://haji-mix.vercel.app/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
     const response = await axios.get(apiUrl, { headers });
     text = response.data.message;
   }
