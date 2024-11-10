@@ -3,7 +3,7 @@ const axios = require("axios");
 module.exports = {
   name: "fight",
   description: "Generate a canvas fight naruto amd sasuke",
-  usage: "pervert one two",
+  usage: "fight one two",
   author: "Cliff (Api-kenlie syugg)",
   async execute(senderId, args, pageAccessToken, sendMessage) {
     try {

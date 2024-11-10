@@ -14,6 +14,7 @@ const headers = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   'Content-Type': 'application/json'
 };
+const { typingIndicator } = require("./kupal");
 
 const app = express();
 app.use(bodyParser.json());
@@ -29,7 +30,6 @@ const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO39cZCWtulezE599r3wNa7hcPyHwqyN8EzfVaZAt
 const commandList = [];
 const descriptions = [];
 const commands = new Map();
-
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "page.html"));
@@ -68,8 +68,8 @@ app.post('/webhook', (req, res) => {
           handlePostback(event, PAGE_ACCESS_TOKEN);
         } else if (GET_STARTED_PAYLOAD) {
          handlePostback(event, PAGE_ACCESS_TOKEN);
-   /**   } else if (event.response_feedback) {
-        handleResponseFeedback(event); **/
+      } else if (senderId) {
+        handleLongTask(senderId);
         }
       });
     });     res.status(200).send('EVENT_RECEIVED');
@@ -127,6 +127,52 @@ function handlePostback(event, pageAccessToken) {
   }
 }
 
+function handleLongTask(senderId) {
+    typingIndicator(senderId, true);
+
+    const maxTimeout = 30000;
+    let isResponseSent = false;
+
+    simulateApiCall()
+        .then(response => {
+            if (!isResponseSent) {
+                isResponseSent = true;
+                clearTimeout(timeout);
+                typingIndicator(senderId, false);
+            }
+        })
+        .catch(error => {
+            if (!isResponseSent) {
+                isResponseSent = true;
+                clearTimeout(timeout);
+                typingIndicator(senderId, false);
+            }
+        });
+
+    const timeout = setTimeout(() => {
+        if (!isResponseSent) {
+            isResponseSent = true;
+            typingIndicator(senderId, false);
+        sendMessage(senderId, { text: 'The request took too long to process and has been timed out.'}, pageAccessToken);
+        }
+    }, maxTimeout);
+}
+
+function simulateApiCall() {
+    return new Promise((resolve, reject) => {
+        const delay = Math.floor(Math.random() * 35000);
+        setTimeout(() => {
+            if (delay < 30000) {
+                resolve('Simulated API data');
+            } else {
+                reject('Simulated timeout error');
+            }
+        }, delay);
+    });
+}
+
+
+
 async function sendMessage(senderId, message, pageAccessToken) {
 
 if (!message || (!message.text && !message.attachment)) {
@@ -174,12 +220,12 @@ await axios.post('https://graph.facebook.com/v21.0/me/messages', messagePayload,
 params: { access_token: pageAccessToken }
 });
 
-await axios.post('https://graph.facebook.com/v21.0/me/messages', {
+ await axios.post('https://graph.facebook.com/v21.0/me/messages', {
 recipient: { id: senderId },
 sender_action: 'typing_off'
 }, {
 params: { access_token: pageAccessToken }
-});
+}); 
 } catch (error) {
 console.error();
 }
