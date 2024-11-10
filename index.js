@@ -215,7 +215,7 @@ for (const file of commandFiles) {
 
 
 async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.message || !event.message.mid || !event.sender.id || !event.message.attachments)  {
+  if (!event || !event.sender || !event.message || !event.sender.id)  {
     return;
   }
 
