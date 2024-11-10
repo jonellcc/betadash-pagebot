@@ -13,9 +13,9 @@ if (!prompt) {
 
     try {
 sendMessage(senderId, { text: '🔍 Searching Please Wait....' }, pageAccessToken);
-      const apiUrl = `https://haji-mix.vercel.app/gpt4om?prompt=${encodeURIComponent(prompt)}&uid=${senderId}`;
+      const apiUrl = `https://yt-video-production.up.railway.app/gpt4-omni?ask=${encodeURIComponent(prompt)}&userid=${senderId}`;
       const response = await axios.get(apiUrl);
-      const text = response.data.message;
+      const text = response.data.response;
 
       const maxMessageLength = 2000;
       if (text.length > maxMessageLength) {

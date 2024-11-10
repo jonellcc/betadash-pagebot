@@ -19,7 +19,7 @@ module.exports = {
     try {
       sendMessage(senderId, { text: '🔍 Searching, Please Wait....' }, pageAccessToken);
 
-      const apiUrl = `https://betadash-api-swordslush.vercel.app/blackbox?ask=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://yt-video-production.up.railway.app/blackbox?ask=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
       const text = response.data.Response;
 

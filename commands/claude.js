@@ -13,9 +13,9 @@ if (!prompt) {
 
     try {
       sendMessage(senderId, { text: '🔍 Searching Please Wait....' }, pageAccessToken);
-      const apiUrl = `https://betadash-api-swordslush.vercel.app/claude-3-5-sonnet-20240620?ask=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://kaiz-apis.gleeze.com/api/claude-sonnet-3.5?q=${encodeURIComponent(prompt)}&uid=${senderId}`;
       const response = await axios.get(apiUrl);
-      const text = response.data.message;
+      const text = response.data.response;
 
       const maxMessageLength = 2000;
       if (text.length > maxMessageLength) {
