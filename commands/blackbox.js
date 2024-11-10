@@ -30,10 +30,10 @@ module.exports = {
       if (formattedResponse.length > maxMessageLength) {
         const messages = splitMessageIntoChunks(formattedResponse, maxMessageLength);
         for (const message of messages) {
-          sendMessage(senderId, { text: message }, pageAccessToken);
+          await sendMessage(senderId, { text: message }, pageAccessToken);
         }
       } else {
-        sendMessage(senderId, { text: formattedResponse }, pageAccessToken);
+     await  sendMessage(senderId, { text: formattedResponse }, pageAccessToken);
       }
     } catch (error) {
       sendMessage(senderId, { text: 'Sorry, there was an error processing your request.' }, pageAccessToken);
