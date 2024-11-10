@@ -118,6 +118,21 @@ const kupal = {
        quick_replies: [
           {
             content_type: "text",
+            title: "gpt4o",
+            payload: "GPT4O"
+          },
+          {
+            content_type: "text",
+            title: "wizard",
+            payload: "WIZARD"
+          },
+          {
+            content_type: "text",
+            title: "Blackbox",
+            payload: "BLACKBOX"
+          },
+          {
+            content_type: "text",
             title: "Ai",
             payload: "AI"
           },
