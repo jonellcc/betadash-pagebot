@@ -215,7 +215,7 @@ for (const file of commandFiles) {
 
 
 async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.message || !event.sender.id)  {
+  if (!event || !event.sender || !event.message || !event.message.mid || !event.sender.id || !event.message.attachments)  {
     return;
   }
 
@@ -228,6 +228,7 @@ const gif = event.message.attachments &&
 
    const senderId = event.sender.id;
   const messageText = event.message.text;
+const messageId = event.message.mid;
   let jb = "👍";
 
  let imageUrl = '';
@@ -420,7 +421,7 @@ if (messageText && messageText.includes("gdrive")) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, splitMessageIntoChunks);
+      await command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, messageId, splitMessageIntoChunks);
     } catch (error) {
       const kupall = {
      text: "❌ There was an error processing that command\n\nType 'Help' to see more useful commands",
