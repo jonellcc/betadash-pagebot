@@ -196,8 +196,8 @@ params: { access_token: pageAccessToken }
 
 const messagePayload = {
 recipient: { id: senderId },
-message: message.text ? { text: message.text } : { attachment: message.attachment }
-    };
+message: {}
+};
 
 if (message.text) {
 messagePayload.message.text = message.text;
@@ -254,14 +254,6 @@ const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(f
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
   commands.set(command.name, command);
-}
-
-function splitMessageIntoChunks(message, chunkSize) {
-  const chunks = [];
-  for (let i = 0; i < message.length; i += chunkSize) {
-    chunks.push(message.slice(i, i + chunkSize));
-  }
-  return chunks;
 }
 
 
@@ -472,7 +464,7 @@ if (messageText && messageText.includes("gdrive")) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, splitMessageIntoChunks);
+      await command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, messageId, splitMessageIntoChunks);
     } catch (error) {
       const kupall = {
      text: "❌ There was an error processing that command\n\nType 'Help' to see more useful commands",
@@ -865,6 +857,14 @@ if (messageText && messageText.includes("More shoti")) {
   }
   return;
   }
+}
+
+function splitMessageIntoChunks(message, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < message.length; i += chunkSize) {
+    chunks.push(message.slice(i, i + chunkSize));
+  }
+  return chunks;
 }
 
  function loadCommands() {

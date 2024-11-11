@@ -87,7 +87,9 @@ module.exports = {
         const command = require(path.join(commandsDir, commandFile));
         const name = command.name ? `➟ Name: ${command.name}\n` : "";
         const author = command.author ? `➟ Author: ${command.author}\n` : "";
-       const usage = command.usage || usages ? `➟ Usage: ${command.usage || usages}\n` : "No Usage found";
+       const usage = (command && command.usage) || usages
+  ? `➟ Usage: ${(command && command.usage) || usages}\n`
+  : "No Usage found";
         const description = command.description ? `➟ description: ${command.description}\n` : "";
         const commandDetails = `${name}${author}${usage}${description}`;
 
