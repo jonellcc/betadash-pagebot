@@ -14,7 +14,6 @@ const headers = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   'Content-Type': 'application/json'
 };
-const { typingIndicator } = require("./kupal");
 
 const app = express();
 app.use(bodyParser.json());
@@ -68,8 +67,6 @@ app.post('/webhook', (req, res) => {
           handlePostback(event, PAGE_ACCESS_TOKEN);
         } else if (GET_STARTED_PAYLOAD) {
          handlePostback(event, PAGE_ACCESS_TOKEN);
-      } else if (senderId) {
-        handleLongTask(senderId);
         }
       });
     });     res.status(200).send('EVENT_RECEIVED');
@@ -127,7 +124,7 @@ function handlePostback(event, pageAccessToken) {
   }
 }
 
-function handleLongTask(senderId) {
+/** function handleLongTask(senderId) {
     typingIndicator(senderId, true);
 
     const maxTimeout = 30000;
@@ -169,7 +166,7 @@ function simulateApiCall() {
             }
         }, delay);
     });
-}
+} **/
 
 
 
