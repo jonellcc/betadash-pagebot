@@ -228,38 +228,24 @@ console.error();
 }
 }
 
-
-
 async function getAttachments(mid, pageAccessToken) {
-  if (!mid) {
-    throw new Error("Message ID is required.");
-  }
+    if (!mid) return;
 
-  try {
-    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-      params: { access_token: pageAccessToken }
-    });
+    try {
+      const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+        params: { access_token: pageAccessToken }
+     });
 
-    if (data && data.data.length > 0) {
-      const attachment = data.data[0];
+      if (data && data.data.length > 0) {
+        const attachment = data.data[0];
 
-      if (attachment.image_data) {
-        return attachment.image_data.url;
-      } else if (attachment.video_data) {
-        return attachment.video_data.url;
-      } else if (attachment.animated_image_data) {
-        return attachment.animated_image_data.url; 
-      } else {
-        throw new Error();
-       }
-    } else {
-      throw new Error();
+        if (attachment.image_data) return attachment.image_data.url;
+        if (attachment.video_data) return attachment.video_data.url;
+        if (attachment.animated_image_data) return attachment.animated_image_data.url;
+      }
+    } catch (error) {
     }
-  } catch (error) {
-    throw error;
   }
-}
-
 
 const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
