@@ -256,6 +256,23 @@ for (const file of commandFiles) {
   commands.set(command.name, command);
 }
 
+const fontMapping = {
+    'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚',
+    'H': '𝗛', 'I': '𝗜', 'J': '𝗝', 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡',
+    'O': '𝗢', 'P': '𝗣', 'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧', 'U': '𝗨',
+    'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 'Y': '𝗬', 'Z': '𝗭',
+    'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴',
+    'h': '𝗵', 'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻',
+    'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂',
+    'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 'y': '𝘆', 'z': '𝘇'
+};
+
+function convertToBold(text) {
+    return text.replace(/\*(.*?)\*/g, (match, p1) => {
+        return [...p1].map(char => fontMapping[char] || char).join('');
+    });
+}
+
 
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id)  {
@@ -487,13 +504,13 @@ if (messageText && messageText.includes("gdrive")) {
    try {
   let text;
   if (imageUrl) {
-    const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&file_url=${encodeURIComponent(imageUrl)}`;
+    const apiUrl = `https://ccprojectapis.ddns.net/api/gemini?ask=${encodeURIComponent(messageText)}&imgurl=${encodeURIComponent(imageUrl)}`;
     const response = await axios.get(apiUrl, { headers });
-    text = response.data.message;
+    text = convertToBold(response.data.vision);
   } else {
-    const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
+    const apiUrl = `https://ccprojectapis.ddns.net/api/gpt4o?ask=${encodeURIComponent(messageText)}&id=${senderId}`;
     const response = await axios.get(apiUrl, { headers });
-    text = response.data.message;
+    text = convertToBold(response.data.response);
   }
 
   const maxMessageLength = 2000;
