@@ -232,7 +232,7 @@ console.error();
 
 async function getAttachments(mid, pageAccessToken) {
   if (!mid) {
-    throw new Error();
+    throw new Error("Message ID is required.");
   }
 
   try {
@@ -240,12 +240,23 @@ async function getAttachments(mid, pageAccessToken) {
       params: { access_token: pageAccessToken }
     });
 
-    if (data && data.data.length > 0 && data.data[0].image_data) {
-      return data.data[0].image_data.url;
+    if (data && data.data.length > 0) {
+      const attachment = data.data[0];
+
+      if (attachment.image_data) {
+        return attachment.image_data.url;
+      } else if (attachment.video_data) {
+        return attachment.video_data.url;
+      } else if (attachment.animated_image_data) {
+        return attachment.animated_image_data.url; 
+      } else {
+        throw new Error();
+       }
     } else {
       throw new Error();
     }
   } catch (error) {
+    throw error;
   }
 }
 
@@ -289,18 +300,12 @@ const gif = event.message.attachments &&
    const senderId = event.sender.id;
   const messageText = event.message.text;
 const messageId = event.message.mid;
-  let jb = "👍";
 
  let imageUrl = '';
 
 if (event.message && event.message.attachments) {
-  const imageAttachment = event.message.attachments.find(att => att.type === 'image') 
-    || event.message.attachments.find(att => att.type === 'video');
-
-  if (imageAttachment) {
-    imageUrl = imageAttachment.payload.url;
+    imageUrl = event.message.attachments[0].payload.url || null;
   }
-}
 
   if (event.message && event.message.reply_to && event.message.reply_to.mid) {
     try {
@@ -500,17 +505,17 @@ if (messageText && messageText.includes("gdrive")) {
    };
     sendMessage(senderId, kupall, pageAccessToken);
     }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText) && jb !== messageText)  {
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText)) {
    try {
   let text;
   if (imageUrl) {
-    const apiUrl = `https://ccprojectapis.ddns.net/api/gemini?ask=${encodeURIComponent(messageText)}&imgurl=${encodeURIComponent(imageUrl)}`;
+    const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}&imageUrl=${encodeURIComponent(imageUrl)}`;
     const response = await axios.get(apiUrl, { headers });
-    text = convertToBold(response.data.vision);
+    text = response.data.response;
   } else {
-    const apiUrl = `https://ccprojectapis.ddns.net/api/gpt4o?ask=${encodeURIComponent(messageText)}&id=${senderId}`;
+    const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}`;
     const response = await axios.get(apiUrl, { headers });
-    text = convertToBold(response.data.response);
+    text = response.data.response;
   }
 
   const maxMessageLength = 2000;
