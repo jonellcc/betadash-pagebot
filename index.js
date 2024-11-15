@@ -242,6 +242,7 @@ async function getAttachments(mid, pageAccessToken) {
         if (attachment.image_data) return attachment.image_data.url;
         if (attachment.video_data) return attachment.video_data.url;
         if (attachment.animated_image_data) return attachment.animated_image_data.url;
+   if (attachment.file_url) return attachment.file_url;    
       }
     } catch (error) {
     }
@@ -518,9 +519,9 @@ if (messageText && messageText.includes("gdrive")) {
 } else if (instagramLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Instagram, please wait...' }, pageAccessToken);
-      const apiUrl = `https://universaldownloader.zapto.org/download?url=${encodeURIComponent(messageText)}`;
+      const apiUrl = `https://yt-video-production.up.railway.app/insta?url=${encodeURIComponent(messageText)}`;
       const response = await axios.get(apiUrl, { headers });
-      const videoUrl = response.data.result;
+      const videoUrl = response.data.result[0].url;
 
 const headResponse = await axios.head(videoUrl, { headers });
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
