@@ -67,6 +67,8 @@ app.post('/webhook', (req, res) => {
           handlePostback(event, PAGE_ACCESS_TOKEN);
         } else if (GET_STARTED_PAYLOAD) {
          handlePostback(event, PAGE_ACCESS_TOKEN);
+} else if (event.response_feedback.feedback) {
+        handleResponseFeedback(event);
         }
       });
     });     res.status(200).send('EVENT_RECEIVED');
@@ -76,7 +78,7 @@ app.post('/webhook', (req, res) => {
 });
 
 
-/** function handleResponseFeedback(event) {
+ function handleResponseFeedback(event) {
   const feedback = event.response_feedback.feedback;
   const messageId = event.response_feedback.mid;
   const senderId = event.sender.id;
@@ -86,22 +88,35 @@ app.post('/webhook', (req, res) => {
     : `User ${senderId} gave negative feedback for message ${messageId}`;
 
   sendMessage("7913024942132935", { text: messageText }, pageAccessToken);
-} **/
+} 
 
 
-function handlePostback(event, pageAccessToken) {
+/** function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
 
   try {
     if (payload === 'GET_STARTED_PAYLOAD') {
-      const greetingMessage = {
-        greeting: [
-          {
-            locale: "default",
-            text: "Hello, I'm BELUGA! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving. \n\nType 'help' below 👇 to see available commands."
+      sendMessage(senderId, {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: "Hello, I'm Beluga! I'm your friendly AI assistant, here to help with any questions, tasks, or just about anything else you need. I'm constantly learning and improving, so please bear with me if ever I make any mistakes. I'm excited to work with you and make your day a little brighter. What's on your mind today?\n\nUse the 'HELP' button to show a list of commands. Beluga is for educational and fun purposes, so now you can explore all the commands. Like/Follow for more.",
+            buttons: [
+              {
+                type: 'web_url',
+                url: "https://www.facebook.com/61567757543707",
+                title: "Like/Follow"
+              },
+              {
+                type: 'postback',
+                title: "Help",
+                payload: "HELP_PAYLOAD"
+              }
+            ]
           }
-        ],
+        },
         quick_replies: [
           {
             content_type: "text",
@@ -114,15 +129,37 @@ function handlePostback(event, pageAccessToken) {
             payload: "PRIVACY_POLICY"
           }
         ]
-      };
-
-      sendMessage(senderId, greetingMessage, pageAccessToken);
-    } else {
-      sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
+      });
     }
-  } catch (err) {
+  } catch (error) {
   }
-}
+
+  if (event.postback && event.postback.payload) {
+    handlePayload(event.postback.payload);
+  }
+
+  const url = `https://graph.facebook.com/v21.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
+  const profilePayload = {
+    get_started: { payload: "GET_STARTED_PAYLOAD" },
+    greeting: [
+      {
+        locale: "en_US",
+        text: "Hello, {{user_first_name}}! I'm Beluga! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving. What's on your mind today?"
+      }
+    ]
+  };
+
+  axios.post(url, profilePayload, {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .then(response => {
+  })
+  .catch(error => {
+  });
+} **/
+
 
 /** function handleLongTask(senderId) {
     typingIndicator(senderId, true);
@@ -168,7 +205,12 @@ function simulateApiCall() {
     });
 } **/
 
+function handlePostback(event, pageAccessToken) {
+  const senderId = event.sender.id;
+  const payload = event.postback.payload;
 
+  sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
+}
 
 async function sendMessage(senderId, message, pageAccessToken) {
 
@@ -271,6 +313,15 @@ function convertToBold(text) {
     });
 }
 
+async function getMessage(mid) {
+      return new Promise((resolve, reject) => {
+        if (!mid) resolve(null);
+        axios.get(`https://graph.facebook.com/v21.0/${mid}?fields=message&access_token=${pageAccessToken}`)
+          .then(response => resolve(response.data.message))
+          .catch(err => reject(err));
+      });
+    }
+
 
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id)  {
@@ -284,6 +335,7 @@ const video = event.message.attachments &&
 const gif = event.message.attachments &&
            (event.message.attachments[0]?.type === 'gif');
 
+const events = event;
    const senderId = event.sender.id;
   const messageText = event.message.text;
 const messageId = event.message.mid;
@@ -473,7 +525,7 @@ if (messageText && messageText.includes("gdrive")) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, event, pageid, admin, messageId, splitMessageIntoChunks);
+      await command.execute(senderId, args, pageAccessToken, sendMessage, events, admin, splitMessageIntoChunks);
     } catch (error) {
       const kupall = {
      text: "❌ There was an error processing that command\n\nType 'Help' to see more useful commands",
