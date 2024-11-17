@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "61567757543707";
 const admin = ["8786755161388846", "8376765705775283", "8552967284765085"];
-const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO39cZCWtulezE599r3wNa7hcPyHwqyN8EzfVaZAt1etXDwncdZB8MDHxLlY6ZCPdSs7BKhR6ujna8OWI56zJnQQPudShraMvR4PglQjqb5ijCWcdUOhU6SRreFoDYmlCoMqaRryG86CpncRQLI6PjYcgEk9I0dVZBvs6ANP5dV8xnWYUOzdp7uQZDZD";
+const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO8kzsEU0Sw8ZBYx3ciRAZCmobzRgOnZBRSLhlPdAUgOGbpBAXUVNhZCBQ88ZAgLsXsWLb81FvIzNZC1ZByfliyzivZBBkZA4yVWsdg6qK3NZAmdGidaRpj92NGq25C09QWzO2NP3lRZCOa2zaZC9s1sj2ZCY8h4ZBi35ZC172pSNZCZCUxvIkeeg47s1QrJf79QZDZD";
 
 const commandList = [];
 const descriptions = [];
@@ -213,62 +213,59 @@ function handlePostback(event, pageAccessToken) {
 }
 
 async function sendMessage(senderId, message, pageAccessToken) {
+    if (!message || (!message.text && !message.attachment)) {
+        console.error();
+        return;
+    }
 
-if (!message || (!message.text && !message.attachment)) {
-console.error();
-return;
+    try {
+        await axios.post('https://graph.facebook.com/v21.0/me/messages', {
+            recipient: { id: senderId },
+            sender_action: 'mark_seen'
+        }, {
+            params: { access_token: pageAccessToken }
+        });
+
+        await axios.post('https://graph.facebook.com/v21.0/me/messages', {
+            recipient: { id: senderId },
+            sender_action: 'typing_on'
+        }, {
+            params: { access_token: pageAccessToken }
+        });
+
+        const messagePayload = {
+            recipient: { id: senderId },
+            message: {},
+            messaging_type: "RESPONSE"
+        };
+
+        if (message.text) {
+            messagePayload.message.text = message.text;
+        }
+
+        if (message.attachment) {
+            messagePayload.message.attachment = message.attachment;
+        }
+
+        if (message.quick_replies) {
+            messagePayload.message.quick_replies = message.quick_replies;
+        }
+
+        await axios.post('https://graph.facebook.com/v21.0/me/messages', messagePayload, {
+            params: { access_token: pageAccessToken }
+        });
+
+        await axios.post('https://graph.facebook.com/v21.0/me/messages', {
+            recipient: { id: senderId },
+            sender_action: 'typing_off'
+        }, {
+            params: { access_token: pageAccessToken }
+        });
+    } catch (error) {
+        console.error();
+    }
 }
 
-
-try {
-await axios.post('https://graph.facebook.com/v21.0/me/messages', {
-recipient: { id: senderId },
-sender_action: 'mark_seen'
-}, {
-params: { access_token: pageAccessToken }
-});
-
-
-await axios.post('https://graph.facebook.com/v21.0/me/messages', {
-recipient: { id: senderId },
-sender_action: 'typing_on'
-}, {
-params: { access_token: pageAccessToken }
-});
-
-const messagePayload = {
-recipient: { id: senderId },
-message: {}
-};
-
-if (message.text) {
-messagePayload.message.text = message.text;
-}
-
-
-if (message.attachment) {
-messagePayload.message.attachment = message.attachment;
-}
-
-
-if (message.quick_replies) {
-messagePayload.message.quick_replies = message.quick_replies;
-}
-
-await axios.post('https://graph.facebook.com/v21.0/me/messages', messagePayload, {
-params: { access_token: pageAccessToken }
-});
-
- await axios.post('https://graph.facebook.com/v21.0/me/messages', {
-recipient: { id: senderId },
-sender_action: 'typing_off'
-}, {
-params: { access_token: pageAccessToken }
-}); 
-} catch (error) {
-console.error();
-}
-}
 
 async function getAttachments(mid, pageAccessToken) {
     if (!mid) return;
@@ -339,8 +336,7 @@ const events = event;
    const senderId = event.sender.id;
   const messageText = event.message.text;
 const messageId = event.message.mid;
-
- let imageUrl = '';
+let imageUrl = '';
 
 if (event.message && event.message.attachments) {
     imageUrl = event.message.attachments[0].payload.url || null;
@@ -525,7 +521,7 @@ if (messageText && messageText.includes("gdrive")) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, events, admin, splitMessageIntoChunks);
+      await command.execute(senderId, args, pageAccessToken, sendMessage, admin, splitMessageIntoChunks);
     } catch (error) {
       const kupall = {
      text: "❌ There was an error processing that command\n\nType 'Help' to see more useful commands",
@@ -547,15 +543,27 @@ if (messageText && messageText.includes("gdrive")) {
   } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText)) {
    try {
   let text;
+    if (imageUrl) {
+        const apiUrl = `https://haji-mix.onrender.com/google?prompt=${encodedURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&roleplay=&google_api_key=&file_url=${encodedURIComponent(imageUrl)}`;
+        const response = await axios.get(apiUrl, { headers });
+        text = response.data.message;
+      } else {
+        const api = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
+        const response = await axios.get(api, { headers });
+        text = response.data.message;
+}
+
+/** let text;
   if (imageUrl) {
-    const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}&imageUrl=${encodeURIComponent(imageUrl)}`;
+    const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&file_url=${encodeURIComponent(imageUrl)}`;
     const response = await axios.get(apiUrl, { headers });
-    text = response.data.response;
+    text = response.data.message;
   } else {
-    const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(messageText)}&uid=${senderId}`;
+    const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
     const response = await axios.get(apiUrl, { headers });
-    text = response.data.response;
-  }
+    text = response.data.message;
+  } **/
+
 
   const maxMessageLength = 2000;
   if (text.length > maxMessageLength) {
@@ -962,7 +970,7 @@ async function updateMessengerCommands() {
   { 
     commands: [
       { 
-        locale: 'default', 
+        locale: 'en_US', 
         commands: commandsPayload 
       }
     ] 
@@ -974,39 +982,11 @@ async function updateMessengerCommands() {
   }
 );
 
-
-    console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to load commands'); 
+console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to load commands'); 
   } catch (error) {
   }
 } 
 
-
-/** async function persistent_menu() {
-  const commandsPayload = {
-    persistent_menu: [
-      {
-        locale: "default",
-        composer_input_disabled: false,
-        call_to_actions: commandList.map((name, index) => ({
-          title: name,
-          type: "postback",
-          payload: `COMMAND_${name.toUpperCase()}`
-        }))
-      }
-    ]
-  };
-
-  try {
-    const response = await axios.post(`https://graph.facebook.com/v21.0/me/messenger_profile`, commandsPayload, {
-      params: { access_token: PAGE_ACCESS_TOKEN }
-    });
-    console.log("Commands updated:", response.data);
-  } catch (error) {
-    console.error("Failed to update commands:", error.response?.data || error.message);
-  }
-}
-
-persistent_menu(); **/
  loadCommands();
 updateMessengerCommands();
 
