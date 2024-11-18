@@ -310,7 +310,7 @@ function convertToBold(text) {
     });
 }
 
-async function getMessage(mid) {
+async function getMessage(mid, pageAccessToken) {
       return new Promise((resolve, reject) => {
         if (!mid) resolve(null);
         axios.get(`https://graph.facebook.com/v21.0/${mid}?fields=message&access_token=${pageAccessToken}`)
@@ -336,6 +336,14 @@ const events = event;
    const senderId = event.sender.id;
   const messageText = event.message.text;
 const messageId = event.message.mid;
+
+let content = "";
+
+if (event.type === "message_reply" && event.message) {
+content = await getMessage(event.message.reply_to.mid);
+}
+const combinedContent = content ? `${messageText} ${content}` : messageText;
+
 let imageUrl = '';
 
 if (event.message && event.message.attachments) {
@@ -544,11 +552,14 @@ if (messageText && messageText.includes("gdrive")) {
    try {
   let text;
     if (imageUrl) {
-        const apiUrl = `https://haji-mix.onrender.com/google?prompt=${encodedURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}&roleplay=&google_api_key=&file_url=${encodedURIComponent(imageUrl)}`;
+const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
+        const imgurResponse = await axios.get(imgurApiUrl, { headers } );
+        const imgurLink = imgurResponse.data.uploaded.image;
+        const apiUrl = `https://haji-mix.onrender.com/google?prompt=${encodedURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}&roleplay=&google_api_key=&file_url=${imgurLink}`;
         const response = await axios.get(apiUrl, { headers });
         text = response.data.message;
       } else {
-        const api = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(messageText)}&model=gemini-1.5-flash&uid=${senderId}`;
+        const api = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}`;
         const response = await axios.get(api, { headers });
         text = response.data.message;
 }
