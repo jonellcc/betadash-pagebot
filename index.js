@@ -267,12 +267,12 @@ async function sendMessage(senderId, message, pageAccessToken) {
 }
 
 
-async function getAttachments(mid, pageAccessToken) {
+async function getAttachments(mid) {
     if (!mid) return;
 
     try {
       const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
-        params: { access_token: pageAccessToken }
+        params: { access_token: `${PAGE_ACCESS_TOKEN}` }
      });
 
       if (data && data.data.length > 0) {
@@ -354,7 +354,7 @@ if (event.message && event.message.attachments) {
 
   if (event.message && event.message.reply_to && event.message.reply_to.mid) {
     try {
-      imageUrl = await getAttachments(event.message.reply_to.mid, pageAccessToken);
+      imageUrl = await getAttachments(event.message.reply_to.mid);
     } catch (error) {
       imageUrl = ''; 
     }
@@ -531,7 +531,7 @@ if (messageText && messageText.includes("gdrive")) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, admin, splitMessageIntoChunks);
+      await command.execute(senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks);
     } catch (error) {
       const kupall = {
      text: "❌ There was an error processing that command\n\nType 'Help' to see more useful commands",
