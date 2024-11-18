@@ -310,14 +310,16 @@ function convertToBold(text) {
     });
 }
 
-async function getMessage(mid, pageAccessToken) {
-      return new Promise((resolve, reject) => {
-        if (!mid) resolve(null);
-        axios.get(`https://graph.facebook.com/v21.0/${mid}?fields=message&access_token=${pageAccessToken}`)
-          .then(response => resolve(response.data.message))
-          .catch(err => reject(err));
-      });
-    }
+async function getMessage(mid) {
+  return await new Promise(async (resolve, reject) => {
+    if (!mid) resolve(null);
+    await axios.get(`https://graph.facebook.com/v21.0/${mid}?fields=message&access_token=${PAGE_ACCESS_TOKEN}`).then(data => {
+      resolve(data.data.message);
+    }).catch(err => {
+      reject(err);
+    });
+  });
+}
 
 
 async function handleMessage(event, pageAccessToken) {
@@ -339,7 +341,7 @@ const messageId = event.message.mid;
 
 let content = "";
 
-if (event.type === "message_reply" && event.message) {
+if (event.message && event.message.reply_to) {
 content = await getMessage(event.message.reply_to.mid);
 }
 const combinedContent = content ? `${messageText} ${content}` : messageText;
