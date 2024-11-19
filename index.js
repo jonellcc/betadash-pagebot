@@ -67,11 +67,12 @@ app.post('/webhook', (req, res) => {
           handlePostback(event, PAGE_ACCESS_TOKEN);
         } else if (GET_STARTED_PAYLOAD) {
          handlePostback(event, PAGE_ACCESS_TOKEN);
-} else if (event.response_feedback.feedback) {
-        handleResponseFeedback(event);
+} else if (event.response_feedback?.feedback) {
+          handleResponseFeedback(event);
         }
       });
-    });     res.status(200).send('EVENT_RECEIVED');
+    });
+    res.status(200).send('EVENT_RECEIVED');
   } else {
     res.sendStatus(404);
   }
@@ -88,7 +89,7 @@ app.post('/webhook', (req, res) => {
     : `User ${senderId} gave negative feedback for message ${messageId}`;
 
   sendMessage("7913024942132935", { text: messageText }, pageAccessToken);
-} 
+}
 
 
 /** function handlePostback(event, pageAccessToken) {
@@ -235,8 +236,8 @@ async function sendMessage(senderId, message, pageAccessToken) {
 
         const messagePayload = {
             recipient: { id: senderId },
-            message: {},
-            messaging_type: "RESPONSE"
+            messaging_type: "RESPONSE",
+            message: {},         
         };
 
         if (message.text) {
@@ -557,14 +558,15 @@ if (messageText && messageText.includes("gdrive")) {
 const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
-        const apiUrl = `https://haji-mix.onrender.com/google?prompt=${encodedURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}&roleplay=&google_api_key=&file_url=${imgurLink}`;
+        const apiUrl = `https://api.kenliejugarap.com/pixtral-paid/?question=${encodeURIComponent(combinedContent)}&image_url=${imgurLink}`;
         const response = await axios.get(apiUrl, { headers });
-        text = response.data.message;
+        text = convertToBold(response.data.response);
       } else {
-        const api = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}`;
+        const api = `https://kaiz-apis.gleeze.com/api/ministral-8b?q=${encodeURIComponent(combinedContent)}&uid=${senderId}`;
         const response = await axios.get(api, { headers });
-        text = response.data.message;
+        text = convertToBold(response.data.content);
 }
+
 
 /** let text;
   if (imageUrl) {
