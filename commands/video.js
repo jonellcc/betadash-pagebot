@@ -18,14 +18,22 @@ module.exports = {
     sendMessage(senderId, { text: `🔍 Searching for '${search}', please wait...` }, pageAccessToken);
 
     try {
-      const response = await axios.get(`https://betadash-search-download.vercel.app/videov2?search=${encodeURIComponent(search)}`, { headers });
-      const { downloadUrl: videoUrl, title, time, views } = response.data;
+      const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(search)}`;
+        const videoResponse = await axios.get(videoSearchUrl);
+        const videoData = videoResponse.data[0];
 
+const videoUrl = videoData.url;
+
+      const { title, time, views, thumbnail, channelName} = videoData.data;
+
+const kupal = `https://yt-video-production.up.railway.app/ytdl?url=${videoUrl}`;
+        const vid = await axios.get(kupal, { headers });
+const videos = vid.data.video;
       const message = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${time}\n𝗩𝗶𝗲𝘄𝘀: ${views}`;
       sendMessage(senderId, { text: message }, pageAccessToken);
 
-      if (videoUrl) {
-        const headResponse = await axios.head(videoUrl, { headers });
+      if (videos) {
+        const headResponse = await axios.head(videos, { headers });
         const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
         if (!isNaN(fileSize) && fileSize <= 25 * 1024 * 1024) {
@@ -33,7 +41,7 @@ module.exports = {
             attachment: {
               type: 'video',
               payload: {
-                url: videoUrl,
+                url: videos,
                 is_reusable: true
               }
             }
@@ -48,7 +56,7 @@ module.exports = {
                 buttons: [
                   {
                     type: 'web_url',
-                    url: videoUrl,
+                    url: videos,
                     title: 'Watch Video'
                   }
                 ]

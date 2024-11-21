@@ -306,8 +306,9 @@ const fontMapping = {
 };
 
 function convertToBold(text) {
-    return text.replace(/\*(.*?)\*/g, (match, p1) => {
-        return [...p1].map(char => fontMapping[char] || char).join('');
+    return text.replace(/(?:\*\*(.*?)\*\*|## (.*?)|### (.*?))/g, (match, boldText, h2Text, h3Text) => {
+        const targetText = boldText || h2Text || h3Text;
+        return [...targetText].map(char => fontMapping[char] || char).join('');
     });
 }
 
@@ -715,11 +716,11 @@ const headResponse = await axios.head(shotiUrl, { headers });
   } else if (youtubeLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Youtube, please wait...' }, pageAccessToken);
-      const yts = `https://apiv2.kenliejugarap.com/video?url=${encodeURIComponent(messageText)}`;
+      const yts = `https://yt-video-production.up.railway.app/ytdl?url=${encodeURIComponent(messageText)}`;
      const yu = await axios.get(yts, { headers });
-      const vid = yu.data.response;
-      const views = yu.data.views;
-      const thumbnail = yu.data.image;
+      const vid = yu.data.video;
+      const duration = `${yu.data.duration.seconds}\t${yu.data.duration.label}`;
+      const thumbnail = yu.data.thumbnail;
       const title = yu.data.title;
 
  const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${title}`;
@@ -736,7 +737,7 @@ const headResponse = await axios.head(shotiUrl, { headers });
                 {
                   title: title,
                   image_url: thumbnail,
-                  subtitle: views,
+                  subtitle: duration,
                   default_action: {
                     type: "web_url",
                     url: thumbnail,
