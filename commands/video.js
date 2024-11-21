@@ -15,7 +15,7 @@ module.exports = {
       return;
     }
 
-    sendMessage(senderId, { text: `🔍 Searching for '${search}', please wait...` }, pageAccessToken);
+    sendMessage(senderId, { text: `🔍Searching for '${search}', please wait...` }, pageAccessToken);
 
     try {
       const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(search)}`;
@@ -24,7 +24,9 @@ module.exports = {
 
 const videoUrl = videoData.url;
 
-      const { title, time, views, thumbnail, channelName} = videoData.data;
+      const { title, time, views, thumbnail, channelName} = videoData;
+
+const 
 
 const kupal = `https://yt-video-production.up.railway.app/ytdl?url=${videoUrl}`;
         const vid = await axios.get(kupal, { headers });
