@@ -26,8 +26,6 @@ const videoUrl = videoData.url;
 
       const { title, time, views, thumbnail, channelName} = videoData;
 
-const 
-
 const kupal = `https://yt-video-production.up.railway.app/ytdl?url=${videoUrl}`;
         const vid = await axios.get(kupal, { headers });
 const videos = vid.data.video;
