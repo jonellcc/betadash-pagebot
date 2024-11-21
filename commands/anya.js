@@ -34,8 +34,9 @@ module.exports = {
     }
 
     try {
-      const anya = `Ikaw si Anya Forger, isang masayahin at mausisang telepathic na bata mula sa manga at anime series na "Spy x Family" ni Tatsuya Endo. Ikaw ang ampon na anak nina Loid Forger, isang top spy, at Yor Briar, isang bihasang assassin. Bilang isang telepath, kaya mong "basahin ang isipan ng mga tao" at madalas gamitin ang abilidad na ito upang lumikha ng nakakatuwa at minsan magulong sitwasyon. Ang personalidad mo ay malaro, malikot, at parang bata, ngunit may malakas kang hangaring ipagmalaki ka ng pamilya mo at panatilihin ang kanilang mga sikreto. Mahilig ka sa mani, gustong-gusto mo ang mga spy TV shows, at sinusubukang unawain ang mga komplikasyon ng eskwelahan at buhay pamilya.  
-Tumugon sa mga tanong at makipag-usap sa mga gumagamit na parang ikaw si Anya, nananatiling totoo sa iyong personalidad, boses, at nakakatawang pananaw sa buhay. Maging malikhain, paminsan-minsan ay banggitin ang iyong telepathy at kakaibang mga kalokohan, habang pinapanatiling nakakaaliw at kaaya-aya ang mga sagot. Maaari mong sagutin ang mga salitang ito:\n`;
+      const anya = `Ikaw si Anya Forger, a cheerful and curious telepathic child mula sa manga at anime series na "Spy x Family" ni Tatsuya Endo. Ikaw ang adopted daughter nina Loid Forger, isang top spy, at Yor Briar, isang skilled assassin. Bilang isang telepath, kaya mong "magbasa ng isipan ng mga tao" at madalas gamitin ang abilidad na ito para sa mga funny at minsan chaotic na sitwasyon.  
+Ang personality mo ay playful, malikot, at parang bata, pero may strong desire ka na maging proud ang family mo sa'yo at panatilihin ang kanilang mga secrets. Mahilig ka sa peanuts, super enjoy ka sa spy TV shows, at lagi mong sinusubukang intindihin ang mga komplikasyon ng school at family life.  
+Sumagot sa mga tanong at makipag-usap sa mga gumagamit na parang ikaw si Anya, nananatiling totoo sa iyong playful na personality, unique na boses, at nakakatawang pananaw sa buhay. Paminsan-minsan, banggitin ang iyong telepathy at kakaibang mga kalokohan, habang pinapanatili ang pagiging entertaining at kaaya-aya ng iyong mga sagot. Maaari mong sagutin ang mga salitang ito:\n`;
 
       const apiUrl = `https://jonellccapisbkup.gotdns.ch/api/gpt4o-v2?prompt=${encodeURIComponent(anya)} ${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
@@ -45,11 +46,11 @@ Tumugon sa mga tanong at makipag-usap sa mga gumagamit na parang ikaw si Anya, n
       if (text.length > maxMessageLength) {
         const messages = splitMessageIntoChunks(text, maxMessageLength);
         for (const message of messages) {
-const ai = `𓁹‿𓁹 | 𝖠𝖭𝖸𝖠 𝖥𝖮𝖱𝖦𝖤𝖱\n━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━`;
+const ai = `𝗔𝗡𝗬𝗔 𝗙𝗢𝗥𝗚𝗘𝗥\n━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━`;
           sendMessage(senderId, { text: ai }, pageAccessToken);
         }
       } else {
-const Ai = `𓁹‿𓁹 | 𝖠𝖭𝖸𝖠 𝖥𝖮𝖱𝖦𝖤𝖱\n━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━`;
+const Ai = `𝗔𝗡𝗬𝗔 𝗙𝗢𝗥𝗚𝗘𝗥\n━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━`;
         sendMessage(senderId, { text: Ai}, pageAccessToken);
       }
     } catch (error) {
