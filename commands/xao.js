@@ -19,13 +19,13 @@ function convertToBold(text) {
 }
 
 module.exports = {
-  name: 'bot',
+  name: 'xao',
   description: 'Ask a question to yor Ai',
   author: 'kalix (rest api)',
   async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
     const prompt = args.join(' ');
 if (!prompt) {
-          sendMessage(senderId, { text: 'please provide a question first to talk yor ai' }, pageAccessToken);
+          sendMessage(senderId, { text: 'please provide a question first to talk xao ai' }, pageAccessToken);
         return;
     }
 
@@ -38,11 +38,11 @@ if (!prompt) {
       if (text.length > maxMessageLength) {
         const messages = splitMessageIntoChunks(text, maxMessageLength);
         for (const message of messages) {
-const kupal = `シ | 𝙾𝙿𝙴𝙽𝙲𝙷𝙰𝚃\n━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━\n𝚄𝚂𝙴 "𝙲𝙻𝙴𝙰𝚁" 𝚃𝙾 𝚁𝙴𝚂𝙴𝚃 𝙲𝙾𝙽𝚅𝙴𝚁𝚂𝙰𝚃𝙸𝙾𝙽.`;
+const kupal = `シ | 𝗫𝗔𝗢\n━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━\n𝚄𝚂𝙴 "𝙲𝙻𝙴𝙰𝚁" 𝚃𝙾 𝚁𝙴𝚂𝙴𝚃 𝙲𝙾𝙽𝚅𝙴𝚁𝚂𝙰𝚃𝙸𝙾𝙽.`;
           sendMessage(senderId, { text: kupal}, pageAccessToken);
         }
       } else {
-const kupal2 = `シ | 𝙾𝙿𝙴𝙽𝙲𝙷𝙰𝚃\n━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━\n𝚄𝚂𝙴 "𝙲𝙻𝙴𝙰𝚁" 𝚃𝙾 𝚁𝙴𝚂𝙴𝚃 𝙲𝙾𝙽𝚅𝙴𝚁𝚂𝙰𝚃𝙸𝙾𝙽.`;
+const kupal2 = `シ | 𝗫𝗔𝗢\n━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━\n𝚄𝚂𝙴 "𝙲𝙻𝙴𝙰𝚁" 𝚃𝙾 𝚁𝙴𝚂𝙴𝚃 𝙲𝙾𝙽𝚅𝙴𝚁𝚂𝙰𝚃𝙸𝙾𝙽.`;
         sendMessage(senderId, { text: kupal2 }, pageAccessToken);
       }
     } catch (error) {

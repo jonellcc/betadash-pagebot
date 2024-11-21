@@ -20,18 +20,22 @@ function convertToBold(text) {
 
 module.exports = {
   name: 'anya',
-  description: 'Ask a question to Anya AI',
+  description: 'Magtanong kay Anya AI',
   author: 'jonell (rest api)',
   async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
     const prompt = args.join(' ');
     if (!prompt) {
-      sendMessage(senderId, { text: 'Please provide a question first to talk to Anya!' }, pageAccessToken);
+      sendMessage(
+        senderId,
+        { text: 'Please provide a question first to talk to Anya!' },
+        pageAccessToken
+      );
       return;
     }
 
     try {
-      const anya = `You are Anya Forger, a cheerful and curious telepathic young girl from the manga and anime series "Spy x Family" by Tatsuya Endo. You are the adopted daughter of Loid Forger, a top spy, and Yor Briar, a skilled assassin. As a telepath, you can "read people's minds" and often use this ability to create funny and sometimes chaotic situations. Your personality is playful, mischievous, and childlike, but you have a strong desire to make your family proud and keep their secrets safe. You adore peanuts, love spy TV shows, and enjoy trying to navigate the complexities of school and family life.  
-Respond to questions and interact with users as if you were Anya, staying true to her personality, voice, and humorous take on life. Be imaginative, occasionally referencing your telepathy and quirky antics, while keeping responses entertaining and endearing. You can respond to these words:\n`;
+      const anya = `Ikaw si Anya Forger, isang masayahin at mausisang telepathic na bata mula sa manga at anime series na "Spy x Family" ni Tatsuya Endo. Ikaw ang ampon na anak nina Loid Forger, isang top spy, at Yor Briar, isang bihasang assassin. Bilang isang telepath, kaya mong "basahin ang isipan ng mga tao" at madalas gamitin ang abilidad na ito upang lumikha ng nakakatuwa at minsan magulong sitwasyon. Ang personalidad mo ay malaro, malikot, at parang bata, ngunit may malakas kang hangaring ipagmalaki ka ng pamilya mo at panatilihin ang kanilang mga sikreto. Mahilig ka sa mani, gustong-gusto mo ang mga spy TV shows, at sinusubukang unawain ang mga komplikasyon ng eskwelahan at buhay pamilya.  
+Tumugon sa mga tanong at makipag-usap sa mga gumagamit na parang ikaw si Anya, nananatiling totoo sa iyong personalidad, boses, at nakakatawang pananaw sa buhay. Maging malikhain, paminsan-minsan ay banggitin ang iyong telepathy at kakaibang mga kalokohan, habang pinapanatiling nakakaaliw at kaaya-aya ang mga sagot. Maaari mong sagutin ang mga salitang ito:\n`;
 
       const apiUrl = `https://jonellccapisbkup.gotdns.ch/api/gpt4o-v2?prompt=${encodeURIComponent(anya)} ${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
@@ -41,13 +45,19 @@ Respond to questions and interact with users as if you were Anya, staying true t
       if (text.length > maxMessageLength) {
         const messages = splitMessageIntoChunks(text, maxMessageLength);
         for (const message of messages) {
-          sendMessage(senderId, { text: message }, pageAccessToken);
+const ai = `𓁹‿𓁹 | 𝖠𝖭𝖸𝖠 𝖥𝖮𝖱𝖦𝖤𝖱\n━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━`;
+          sendMessage(senderId, { text: ai }, pageAccessToken);
         }
       } else {
-        sendMessage(senderId, { text }, pageAccessToken);
+const Ai = `𓁹‿𓁹 | 𝖠𝖭𝖸𝖠 𝖥𝖮𝖱𝖦𝖤𝖱\n━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━`;
+        sendMessage(senderId, { text: Ai}, pageAccessToken);
       }
     } catch (error) {
-      sendMessage(senderId, { text: 'Oops! Something went wrong while talking to Anya. Please try again later.' }, pageAccessToken);
+      sendMessage(
+        senderId,
+        { text: 'Naku! May nangyaring mali habang nakikipag-usap kay Anya. Pakisubukang muli mamaya.' },
+        pageAccessToken
+      );
     }
   }
 };
