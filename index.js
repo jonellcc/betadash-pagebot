@@ -339,6 +339,7 @@ const gif = event.message.attachments &&
 const events = event;
    const senderId = event.sender.id;
   const messageText = event.message.text;
+const haha = "More shoti";
 const messageId = event.message.mid;
 
 let content = "";
@@ -552,7 +553,7 @@ if (messageText && messageText.includes("gdrive")) {
    };
     sendMessage(senderId, kupall, pageAccessToken);
     }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText)) {
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText) && haha !== messageText) {
    try {
   let text;
     if (imageUrl) {
@@ -563,9 +564,9 @@ const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURI
         const response = await axios.get(apiUrl, { headers });
         text = convertToBold(response.data.response);
       } else {
-        const api = `https://kaiz-apis.gleeze.com/api/ministral-8b?q=${encodeURIComponent(combinedContent)}&uid=${senderId}`;
+        const api = `https://api.kenliejugarap.com/ministral-8b-paid/?question=${encodeURIComponent(combinedContent)}`;
         const response = await axios.get(api, { headers });
-        text = convertToBold(response.data.content);
+        text = convertToBold(response.data.response);
 }
 
 
