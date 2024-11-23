@@ -22,7 +22,7 @@ module.exports = {
   name: 'anya',
   description: 'Magtanong kay Anya AI',
   author: 'jonell (rest api)',
-  async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
+  async execute(senderId, args, pageAccessToken, sendMessage) {
     const prompt = args.join(' ');
     if (!prompt) {
       sendMessage(
@@ -40,19 +40,29 @@ Sumagot sa mga tanong at makipag-usap sa mga gumagamit na parang ikaw si Anya, n
 
       const apiUrl = `https://jonellccapisbkup.gotdns.ch/api/gpt4o-v2?prompt=${encodeURIComponent(anya)} ${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
-      const text = convertToBold(response.data.response);
+const message = convertToBold(response.data.response);
 
-      const maxMessageLength = 2000;
-      if (text.length > maxMessageLength) {
-        const messages = splitMessageIntoChunks(text, maxMessageLength);
-        for (const message of messages) {
-const ai = `𝗔𝗡𝗬𝗔 𝗙𝗢𝗥𝗚𝗘𝗥\n━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━`;
-          sendMessage(senderId, { text: ai }, pageAccessToken);
-        }
-      } else {
-const Ai = `𝗔𝗡𝗬𝗔 𝗙𝗢𝗥𝗚𝗘𝗥\n━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━`;
-        sendMessage(senderId, { text: Ai}, pageAccessToken);
-      }
+      const text = `𝗔𝗡𝗬𝗔 𝗙𝗢𝗥𝗚𝗘𝗥\n━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━`;
+
+      sendMessage(senderId, { text }, pageAccessToken);
+
+      const tranChat = await axios.get(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ja&dt=t&q=${encodeURIComponent(response.data.response)}`);
+      const translatedText = tranChat.data[0][0][0];
+
+      const audioApi = await axios.get(`https://api.tts.quest/v3/voicevox/synthesis?text=${encodeURIComponent(translatedText)}&speaker=3`);
+      const audioUrl = audioApi.data.mp3StreamingUrl;
+
+      setTimeout(() => {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'audio',
+            payload: {
+              url: audioUrl,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
+      }, 500);
     } catch (error) {
       sendMessage(
         senderId,
