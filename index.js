@@ -88,7 +88,7 @@ app.post('/webhook', (req, res) => {
     ? `User ${senderId} gave positive feedback for message ${messageId}`
     : `User ${senderId} gave negative feedback for message ${messageId}`;
 
-  sendMessage("7913024942132935", { text: messageText }, pageAccessToken);
+  sendMessage("8269473539829237", { text: messageText }, pageAccessToken);
 }
 
 
@@ -416,7 +416,7 @@ if (messageText && messageText.includes("imgur")) {
     } catch (error) {
      }
     return;
-  } 
+  }
 
 if (messageText && messageText.includes("removebg")) {
     try {
@@ -426,6 +426,23 @@ if (messageText && messageText.includes("removebg")) {
      }
     return;
   }
+
+
+if (messageText && messageText.includes("faceswap")) {
+    try {
+const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${yawa1}`;
+        const imgurResponse = await axios.get(imgurApiUrl, { headers } );
+        const imgurLink = imgurResponse.data.uploaded.image;
+const hy = `https://betadash-uploader.vercel.app/imgur?link=${yawa2}`;
+        const tf = await axios.get(hy, { headers } );
+        const link = tf.data.uploaded.image;
+        const bg = `https://kaiz-apis.gleeze.com/api/faceswap?swapUrl=${encodeURIComponent(imgurLink)}&baseUrl=${encodeURIComponent(link)}`;
+      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
+    } catch (error) {
+     }
+    return;
+  }
+
 
 if (messageText && messageText.includes("Get started")) {
   try {
@@ -477,6 +494,21 @@ if (messageText && messageText.includes("remini")) {
     return;
   }
 
+if (messageText && messageText.includes("imgbb")) {
+    try {        
+       const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
+        const imgurResponse = await axios.get(imgurApiUrl, { headers } );
+        const imgurLink = imgurResponse.data.uploaded.image;
+        const rec = `https://betadash-api-swordslush.vercel.app/imgbb?url=${encodeURIComponent(imgurLink)}`;
+     const ap = await axios.get(rec);
+     const yawa = ap.data.imageUrl;
+await sendMessage(senderId, { text: yawa}, pageAccessToken);
+    } catch (error) {
+     }
+    return;
+  }
+
+
 if (messageText && messageText.includes("tinyurl")) {
     try {        
       const apiUrl = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;
@@ -488,17 +520,6 @@ await sendMessage(senderId, { text: dh }, pageAccessToken);
     return;
   }
 
-if (messageText && messageText.includes("prompt")) {
-    try {
-        const kupal = "Give exact prompt of this image";
-        const rec = `https://pixtral2.vercel.app/api/pixtral?text=${kupal}&image_url=${encodeURIComponent(imageUrl)}`;
-     const ap = await axios.get(rec);
-     const ugh = ap.data.response;
-      await sendMessage(senderId, { text: ugh }, pageAccessToken);
-    } catch (error) {
-     }
-    return;
-  }
 
 
 /** if (messageText && messageText.includes("zombie")) {
