@@ -15,12 +15,13 @@ module.exports = {
     let numImages = parseInt(numImagesRaw) || 1;
 
     numImages = Math.abs(numImages);
+
+    if (numImages > 5) {
+      return await sendMessage(senderId, { text: 'The number of images cannot exceed 5. Only 5 number limit will be generated to image.' }, pageAccessToken);
+    }
+
     numImages = Math.min(numImages, 5);
     numImages = Math.max(numImages, 1);
-
-   if (numImages > 5) {
-      return await sendMessage(senderId, { text: 'The number of images cannot exceed 5. Only 5 images will be generated.' }, pageAccessToken);
-    }
 
     const apiUrl = `https://pin-kshitiz.vercel.app/pin?search=${encodeURIComponent(searchTerm)}`;
 
@@ -40,4 +41,3 @@ module.exports = {
     }
   },
 };
-
