@@ -4,15 +4,20 @@ module.exports = {
   name: 'pinterest',
   description: 'Fetch images from Pinterest',
   author: 'coffee',
-  usage: 'pinterest <search term> <number of images (1-10)>',
+  usage: 'pinterest <search term> | <number of images (1-10)>',
   async execute(senderId, args, pageAccessToken, sendMessage) {
-
     if (!args || args.length < 1) {
-      return await sendMessage(senderId, { text: '📷 | Please use this format:\npinterest cat 1-10' }, pageAccessToken);
+      return await sendMessage(senderId, { text: '📷 | Please use this format:\npinterest search_name | 1-10' }, pageAccessToken);
     }
 
-    const searchTerm = args[0];
-    let numImages = parseInt(args[1]) || 1;
+    const input = args.join(" ");
+    const [searchTerm, numImagesRaw] = input.split(" | ");
+    let numImages = parseInt(numImagesRaw) || 1;
+
+if (numImages > 10) {
+      await sendMessage(senderId, { text: 'The number of images cannot exceed 10. Only 10 images will be generate image.' }, pageAccessToken);
+    }
+
     numImages = Math.abs(numImages);
     numImages = Math.min(numImages, 10);
     numImages = Math.max(numImages, 1);

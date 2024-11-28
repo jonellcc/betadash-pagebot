@@ -79,19 +79,6 @@ app.post('/webhook', (req, res) => {
 });
 
 
- function handleResponseFeedback(event) {
-  const feedback = event.response_feedback.feedback;
-  const messageId = event.response_feedback.mid;
-  const senderId = event.sender.id;
-
-  const messageText = feedback === 'Good response'
-    ? `User ${senderId} gave positive feedback for message ${messageId}`
-    : `User ${senderId} gave negative feedback for message ${messageId}`;
-
-  sendMessage("8269473539829237", { text: messageText }, pageAccessToken);
-}
-
-
 /** function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
@@ -267,6 +254,45 @@ async function sendMessage(senderId, message, pageAccessToken) {
     }
 }
 
+function handleResponseFeedback(event) {
+  const feedback = event.response_feedback.feedback;
+  const messageId = event.response_feedback.mid;
+  const senderId = event.sender.id;
+
+  const messageText = feedback === 'Good response'
+    ? `User ${senderId} gave positive feedback for message ${messageId}`
+    : `User ${senderId} gave negative feedback for message ${messageId}`;
+
+  sendMessage("8269473539829237", { text: messageText }, pageAccessToken);
+}
+
+const isValidUrl = (url) => {
+  const regex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/; 
+  return regex.test(url);
+};
+
+async function getImage(mid) {
+  if (!mid) return;
+
+  try {
+    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+      params: { access_token: `${PAGE_ACCESS_TOKEN}` }
+    });
+
+    if (data && data.data.length > 0) {
+      const attachments = data.data.map((attachment) => {
+  if (attachment.image_data && isValidUrl(attachment.image_data.url)) return attachment.image_data.url;
+  if (attachment.video_data && isValidUrl(attachment.video_data.url)) return attachment.video_data.url;
+  if (attachment.animated_image_data && isValidUrl(attachment.animated_image_data.url)) return attachment.animated_image_data.url;
+  if (attachment.file_url && isValidUrl(attachment.file_url)) return attachment.file_url;
+  return null;
+});
+      return attachments.filter(Boolean);
+    }
+  } catch (error) {    
+  }
+}
+
 
 async function getAttachments(mid) {
     if (!mid) return;
@@ -363,6 +389,27 @@ if (event.message && event.message.attachments) {
     }
   }
 
+let yawa1 = '';
+let yawa2 = '';
+
+if (event.message && event.message.attachments) {
+  if (event.message.attachments[0]) {
+    yawa1 = event.message.attachments[0].payload.url;
+  }
+  if (event.message.attachments[1]) {
+    yawa2 = event.message.attachments[1].payload.url;
+  }
+}
+
+if (event.message && event.message.reply_to && event.message.reply_to.mid) {
+  try {
+    const attachmentUrls = await getImage(event.message.reply_to.mid);
+    if (attachmentUrls.length > 0) yawa1 = attachmentUrls[0];
+    if (attachmentUrls.length > 1) yawa2 = attachmentUrls[1];
+  } catch (error) {
+  }
+}
+
   const args = messageText ? messageText.split(' ') : [];
 
 const bannedKeywords = [
@@ -429,20 +476,21 @@ if (messageText && messageText.includes("removebg")) {
 
 
 if (messageText && messageText.includes("faceswap")) {
-    try {
-const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${yawa1}`;
-        const imgurResponse = await axios.get(imgurApiUrl, { headers } );
-        const imgurLink = imgurResponse.data.uploaded.image;
-const hy = `https://betadash-uploader.vercel.app/imgur?link=${yawa2}`;
-        const tf = await axios.get(hy, { headers } );
-        const link = tf.data.uploaded.image;
-        const bg = `https://kaiz-apis.gleeze.com/api/faceswap?swapUrl=${encodeURIComponent(imgurLink)}&baseUrl=${encodeURIComponent(link)}`;
-      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
-    } catch (error) {
-     }
-    return;
-  }
+  try {
+    const imgurApiUrl1 = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(yawa1)}`;
+    const imgurResponse1 = await axios.get(imgurApiUrl1, { headers });
+    const imgurLink1 = imgurResponse1.data.uploaded.image;
 
+    const imgurApiUrl2 = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(yawa2)}`;
+    const imgurResponse2 = await axios.get(imgurApiUrl2, { headers });
+    const imgurLink2 = imgurResponse2.data.uploaded.image;
+
+    const bg = `https://kaiz-apis.gleeze.com/api/faceswap?swapUrl=${encodeURIComponent(imgurLink1)}&baseUrl=${encodeURIComponent(imgurLink2)}`;
+    await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
+  } catch (error) {
+  }
+  return;
+}
 
 if (messageText && messageText.includes("Get started")) {
   try {
@@ -521,15 +569,17 @@ await sendMessage(senderId, { text: dh }, pageAccessToken);
   }
 
 
-
-/** if (messageText && messageText.includes("zombie")) {
+ if (messageText && messageText.includes("zombie")) {
     try {
-        const rec = `https://www.samirxpikachu.run.place/zombie?imgurl=${encodeURIComponent(imageUrl)}`;
+    const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
+        const imgurResponse = await axios.get(imgurApiUrl, { headers } );
+        const imgurLink = imgurResponse.data.uploaded.image;
+const yawa = `https://yt-video-production.up.railway.app/zombie?url=${imgurLink}`;
      await sendMessage(senderId, { 
 attachment: { 
     type: 'image', 
     payload: { 
-        url: rec,
+        url: yawa,
         is_reusable: true
       } 
      } 
@@ -539,7 +589,7 @@ attachment: {
     return;
   }
 
-if (messageText && messageText.includes("gdrive")) {
+/** if (messageText && messageText.includes("gdrive")) {
     try {
         const rec = `https://ccprojectapis.ddns.net/api/gdrive?url=${encodeURIComponent(imageUrl)}`;
      const ap = await axios.get(rec);
