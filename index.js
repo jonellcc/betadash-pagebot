@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "61567757543707";
 const admin = ["8786755161388846", "8376765705775283", "8552967284765085"];
-const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO8kzsEU0Sw8ZBYx3ciRAZCmobzRgOnZBRSLhlPdAUgOGbpBAXUVNhZCBQ88ZAgLsXsWLb81FvIzNZC1ZByfliyzivZBBkZA4yVWsdg6qK3NZAmdGidaRpj92NGq25C09QWzO2NP3lRZCOa2zaZC9s1sj2ZCY8h4ZBi35ZC172pSNZCZCUxvIkeeg47s1QrJf79QZDZD";
+const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBOxZBIC6PPT3dwscohZCfuFXXaKrpj0rB9SHViDHL2nZCa2dW4LZBgLaMqv3aCZBTlSA1jx5ABHV9OtbL2zJlQMp6Gf9n6h8dLOPnC0FR1e2Hrx2O2pKutFvkZAlTjVrmRlXKzMrUYd2fkuZCKuUQg6ZBRnrXyoZAxr9r5LraV4lqzoI4hxZCNW4PAHXgZDZD";
 
 const commandList = [];
 const descriptions = [];
@@ -65,8 +65,8 @@ app.post('/webhook', (req, res) => {
           handleMessage(event, PAGE_ACCESS_TOKEN);
        } else if (event.postback) {
           handlePostback(event, PAGE_ACCESS_TOKEN);
-        } else if (GET_STARTED_PAYLOAD) {
-         handlePostback(event, PAGE_ACCESS_TOKEN);
+        } else if (event, PAGE_ACCESS_TOKEN) {
+         handlePayload(event, PAGE_ACCESS_TOKEN);
 } else if (event.response_feedback?.feedback) {
           handleResponseFeedback(event);
         }
@@ -79,7 +79,7 @@ app.post('/webhook', (req, res) => {
 });
 
 
-/** function handlePostback(event, pageAccessToken) {
+function handlePayload(event, pageAccessToken) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
 
@@ -90,7 +90,7 @@ app.post('/webhook', (req, res) => {
           type: 'template',
           payload: {
             template_type: 'button',
-            text: "Hello, I'm Beluga! I'm your friendly AI assistant, here to help with any questions, tasks, or just about anything else you need. I'm constantly learning and improving, so please bear with me if ever I make any mistakes. I'm excited to work with you and make your day a little brighter. What's on your mind today?\n\nUse the 'HELP' button to show a list of commands. Beluga is for educational and fun purposes, so now you can explore all the commands. Like/Follow for more.",
+            text: "Hello, I'm 𝗕𝗲𝗹𝘂𝗴𝗮! I'm your friendly AI assistant, here to help with any questions, tasks, or just about anything else you need. I'm constantly learning and improving, so please bear with me if ever I make any mistakes. I'm excited to work with you and make your day a little brighter. What's on your mind today?\n\nUse the 'Help' button to show a list of commands. 𝗕𝗲𝗹𝘂𝗴𝗮 is for educational and fun purposes, so now you can explore all the commands. Like/Follow for more.",
             buttons: [
               {
                 type: 'web_url',
@@ -117,13 +117,13 @@ app.post('/webhook', (req, res) => {
             payload: "PRIVACY_POLICY"
           }
         ]
-      });
+      }, pageAccessToken);
     }
   } catch (error) {
   }
 
   if (event.postback && event.postback.payload) {
-    handlePayload(event.postback.payload);
+   handlePayload(event.postback.payload);
   }
 
   const url = `https://graph.facebook.com/v21.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
@@ -132,7 +132,7 @@ app.post('/webhook', (req, res) => {
     greeting: [
       {
         locale: "en_US",
-        text: "Hello, {{user_first_name}}! I'm Beluga! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving. What's on your mind today?"
+        text: "Hello, {{user_first_name}}! I'm 𝗕𝗲𝗹𝘂𝗴𝗮! Your friendly AI assistant, here to help with questions, tasks, and more."
       }
     ]
   };
@@ -146,7 +146,7 @@ app.post('/webhook', (req, res) => {
   })
   .catch(error => {
   });
-} **/
+} 
 
 
 /** function handleLongTask(senderId) {
@@ -292,7 +292,6 @@ async function getImage(mid) {
   } catch (error) {    
   }
 }
-
 
 async function getAttachments(mid) {
     if (!mid) return;

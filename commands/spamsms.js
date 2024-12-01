@@ -1,5 +1,7 @@
 const axios = require('axios');
 
+const cooldowns = {};
+
 module.exports = {
   name: 'spamsms',
   description: 'Send spam SMS',
@@ -13,27 +15,27 @@ module.exports = {
     const arg = args.join(" ");
     const [number, countRaw, intervalRaw] = arg.split(" ");
 
-    // Validate Philippines number
     const philippinesNumberRegex = /^(?:\+63|0)9\d{9}$/;
     if (!philippinesNumberRegex.test(number)) {
-      return await sendMessage(senderId, { 
-        text: '❌ | Please provide only a valid Philippines number (e.g., +639XXXXXXXXX or 09XXXXXXXXX).' 
+      return await sendMessage(senderId, {
+        text: '❌ | Please provide only a valid Philippines number (e.g., +639XXXXXXXXX or 09XXXXXXXXX).'
       }, pageAccessToken);
     }
 
     const count = Math.min(Math.max(parseInt(countRaw) || 1, 1), 30);
 
-    if (countRaw && count > 30) {
-      await sendMessage(senderId, { 
-        text: "The number count cannot exceed 30. The limit is set to 30." 
+    if (count > 30) {
+      await sendMessage(senderId, {
+        text: "The number count cannot exceed 30. The limit is 30 only."
       }, pageAccessToken);
+      return;
     }
 
     const interval = Math.max(parseInt(intervalRaw) || 1000, 1000);
 
-    if (intervalRaw && interval > 1000) {
-      await sendMessage(senderId, { 
-        text: "The interval cannot exceed 1000ms. The limit is set to 1000ms." 
+    if (interval > 1000) {
+      await sendMessage(senderId, {
+        text: "The interval cannot exceed 1000ms. The limit is set to 1000ms."
       }, pageAccessToken);
     }
 
@@ -47,6 +49,19 @@ module.exports = {
         data.result.forEach(res => {
           message += `Message #${res.messageNumber}: ${res.result}\n`;
         });
+
+        const now = Date.now();
+        const cooldownTime = 25 * 1000;
+
+        if (cooldowns[senderId] && now - cooldowns[senderId] < cooldownTime) {
+          const remainingTime = Math.ceil((cooldownTime - (now - cooldowns[senderId])) / 1000);
+          await sendMessage(senderId, {
+            text: `⏳ Please wait ${remainingTime} second(s) before using this command again.\n\nThis cooldown  to prevent spamming.`
+          }, pageAccessToken);
+          return;
+        }
+
+        cooldowns[senderId] = now;
 
         await sendMessage(senderId, { text: message }, pageAccessToken);
       } else {
