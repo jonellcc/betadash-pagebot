@@ -1,4 +1,8 @@
 const axios = require('axios');
+const headers = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+  'Content-Type': 'application/json',
+};
 
 const cooldowns = {};
 
@@ -52,10 +56,8 @@ module.exports = {
       );
     }
 
-    const apiUrl = `https://yt-video-production.up.railway.app/spamsms?number=${encodeURIComponent(number)}&count=${count}&interval=${interval}`;
-
     const now = Date.now();
-    const cooldownTime = 25 * 1000;
+    const cooldownTime = 20 * 1000;
 
     if (cooldowns[senderId] && now - cooldowns[senderId] < cooldownTime) {
       const remainingTime = Math.ceil((cooldownTime - (now - cooldowns[senderId])) / 1000);
@@ -68,18 +70,24 @@ module.exports = {
       );
     }
 
-    try {
-      const { data } = await axios.get(apiUrl);
+    const apiUrl = `https://yt-video-production.up.railway.app/spamsms?number=${encodeURIComponent(number)}&count=${count}&interval=${interval}`;
 
-      if (data.status) {
-        let message = `📩 | Spam SMS Sent\nTarget: ${data.target_number}\nCount: ${data.count}\nInterval: ${data.interval}ms\n\nResults:\n`;
-        data.result.forEach((res) => {
+    try {
+      const response = await axios.get(apiUrl, { headers });
+
+      if (response.data.status) {
+        let message = `📩 | Spam SMS Sent\nTarget: ${response.data.target_number}\nCount: ${response.data.count}\nInterval: ${response.data.interval}ms\n\nResults:\n`;
+        response.data.result.forEach((res) => {
           message += `Message #${res.messageNumber}: ${res.result}\n`;
         });
 
         cooldowns[senderId] = now;
 
-        await sendMessage({ text: message }, pageAccessToken);
+        await sendMessage(
+          senderId,
+          { text: message },
+          pageAccessToken
+        );
       } else {
         await sendMessage(
           senderId,
