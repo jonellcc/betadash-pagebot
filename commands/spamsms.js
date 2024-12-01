@@ -22,20 +22,23 @@ module.exports = {
       }, pageAccessToken);
     }
 
-    const count = Math.min(Math.max(parseInt(countRaw) || 1, 1), 30);
+let count = parseInt(countRaw) || 1;
+
+count = Math.abs(count);
 
     if (count > 30) {
       await sendMessage(senderId, {
-        text: "The number count cannot exceed 30. The limit is 30 only."
+        text: "The number count  limit is 30 only."
       }, pageAccessToken);
       return;
     }
 
-    const interval = Math.max(parseInt(intervalRaw) || 1000, 1000);
+    let interval = parseInt(intervalRaw) || 200;
+    interval Math.abs(interval);
 
     if (interval > 1000) {
       await sendMessage(senderId, {
-        text: "The interval cannot exceed 1000ms. The limit is set to 1000ms."
+        text: "The interval cannot exceed 1000ms. The limit is only 1000ms."
       }, pageAccessToken);
     }
 
