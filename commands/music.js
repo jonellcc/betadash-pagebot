@@ -16,48 +16,47 @@ module.exports = {
     }
 
     try {
+      const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(query)}`;
+      const videoResponse = await axios.get(videoSearchUrl, { headers });
+      const videoData = videoResponse.data[0];
 
-      const videoSearchUrl =     `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(query)}`;
+      if (!videoData) {
+        sendMessage(senderId, { text: 'Video not found. Please try another search.' }, pageAccessToken);
+        return;
+      }
 
-        const videoResponse = await axios.get(videoSearchUrl);
-        const videoData = videoResponse.data[0];
+      const videoUrl = videoData.url;
 
-        if (!videoData) {
-            return res.status(404).json({ error: 'Video not found' });
-        }
-
-    const videoUrl = videoData.url;
-
-    const youtubeTrackUrl = `https://yt-video-production.up.railway.app/ytdl?url=${encodedURIComponent(videoUrl)}`;
+      const youtubeTrackUrl = `https://yt-video-production.up.railway.app/ytdl?url=${encodeURIComponent(videoUrl)}`;
       const response = await axios.get(youtubeTrackUrl, { headers });
-      const { audio, title, thumbnail} = response.data;
+      const { audio, title, thumbnail, duration } = response.data;
 
       if (!audio) {
         sendMessage(senderId, { text: `Sorry, no download link found for "${query}"` }, pageAccessToken);
         return;
       }
 
-      sendMessage(
+      await sendMessage(
         senderId,
         {
           attachment: {
-            type: "template",
+            type: 'template',
             payload: {
-              template_type: "generic",
+              template_type: 'generic',
               elements: [
                 {
                   title: title,
                   image_url: thumbnail,
-                  subtitle: `Duration: ${response.data.duration.label} ${response.data.duration.seconds}`,
+                  subtitle: `Duration: ${duration.label} (${duration.seconds}s)`,
                   default_action: {
-                    type: "web_url",
+                    type: 'web_url',
                     url: thumbnail,
-                    webview_height_ratio: "tall"
-                  }
-                }
-              ]
-            }
-          }
+                    webview_height_ratio: 'tall',
+                  },
+                },
+              ],
+            },
+          },
         },
         pageAccessToken
       );
@@ -66,34 +65,41 @@ module.exports = {
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
       if (fileSize > 25 * 1024 * 1024) {
-        sendMessage(senderId, {
-          attachment: {
-            type: 'template',
-            payload: {
-              template_type: 'button',
-              text: `Error: The audio file exceeds the 25 MB limit and cannot be sent.`,
-              buttons: [
-                {
-                  type: 'web_url',
-                  url: audio,
-                  title: 'Download URL'
-                }
-              ]
-            }
-          }
-        }, pageAccessToken);
+        await sendMessage(
+          senderId,
+          {
+            attachment: {
+              type: 'template',
+              payload: {
+                template_type: 'button',
+                text: 'Error: The audio file exceeds the 25 MB limit and cannot be sent.',
+                buttons: [
+                  {
+                    type: 'web_url',
+                    url: audio,
+                    title: 'Download URL',
+                  },
+                ],
+              },
+            },
+          },
+          pageAccessToken
+        );
       } else {
-        sendMessage(senderId, {
-          attachment: {
-            type: 'audio',
-            payload: {
-              url: audio,
-              is_reusable: true
-            }
-          }
-        }, pageAccessToken);
+        sendMessage(
+          senderId,
+          {
+            attachment: {
+              type: 'audio',
+              payload: {
+                url: audio,
+                is_reusable: true,
+              },
+            },
+          },
+          pageAccessToken
+        );
       }
-
     } catch (error) {
       sendMessage(
         senderId,
