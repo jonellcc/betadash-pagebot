@@ -17,7 +17,7 @@ module.exports = {
        sendMessage(senderId, { text: "֎ | Generating Please Wait...."}, pageAccessToken);
       const apiUrl = `https://betadash-api-swordslush.vercel.app/flux?prompt=${encodeURIComponent(prompt)}`;
 
-const reaponse = await axios.get(apiUrl);
+const response = await axios.get(apiUrl);
 const yep = response.data.imageUrl;
 
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: yep } } }, pageAccessToken);
