@@ -17,7 +17,7 @@ module.exports = {
 
     try {
 
-const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${query}`;
+      const videoSearchUrl =     `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(query)}`;
 
         const videoResponse = await axios.get(videoSearchUrl);
         const videoData = videoResponse.data[0];
@@ -28,7 +28,7 @@ const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${
 
     const videoUrl = videoData.url;
 
-    const youtubeTrackUrl = `https://yt-video-production.up.railway.app/ytdl?url=${videoUrl}`;
+    const youtubeTrackUrl = `https://yt-video-production.up.railway.app/ytdl?url=${encodedURIComponent(videoUrl)}`;
       const response = await axios.get(youtubeTrackUrl, { headers });
       const { audio, title, thumbnail} = response.data;
 
@@ -48,7 +48,7 @@ const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${
                 {
                   title: title,
                   image_url: thumbnail,
-                  subtitle: `Duration: ${response.duration.label} ${response.duration.seconds}`,
+                  subtitle: `Duration: ${response.data.duration.label} ${response.data.duration.seconds}`,
                   default_action: {
                     type: "web_url",
                     url: thumbnail,
