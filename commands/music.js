@@ -30,9 +30,9 @@ const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${
 
     const youtubeTrackUrl = `https://yt-video-production.up.railway.app/ytdl?url=${videoUrl}`;
       const response = await axios.get(youtubeTrackUrl, { headers });
-      const { downloadUrl, title, time, thumbnail, views } = response.data;
+      const { audio, title, thumbnail} = response.data;
 
-      if (!downloadUrl) {
+      if (!audio) {
         sendMessage(senderId, { text: `Sorry, no download link found for "${query}"` }, pageAccessToken);
         return;
       }
@@ -48,7 +48,7 @@ const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${
                 {
                   title: title,
                   image_url: thumbnail,
-                  subtitle: `${views} - Duration: ${time}`,
+                  subtitle: `Duration: ${response.duration.label} ${response.duration.seconds}`,
                   default_action: {
                     type: "web_url",
                     url: thumbnail,
@@ -62,7 +62,7 @@ const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${
         pageAccessToken
       );
 
-      const headResponse = await axios.head(downloadUrl, { headers });
+      const headResponse = await axios.head(audio, { headers });
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
       if (fileSize > 25 * 1024 * 1024) {
@@ -75,7 +75,7 @@ const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${
               buttons: [
                 {
                   type: 'web_url',
-                  url: downloadUrl,
+                  url: audio,
                   title: 'Download URL'
                 }
               ]
@@ -87,7 +87,7 @@ const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${
           attachment: {
             type: 'audio',
             payload: {
-              url: downloadUrl,
+              url: audio,
               is_reusable: true
             }
           }
