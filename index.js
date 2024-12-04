@@ -10,6 +10,9 @@ const youtubeLinkRegex = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$
 const spotifyLinkRegex = /^https?:\/\/open\.spotify\.com\/track\/[a-zA-Z0-9]+$/;
 const soundcloudRegex = /^https?:\/\/soundcloud\.com\/([a-zA-Z0-9-]+)\/([a-zA-Z0-9-]+)(?:\/([a-zA-Z0-9-]+))?(?:\?.*)?$/;
 const capcutLinkRegex = /https:\/\/www\.capcut\.com\/t\/[A-Za-z0-9]+/;
+const redditVideoRegex = /https:\/\/www\.reddit\.com\/r\/[A-Za-z0-9_]+\/comments\/[A-Za-z0-9]+\/[A-Za-z0-9_]+\/?/;
+const snapchatRegex = /https?:\/\/(www\.)?snapchat\.com\/spotlight\/[A-Za-z0-9_-]+/i;
+
 const headers = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   'Content-Type': 'application/json'
@@ -623,18 +626,20 @@ attachment: {
    };
     sendMessage(senderId, kupall, pageAccessToken);
     }
-  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText) && haha !== messageText) {
+  } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText)
+&& !redditVideoRegex.test(messageText)
+&& !snapchatRegex.test(messageText) && haha !== messageText) {
    try {
   let text;
     if (imageUrl) {
 const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
-        const apiUrl = `https://api.kenliejugarap.com/pixtral-paid/?question=${encodeURIComponent(combinedContent)}&image_url=${imgurLink}`;
+        const apiUrl = `https://kaiz-apis.gleeze.com/api/gpt4o-pro?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&imageUrl==${imgurLink}`;
         const response = await axios.get(apiUrl, { headers });
         text = convertToBold(response.data.response);
       } else {
-        const api = `https://api.kenliejugarap.com/ministral-8b-paid/?question=${encodeURIComponent(combinedContent)}`;
+        const api = `https://api.kenliejugarap.com/mistral-large/?question=${encodeURIComponent(combinedContent)}`;
         const response = await axios.get(api, { headers });
         text = convertToBold(response.data.response);
 }
@@ -946,14 +951,14 @@ const { download, thumbnail, quality, duration, title } = response.data;
 } else if (capcutLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Capcut, please wait...' }, pageAccessToken);
-      const capct = `https://betadash-search-download.vercel.app/capcutdl?link=${encodeURIComponent(messageText)}`;
+      const capct = `https://kaiz-apis.gleeze.com/api/capcutdl?url=${encodeURIComponent(messageText)}`;
      const response = await axios.get(capct, { headers });
-      const {title, description, digunakan, video_ori, author_profile, cover} = response.data.result;
+      const {title, url, thumbnail, size, quality} = response.data;
 
-const headResponse = await axios.head(video_ori, { headers });
+const headResponse = await axios.head(url, { headers });
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
-const kupal = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻: ${description}\n𝗧𝗲𝗺𝗽𝗹𝗮𝘁𝗲-𝗨𝘀𝗲𝗱: ${digunakan}`;
+const kupal = `𝗧𝗶𝘁𝗹𝗲: ${title}`;
 sendMessage(senderId, { text: kupal }, pageAccessToken); 
 
     if (fileSize > 25 * 1024 * 1024) {
@@ -967,22 +972,22 @@ sendMessage(senderId, { text: kupal }, pageAccessToken);
               elements: [
                 {
                   title: title,
-                  image_url: cover,
-                  subtitle: `Description: ${description} Used: ${digunakan}`,
+                  image_url: thumbnail,
+                  subtitle: `Quality: ${quality} Size: ${size}`,
                   default_action: {
                     type: "web_url",
-                    url: cover,
+                    url: thumbnail,
                     webview_height_ratio: "tall"
                  },
                  buttons: [
                 {
                   type: "web_url",
-                  url: video_ori,
+                  url: url,
                   title: "Download Video"
                 },
                 {
                   type: "web_url",
-                  url: author_profile,
+                  url: thumbnail,
                   title: "Author Profile"
                 }
               ]
@@ -996,7 +1001,7 @@ sendMessage(senderId, { text: kupal }, pageAccessToken);
           attachment: {
             type: 'video',
             payload: {
-              url: video_ori,
+              url: url,
               is_reusable: true
             }
           }
@@ -1004,7 +1009,142 @@ sendMessage(senderId, { text: kupal }, pageAccessToken);
       }
     } catch (error) {
     }
+  } else if (redditVideoRegex.test(messageText)) {
+  try {
+    sendMessage(senderId, { text: 'Downloading Reddit video, please wait...' }, pageAccessToken);
+
+    const apiURL = `https://betadash-api-swordslush.vercel.app/reddit?url=${encodeURIComponent(messageText)}`;
+    const response = await axios.get(apiURL, { headers });
+    const { title, videoFormats, audioFormats, thumbnailUrl } = response.data;
+
+    const headerMessage = `𝗧𝗶𝘁𝗹𝗲: ${title}`;
+    sendMessage(senderId, { text: headerMessage }, pageAccessToken);
+    sendMessage(senderId, {
+      attachment: {
+        type: "image",
+        payload: {
+          url: thumbnailUrl,
+          is_reusable: true
+        }
+      }
+    }, pageAccessToken);
+
+    const videoButtons = videoFormats.map((format) => ({
+      type: "web_url",
+      url: format.url,
+      title: `Download Video (${format.quality})`
+    }));
+
+    if (audioFormats && audioFormats.length > 0) {
+      const audioButton = {
+        type: "web_url",
+        url: audioFormats[0].url,
+        title: `Download Audio (${audioFormats[0].label})`
+      };
+      videoButtons.push(audioButton);
+    }
+
+    const largestVideo = videoFormats[videoFormats.length - 1];
+    const headResponse = await axios.head(largestVideo.url, { headers });
+    const fileSize = parseInt(headResponse.headers['content-length'], 10);
+
+    if (fileSize > 25 * 1024 * 1024) {
+      sendMessage(senderId, {
+        attachment: {
+          type: "template",
+          payload: {
+            template_type: "generic",
+            elements: [
+              {
+                title: title,
+                image_url: thumbnailUrl,
+                subtitle: "Select a format to download:",
+                buttons: videoButtons
+              }
+            ]
+          }
+        }
+      }, pageAccessToken);
+    } else {
+      sendMessage(senderId, {
+        attachment: {
+          type: "video",
+          payload: {
+            url: videoFormats[0].url,
+            is_reusable: true
+          }
+        }
+      }, pageAccessToken);
+    }
+  } catch (error) {
+    sendMessage(senderId, { text: "An error occurred while processing the video. Please try again later." }, pageAccessToken);
   }
+} else if (snapchatRegex.test(messageText)) {
+  try {
+    sendMessage(senderId, { text: 'Downloading Snapchat video, please wait...' }, pageAccessToken);
+
+    const apiURL = `https://betadash-api-swordslush.vercel.app/snapchat?url=${encodeURIComponent(messageText)}`;
+    const response = await axios.get(apiURL, { headers });
+    const { title, author, mediaUrl, mediaPreviewUrl, thumbnailUrl } = response.data;
+
+    const headerMessage = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗔𝘂𝘁𝗵𝗼𝗿: ${author}`;
+    sendMessage(senderId, { text: headerMessage }, pageAccessToken);
+    sendMessage(senderId, {
+      attachment: {
+        type: "image",
+        payload: {
+          url: thumbnailUrl,
+          is_reusable: true
+        }
+      }
+    }, pageAccessToken);
+
+    const headResponse = await axios.head(mediaUrl, { headers });
+    const fileSize = parseInt(headResponse.headers['content-length'], 10);
+
+    if (fileSize > 25 * 1024 * 1024) {
+      sendMessage(senderId, {
+        attachment: {
+          type: "template",
+          payload: {
+            template_type: "generic",
+            elements: [
+              {
+                title: title,
+                image_url: thumbnailUrl,
+                subtitle: `Author: ${author}`,
+                buttons: [
+                  {
+                    type: "web_url",
+                    url: mediaUrl,
+                    title: "Download Video"
+                  },
+                  {
+                    type: "web_url",
+                    url: mediaPreviewUrl,
+                    title: "Preview Video"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }, pageAccessToken);
+    } else {
+      sendMessage(senderId, {
+        attachment: {
+          type: "video",
+          payload: {
+            url: mediaUrl,
+            is_reusable: true
+          }
+        }
+      }, pageAccessToken);
+    }
+  } catch (error) {
+    sendMessage(senderId, { text: "An error occurred while processing the video. Please try again later." }, pageAccessToken);
+  }
+}
 
 if (messageText && messageText.includes("More shoti")) {
   const shotiCommand = commands.get('shoti');

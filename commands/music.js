@@ -16,8 +16,20 @@ module.exports = {
     }
 
     try {
-      const apiUrl = `https://dlvc.vercel.app/yt-audio?search=${encodeURIComponent(query)}`;
-      const response = await axios.get(apiUrl, { headers });
+
+const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${query}`;
+
+        const videoResponse = await axios.get(videoSearchUrl);
+        const videoData = videoResponse.data[0];
+
+        if (!videoData) {
+            return res.status(404).json({ error: 'Video not found' });
+        }
+
+    const videoUrl = videoData.url;
+
+    const youtubeTrackUrl = `https://yt-video-production.up.railway.app/ytdl?url=${videoUrl}`;
+      const response = await axios.get(youtubeTrackUrl, { headers });
       const { downloadUrl, title, time, thumbnail, views } = response.data;
 
       if (!downloadUrl) {
@@ -36,7 +48,7 @@ module.exports = {
                 {
                   title: title,
                   image_url: thumbnail,
-                  subtitle: `Views: ${views} - Duration: ${time}`,
+                  subtitle: `${views} - Duration: ${time}`,
                   default_action: {
                     type: "web_url",
                     url: thumbnail,

@@ -1,8 +1,10 @@
+const axios = require("axios");
+
 module.exports = {
   name: 'flux',
   description: 'Generate images via prompt',
   usage: 'flux <prompt>',
-  author: 'Cliff', // api by neth
+  author: 'Cliff', 
   async execute(senderId, args, pageAccessToken, sendMessage) {
     if (!args || !Array.isArray(args) || args.length === 0) {
       await sendMessage(senderId, { text: 'Please provide a prompt for image generation.' }, pageAccessToken);
@@ -13,9 +15,12 @@ module.exports = {
 
     try {
        sendMessage(senderId, { text: "֎ | Generating Please Wait...."}, pageAccessToken);
-      const apiUrl = `https://echavie3.nethprojects.workers.dev/flux?q=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://betadash-api-swordslush.vercel.app/flux?prompt=${encodeURIComponent(prompt)}`;
 
-      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: apiUrl } } }, pageAccessToken);
+const reaponse = await axios.get(apiUrl);
+const yep = response.data.imageUrl;
+
+      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: yep } } }, pageAccessToken);
 
     } catch (error) {
       await sendMessage(senderId, { text: 'Error: Could not generate image.' }, pageAccessToken);
