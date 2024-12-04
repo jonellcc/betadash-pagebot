@@ -1087,17 +1087,8 @@ sendMessage(senderId, { text: kupal }, pageAccessToken);
     const response = await axios.get(apiURL, { headers });
     const { title, author, mediaUrl, mediaPreviewUrl, thumbnailUrl } = response.data;
 
-    const headerMessage = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗔𝘂𝘁𝗵𝗼𝗿: ${author}`;
+    const headerMessage = `𝗧𝗶𝘁𝗹𝗲: ${title}`;
     sendMessage(senderId, { text: headerMessage }, pageAccessToken);
-    sendMessage(senderId, {
-      attachment: {
-        type: "image",
-        payload: {
-          url: thumbnailUrl,
-          is_reusable: true
-        }
-      }
-    }, pageAccessToken);
 
     const headResponse = await axios.head(mediaUrl, { headers });
     const fileSize = parseInt(headResponse.headers['content-length'], 10);
@@ -1112,7 +1103,7 @@ sendMessage(senderId, { text: kupal }, pageAccessToken);
               {
                 title: title,
                 image_url: thumbnailUrl,
-                subtitle: `Author: ${author}`,
+                subtitle: Author: ${author},
                 buttons: [
                   {
                     type: "web_url",
@@ -1197,13 +1188,14 @@ async function updateMessengerCommands() {
   { 
     commands: [
       { 
-        locale: 'en_US', 
+        locale: 'default', 
         commands: commandsPayload 
       }
     ] 
   },
   { 
     headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
       'Content-Type': 'application/json' 
     }
   }
@@ -1212,7 +1204,7 @@ async function updateMessengerCommands() {
 console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to load commands'); 
   } catch (error) {
   }
-} 
+}
 
  loadCommands();
 updateMessengerCommands();
