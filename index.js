@@ -1103,7 +1103,7 @@ sendMessage(senderId, { text: kupal }, pageAccessToken);
               {
                 title: title,
                 image_url: thumbnailUrl,
-                subtitle: Author: ${author},
+                subtitle: `Author: ${author}`,
                 buttons: [
                   {
                     type: "web_url",
