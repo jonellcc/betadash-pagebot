@@ -16,14 +16,39 @@ sendMessage(senderId, { text: `🔍 | Searching music ${query}`}, pageAccessToke
       const apiUrl = `https://betadash-search-download.vercel.app/spt?search=${encodeURIComponent(query)}&apikey=syugg`;
       const response = await axios.get(apiUrl);
 
-      const spotifyLink = response.data.spotify[0].result;
+      const { title, duration, artists, download_url, thumbnail} = response.data;
 
-      if (spotifyLink) {
+sendMessage(
+        senderId,
+        {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [
+                {
+                  title: title,
+                  image_url: thumbnail,
+                  subtitle: `${artists} ${duration}`,
+                  default_action: {
+                    type: "web_url",
+                    url: thumbnail,
+                    webview_height_ratio: "tall"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        pageAccessToken
+      ); 
+
+      if (download_url) {
         sendMessage(senderId, {
           attachment: {
             type: 'audio',
             payload: {
-              url: spotifyLink,
+              url: download_url,
               is_reusable: true
             }
           }

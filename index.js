@@ -455,6 +455,10 @@ if (containsBannedKeyword) {
 
 if (messageText && messageText.includes("imgur")) {
     try {
+if (!content) {
+      sendMessage(senderId, { text: "Reply to an image to upload in imgur" }, pageAccessToken);
+      return;
+    }     
         const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
@@ -469,6 +473,10 @@ if (messageText && messageText.includes("imgur")) {
 
 if (messageText && messageText.includes("removebg")) {
     try {
+if (!content) {
+      sendMessage(senderId, { text: "Reply a photo to Remove background image" }, pageAccessToken);
+      return;
+    }     
         const bg = `https://ccprojectapis.ddns.net/api/removebg?url=${encodeURIComponent(imageUrl)}`;
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
     } catch (error) {
@@ -476,9 +484,12 @@ if (messageText && messageText.includes("removebg")) {
     return;
   }
 
-
 if (messageText && messageText.includes("faceswap")) {
   try {
+if (!content) {
+      sendMessage(senderId, { text: "Reply with two image to combine face" }, pageAccessToken);
+      return;
+    }     
     const imgurApiUrl1 = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(yawa1)}`;
     const imgurResponse1 = await axios.get(imgurApiUrl1, { headers });
     const imgurLink1 = imgurResponse1.data.uploaded.image;
@@ -537,6 +548,10 @@ if (messageText && messageText.includes("Get started")) {
 
 if (messageText && messageText.includes("remini")) {
     try {
+if (!content) {
+      sendMessage(senderId, { text: "Reply a photo to Enhancing image" }, pageAccessToken);
+      return;
+    }     
         const rem = `https://xnilnew404.onrender.com/xnil/remini?imageUrl=${encodeURIComponent(imageUrl)}&method=enhance`;
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: rem } } }, pageAccessToken);
     } catch (error) {
@@ -545,7 +560,11 @@ if (messageText && messageText.includes("remini")) {
   }
 
 if (messageText && messageText.includes("imgbb")) {
-    try {        
+    try { 
+       if (!content) {
+      sendMessage(senderId, { text: "Please reply by image to get the imgbb url" }, pageAccessToken);
+      return;
+    }
        const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
@@ -560,7 +579,11 @@ await sendMessage(senderId, { text: yawa}, pageAccessToken);
 
 
 if (messageText && messageText.includes("tinyurl")) {
-    try {        
+    try { 
+if (!content) {
+      sendMessage(senderId, { text: "Please reply by image to get the shorten url" }, pageAccessToken);
+      return;
+    }     
       const apiUrl = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;
 const fuck = await axios.get(apiUrl);
 const dh = fuck.data.url;
@@ -573,6 +596,10 @@ await sendMessage(senderId, { text: dh }, pageAccessToken);
 
  if (messageText && messageText.includes("zombie")) {
     try {
+if (!content) {
+      sendMessage(senderId, { text: "Reply a photo to to generate canvas zombie face" }, pageAccessToken);
+      return;
+    }     
     const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
@@ -601,6 +628,8 @@ attachment: {
      }
     return;
   } **/
+
+
 
   const commandName = args.shift()?.toLowerCase();
 
@@ -635,9 +664,9 @@ attachment: {
 const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
-        const apiUrl = `https://kaiz-apis.gleeze.com/api/gpt4o-pro?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&imageUrl==${imgurLink}`;
+        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}&file_url=${imgurLink}`;
         const response = await axios.get(apiUrl, { headers });
-        text = convertToBold(response.data.response);
+        text = convertToBold(response.data.message);
       } else {
         const api = `https://api.kenliejugarap.com/mistral-large/?question=${encodeURIComponent(combinedContent)}`;
         const response = await axios.get(api, { headers });
@@ -865,14 +894,42 @@ const headResponse = await axios.head(shotiUrl, { headers });
       sendMessage(senderId, { text: 'Downloading Spotify, please wait...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/spotifydl?url=${encodeURIComponent(messageText)}`;
       const response = await axios.get(apiUrl, { headers });
-      const spotifyLink = response.data.result;
+      const { track_name, cover_image, artist, album_artist, album, release_date } = response.data.metadata;
 
-      if (spotifyLink) {
+const audio = response.data.download.file_url;
+
+  sendMessage(
+        senderId,
+        {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements: [
+                {
+                  title: track_name,
+                  image_url: cover_image,
+                  subtitle: `${album_artist} ${release_date}`,
+                  default_action: {
+                    type: "web_url",
+                    url: cover_image,
+                    webview_height_ratio: "tall"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        pageAccessToken
+      ); 
+
+
+      if (audio) {
         sendMessage(senderId, {
           attachment: {
             type: 'audio',
             payload: {
-              url: spotifyLink,
+              url: audio,
               is_reusable: true
             }
           }

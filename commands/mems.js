@@ -1,20 +1,20 @@
 const axios = require("axios");
 
 module.exports = {
-  name: "gay",
-  description: "Generate a canvas gay bisexual",
-  usage: "gay one two",
+  name: "mems",
+  description: "Generate a canvas mems",
+  usage: "mems one two",
   author: "Cliff",
   async execute(senderId, args, pageAccessToken, sendMessage) {
     try {
       const input = args.join(" ");
-      const [one, two] = input.split(" ");
+      const [one, two] = input.split(" | ");
 
       if (!one || !two) {
-        return sendMessage(senderId, { text: "Invalid Usage: Use gay <uid1> <uid2>" }, pageAccessToken);
+        return sendMessage(senderId, { text: "Invalid Usage: Use mems <text1> <text2>" }, pageAccessToken);
       }
 
-      const apiUrl = `https://api-canvass.vercel.app/gay?uid1=${one}&uid2=${two}`;
+      const apiUrl = `https://api-canvass.vercel.app/mems?text1=${one}&text2=${two}`;
 
       await sendMessage(senderId, {
         attachment: {

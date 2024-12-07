@@ -19,6 +19,7 @@ async function kupal(event, pageAccessToken) {
 
   const senderId = event.sender.id;
   let imageUrl = null;
+  const events = event;
   let videoUrl = null;
 
   if (event.message && event.message.attachments) {
@@ -48,7 +49,7 @@ async function kupal(event, pageAccessToken) {
       if (lastImage || lastVideo) {
         try {
           const mediaToUpload = lastImage || lastVideo;
-          await commands.get('imgur').execute(senderId, args, pageAccessToken, mediaToUpload, admin);
+          await commands.get('imgur').execute(senderId, args, pageAccessToken, events, mediaToUpload, admin);
 
           if (lastImage) lastImageByUser.delete(senderId);
           if (lastVideo) lastVideoByUser.delete(senderId);
