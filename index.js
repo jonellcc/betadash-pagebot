@@ -316,6 +316,24 @@ async function getAttachments(mid) {
     }
   }
 
+  function formatFont(text) {
+      const fontMapping = {
+        A: "𝗔", B: "𝗕", C: "𝗖", D: "𝗗", E: "𝗘", F: "𝗙", G: "𝗚", H: "𝗛",
+        I: "𝗜", J: "𝗝", K: "𝗞", L: "𝗟", M: "𝗠", N: "𝗡", O: "𝗢", P: "𝗣",
+        Q: "𝗤", R: "𝗥", S: "𝗦", T: "𝗧", U: "𝗨", V: "𝗩", W: "𝗪", X: "𝗫",
+        Y: "𝗬", Z: "𝗭", a: "𝗮", b: "𝗯", c: "𝗰", d: "𝗱", e: "𝗲", f: "𝗳",
+        g: "𝗴", h: "𝗵", i: "𝗶", j: "𝗷", k: "𝗸", l: "𝗹", m: "𝗺", n: "𝗻",
+        o: "𝗼", p: "𝗽", q: "𝗾", r: "𝗿", s: "𝘀", t: "𝘁", u: "𝘂", v: "𝘃",
+        w: "𝘄", x: "𝘅", y: "𝘆", z: "𝘇",
+      };
+
+      return text
+        .split("")
+        .map((char) => fontMapping[char] || char)
+        .join("");
+    }
+
+
 const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
@@ -369,6 +387,8 @@ const events = event;
   const messageText = event.message.text;
 const haha = "More shoti";
 const messageId = event.message.mid;
+const If = "aidetect";
+const j = "humanize";
 
 let content = "";
 
@@ -455,7 +475,7 @@ if (containsBannedKeyword) {
 
 if (messageText && messageText.includes("imgur")) {
     try {
-if (!content) {
+if (!imageUrl) {
       sendMessage(senderId, { text: "Reply to an image to upload in imgur" }, pageAccessToken);
       return;
     }     
@@ -473,7 +493,7 @@ if (!content) {
 
 if (messageText && messageText.includes("removebg")) {
     try {
-if (!content) {
+if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to Remove background image" }, pageAccessToken);
       return;
     }     
@@ -486,7 +506,7 @@ if (!content) {
 
 if (messageText && messageText.includes("faceswap")) {
   try {
-if (!content) {
+if (!imageUrl) {
       sendMessage(senderId, { text: "Reply with two image to combine face" }, pageAccessToken);
       return;
     }     
@@ -548,7 +568,7 @@ if (messageText && messageText.includes("Get started")) {
 
 if (messageText && messageText.includes("remini")) {
     try {
-if (!content) {
+if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to Enhancing image" }, pageAccessToken);
       return;
     }     
@@ -561,7 +581,7 @@ if (!content) {
 
 if (messageText && messageText.includes("imgbb")) {
     try { 
-       if (!content) {
+       if (!imageUrl) {
       sendMessage(senderId, { text: "Please reply by image to get the imgbb url" }, pageAccessToken);
       return;
     }
@@ -580,7 +600,7 @@ await sendMessage(senderId, { text: yawa}, pageAccessToken);
 
 if (messageText && messageText.includes("tinyurl")) {
     try { 
-if (!content) {
+if (!imageUrl) {
       sendMessage(senderId, { text: "Please reply by image to get the shorten url" }, pageAccessToken);
       return;
     }     
@@ -596,7 +616,7 @@ await sendMessage(senderId, { text: dh }, pageAccessToken);
 
  if (messageText && messageText.includes("zombie")) {
     try {
-if (!content) {
+if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to to generate canvas zombie face" }, pageAccessToken);
       return;
     }     
@@ -631,6 +651,71 @@ attachment: {
 
 
 
+if (messageText && messageText.includes("aidetect")) {
+    try {
+        if (!content) {
+            sendMessage(senderId, { text: "Please provide a text or reply by message" }, pageAccessToken);
+            return;
+        }
+
+        let result = await axios.get(`https://haji-mix.onrender.com/aidetect?text=${encodeURIComponent(content)}`);
+        const { raw_result } = result.data;
+        const { grade_level, probability_fake, probability_real, readability_score, reading_ease } = raw_result;
+
+        const fakePercentage = (probability_fake * 100).toFixed(2);
+        const realPercentage = (probability_real * 100).toFixed(2);
+
+        const certaintyMessage =
+            fakePercentage > realPercentage
+                ? `The text is ${fakePercentage}% likely to be written by an AI and ${realPercentage}% likely to be written by a human.`
+                : `The text is ${realPercentage}% likely to be written by a human and ${fakePercentage}% likely to be written by an AI.`;
+
+        const response = `${formatFont("Detection Result")}:
+- ${formatFont("Grade Level")}: ${grade_level}
+- ${formatFont("Probability Fake")}: ${fakePercentage}%
+- ${formatFont("Probability Real")}: ${realPercentage}%
+- ${formatFont("Readability Score")}: ${readability_score}
+- ${formatFont("Reading Ease")}: ${reading_ease !== null ? reading_ease : "N/A"}
+
+${certaintyMessage}`;
+
+        sendMessage(senderId, { text: response }, pageAccessToken);
+    } catch (error) {
+        sendMessage(senderId, { text: "Error connecting to the detection API. Please try again later." }, pageAccessToken);
+        }
+      return;
+}
+
+
+if (messageText && messageText.includes("humanize")) {
+    try {
+        if (!content) {
+            sendMessage(senderId, { text: "Please provide a text or reply by message" }, pageAccessToken);
+            return;
+        }
+
+        const result = await axios.get(`https://ccprojectapis.ddns.net/api/aihuman?text=${encodeURIComponent(content)}`)
+            .then((res) => res.data)
+            .catch((err) => {
+                return null;
+            });
+
+        if (!result || result.error !== "No") {
+            sendMessage(senderId, { text: "An error occurred while processing the text. Please try again later." }, pageAccessToken);
+            return;
+        }
+
+        const kupal = `${formatFont("HUMANIZED TEXT")}:\n━━━━━━━━━━━━━━━━\n${result.message}\n`;
+
+        sendMessage(senderId, { text: kupal }, pageAccessToken);
+    } catch (error) {
+        sendMessage(senderId, { text: "An error occurred while processing your request. Please try again later." }, pageAccessToken);
+    }
+}
+
+
+
+
   const commandName = args.shift()?.toLowerCase();
 
   if (commands.has(commandName)) {
@@ -657,7 +742,7 @@ attachment: {
     }
   } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText)
 && !redditVideoRegex.test(messageText)
-&& !snapchatRegex.test(messageText) && haha !== messageText) {
+&& !snapchatRegex.test(messageText) && haha !== messageText && If !== messageText && j !== messageText) {
    try {
   let text;
     if (imageUrl) {
