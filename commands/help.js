@@ -111,7 +111,7 @@ module.exports = {
       return `│ ✧ ${command.name}`;
     });
 
-const huys = "\t「 𝗛𝗜𝗗𝗘𝗡 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦 」\n● Autodownloader - Insta, Tiktok, Facebook, Youtube, Capcut, SoundCloud, Spotify, Snapchat, Reddit.\n● imgur - Reply to an image to upload in imgur.\n● imgbb- Reply image to get the imgbb url.\n● tinyurl - Reply to image to shorter url.\n● removebg - Reply a photo to Remove background image.\n● remini - Reply a photo to Enhancing image\n● zombie - Reply a photo to to generate canvas zombie face\n● faceswap - Reply with two images to combine face";
+const huys = "\t「 𝗛𝗜𝗗𝗘𝗡 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦 」\n● Autodownloader - Insta, Tiktok, Facebook, Youtube, Capcut, SoundCloud, Spotify, Snapchat, Reddit.\n● aidetect - provide a text or reply by a message.\n● humanize - provide a text or reply by a message.\n● imgur - Reply to an image to upload in imgur.\n● imgbb- Reply image to get the imgbb url.\n● tinyurl - Reply to image to shorter url.\n● removebg - Reply a photo to Remove background image.\n● remini - Reply a photo to Enhancing image\n● zombie - Reply a photo to to generate canvas zombie face\n● faceswap - Reply with two images to combine face";
 
     const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commandsList.join('\n')}\n╰───────────◊\n\n${huys}\n\n» 𝗣𝗮𝗴𝗲: <${pageNumber}/${Math.ceil(totalCommands / commandsPerPage)}>\n» 𝗚𝘂𝗶𝗱𝗲: "Type help 1 or any pages number or help <command_name> to view detailed usage instructions for a specific command"\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀: [ ${totalCommands} ]\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
 
