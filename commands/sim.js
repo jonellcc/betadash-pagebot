@@ -13,12 +13,13 @@ module.exports = {
     }
 
     try {
-      const apiUrl = `https://apis-markdevs69v2.onrender.com/api/simv2/get/${prompt}`;
-      const response = await axios.get(apiUrl);
-      const text = response.data.reply;
+      const res = await axios.get(`https://markdevs-last-api-s7d0.onrender.com/sim?q=${content}`);
+      
+      const response = await axios.get(res);
+      const respond = response.data.response;
 
       // Send the API response text back to the user
-      sendMessage(senderId, { text }, pageAccessToken);
+      sendMessage(senderId, { text: respond }, pageAccessToken);
 
     } catch (error) {
       sendMessage(senderId, { text: 'Sorry, there was an error processing your request.' }, pageAccessToken);
