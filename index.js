@@ -749,13 +749,13 @@ if (messageText && messageText.includes("humanize")) {
 const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
-        const apiUrl = `https://haji-mix.onrender.com/gemini?prompt=${encodeURIComponent(combinedContent)}&model=gemini-1.5-flash&uid=${senderId}&file_url=${imgurLink}`;
+        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&&imageUrl=${imgurLink}`;
         const response = await axios.get(apiUrl, { headers });
-        text = convertToBold(response.data.message);
-      } else {
-        const api = `https://api.kenliejugarap.com/mistral-large/?question=${encodeURIComponent(combinedContent)}`;
-        const response = await axios.get(api, { headers });
         text = convertToBold(response.data.response);
+      } else {
+        const api = `https://api.joshweb.click/api/mixtral-8b?q=${encodeURIComponent(combinedContent)}`;
+        const response = await axios.get(api, { headers });
+        text = convertToBold(response.data.result);
 }
 
 
