@@ -18,7 +18,6 @@
     "cheerio": "^1.0.0",
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
-    "javascript-obfuscator": "^4.1.1",
     "os": "^0.1.2",
     "pastebin-api": "^7.0.0",
     "path": "^0.12.7",

@@ -18,6 +18,8 @@ const headers = {
   'Content-Type': 'application/json'
 };
 
+let likeCounter = {};
+
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,9 +27,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 8080;
 
 const VERIFY_TOKEN = 'shipazu';
-const pageid = "61567757543707";
+const pageid = "493920247130641";
 const admin = ["8786755161388846", "8376765705775283", "8552967284765085"];
-const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBOxZBIC6PPT3dwscohZCfuFXXaKrpj0rB9SHViDHL2nZCa2dW4LZBgLaMqv3aCZBTlSA1jx5ABHV9OtbL2zJlQMp6Gf9n6h8dLOPnC0FR1e2Hrx2O2pKutFvkZAlTjVrmRlXKzMrUYd2fkuZCKuUQg6ZBRnrXyoZAxr9r5LraV4lqzoI4hxZCNW4PAHXgZDZD";
+const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO7D11OcLZBZCeUZAX5IMxncfJrULsqcGUBbSrp6yVIwXuM4YRCtEwZCjk3ZAeS7wc29AZBsjRJG9UVK0r4VJKabTBVe4Rye0a7yoPLGhTuzCATKond7WP6LXJPIVJddOzZA1nDtzg0ZBMZCe4hiz4D1e606vg2RAiXZBZCDLDRPMrg1DhQPX6FZBqoSqHwZDZD";
 
 const commandList = [];
 const descriptions = [];
@@ -369,6 +371,21 @@ async function getMessage(mid) {
   });
 }
 
+async function banned(event, pageAccessToken) {
+    const userId = event.sender.id;
+    const url = `https://graph.facebook.com/v21.0/${pageId}/banned`;
+    const data = {
+        user: userId,
+        access_token: PAGE_ACCESS_TOKEN,
+    };
+
+    await axios.post(url, data).then(async () => {
+        await sendMessage(userId, {text: "You have been banned due to spamming."}, pageAccessToken);
+    }).catch((error) => {
+        console.error("Error banning user:", error.response ? error.response.data : error.message);
+    });
+}
+
 
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id)  {
@@ -389,6 +406,17 @@ const haha = "More shoti";
 const messageId = event.message.mid;
 const If = "aidetect";
 const j = "humanize";
+
+
+if (messageText === "👍") {
+        likeCounter[senderId] = (likeCounter[senderId] || 0) + 1;
+
+        if (likeCounter[userId] >= 2) {
+            if (!admin.includes(senderId)) {
+                await banned(event);
+            }
+        }
+    }
 
 let content = "";
 
@@ -1337,7 +1365,6 @@ async function updateMessengerCommands() {
   },
   { 
     headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
       'Content-Type': 'application/json' 
     }
   }
