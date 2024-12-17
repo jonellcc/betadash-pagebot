@@ -1,9 +1,9 @@
 const axios = require('axios');
 
 module.exports = {
-  name: 'tattoo',
-  description: 'Generate canvas tattoo',
-  usage: 'tattoo <userid>',
+  name: 'christmas-present',
+  description: 'christmas-present canvas',
+  usage: 'christmas-present <userid>',
   author: 'cliff',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     if (!args || !Array.isArray(args) || args.length === 0) {
@@ -14,12 +14,13 @@ module.exports = {
     const uid = args.join(' ');
 
     try {
-      const apiUrl = `https://apiv2.kenliejugarap.com/tattoo?url=https://api-canvass.vercel.app/profile?uid=${uid}`;
+      const apiUrl = `https://api-canvass.vercel.app/christmas-present?userid=${encodeURIComponent(uid)}`;
 
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: apiUrl } } }, pageAccessToken);
 
     } catch (error) {
-      await sendMessage(senderId, { text: 'Error: Could not generate image.' }, pageAccessToken);
+      await sendMessage(senderId, { text: "This canvas is automatically face detected if the profile photo of user is no face detected can't generate canvas."}, pageAccessToken);
     }
   }
 };
+

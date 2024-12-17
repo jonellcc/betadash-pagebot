@@ -1,22 +1,20 @@
 const axios = require('axios');
 
 module.exports = {
-  name: 'trump',
-  description: 'Trump post canvas',
-  usage: 'trump <text>',
+  name: 'snowglobe',
+  description: 'Generate canvas Christmas ',
+  usage: ' Christmas <name>',
   author: 'cliff',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     if (!args || !Array.isArray(args) || args.length === 0) {
-      await sendMessage(senderId, { text: 'Please provide a text' }, pageAccessToken);
+      await sendMessage(senderId, { text: 'Please provide a name to generate canvas' }, pageAccessToken);
       return;
     }
 
-    const prompt = args.join(' ');
+    const name = args.join(' ');
 
     try {
-      const apiUrl = `https://api-canvass.vercel.app/trump-post?text=${encodeURIComponent(prompt)}`;
-const fuck = await axios.get(apiUrl);
-const dh = fuck.data.response;
+      const apiUrl = `https://api-canvass.vercel.app/christmas?name=${encodeURIComponent(name)}`;
 
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: apiUrl } } }, pageAccessToken);
 

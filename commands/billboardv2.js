@@ -1,20 +1,20 @@
 const axios = require('axios');
 
 module.exports = {
-  name: 'christmas',
-  description: 'Generate canvas Christmas ',
-  usage: ' Christmas <name>',
+  name: 'billboardv2',
+  description: 'city billboard canvas',
+  usage: 'billboardv2 <userid>',
   author: 'cliff',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     if (!args || !Array.isArray(args) || args.length === 0) {
-      await sendMessage(senderId, { text: 'Please provide a name to generate canvas' }, pageAccessToken);
+      await sendMessage(senderId, { text: 'Please provide a userid to generate canvas' }, pageAccessToken);
       return;
     }
 
-    const name = args.join(' ');
+    const uid = args.join(' ');
 
     try {
-      const apiUrl = `https://api-canvass.vercel.app/christmas?name=${encodeURIComponent(name)}`;
+      const apiUrl = `https://api-canvass.vercel.app/city-billboard?userid=${encodeURIComponent(uid)}`;
 
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: apiUrl } } }, pageAccessToken);
 
@@ -23,3 +23,4 @@ module.exports = {
     }
   }
 };
+

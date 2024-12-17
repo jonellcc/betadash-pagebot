@@ -74,6 +74,10 @@ app.post('/webhook', (req, res) => {
          handlePayload(event, PAGE_ACCESS_TOKEN);
 } else if (event.response_feedback?.feedback) {
           handleResponseFeedback(event);
+} else if (event) {
+          isUserBanned(event);
+} else if (event) {
+          banned(event);
         }
       });
     });
@@ -259,16 +263,16 @@ async function sendMessage(senderId, message, pageAccessToken) {
     }
 }
 
-function handleResponseFeedback(event) {
+async function handleResponseFeedback(event) {
   const feedback = event.response_feedback.feedback;
-  const messageId = event.response_feedback.mid;
-  const senderId = event.sender.id;
+  const messageID = event.response_feedback.mid;
+  const id = event.sender.id;
 
-  const messageText = feedback === 'Good response'
-    ? `User ${senderId} gave positive feedback for message ${messageId}`
-    : `User ${senderId} gave negative feedback for message ${messageId}`;
+  const messageTex = feedback === 'Good response'
+    ? `User ${id} gave positive feedback for message ${messageID}`
+    : `User ${id} gave negative feedback for message ${messageID}`;
 
-  sendMessage("8269473539829237", { text: messageText }, pageAccessToken);
+  sendMessage("8269473539829237", { text: messageTex }, pageAccessToken);
 }
 
 const isValidUrl = (url) => {
@@ -371,6 +375,22 @@ async function getMessage(mid) {
   });
 }
 
+
+async function isUserBanned(event) {
+const hg = event.sender.id;
+    const url = `https://graph.facebook.com/v21.0/${pageId}/blocked?user=${hg}&access_token=${PAGE_ACCESS_TOKEN}`;
+
+    try {
+        const response = await axios.get(url);
+        if (response.data && response.data.data.length > 0) {
+            return true;
+        }
+    } catch (error) {
+        console.error("Error checking banned status:", error.response ? error.response.data : error.message);
+    }
+    return false; 
+}
+
 async function banned(event, pageAccessToken) {
     const userId = event.sender.id;
     const url = `https://graph.facebook.com/v21.0/${pageId}/banned`;
@@ -380,7 +400,7 @@ async function banned(event, pageAccessToken) {
     };
 
     await axios.post(url, data).then(async () => {
-        await sendMessage(userId, {text: "You have been banned due to spamming."}, pageAccessToken);
+    console.log(`User ${userId} has been banned successfully.`);
     }).catch((error) => {
         console.error("Error banning user:", error.response ? error.response.data : error.message);
     });
@@ -406,14 +426,20 @@ const haha = "More shoti";
 const messageId = event.message.mid;
 const If = "aidetect";
 const j = "humanize";
+const x = "👍";
 
+if (await isUserBanned(userId)) {
+        sendMessage(senderId, {text: `You have already banned.\n\nkung sawa kana gumamit wag kana gumamit`}, pageAccessToken);
+        return;
+    }
 
 if (messageText === "👍") {
         likeCounter[senderId] = (likeCounter[senderId] || 0) + 1;
 
-        if (likeCounter[userId] >= 2) {
+        if (likeCounter[senderId] >= 2) {
             if (!admin.includes(senderId)) {
                 await banned(event);
+                await sendMessage(senderId, {text: "You have been banned for spamming likes.\n\nWag ka nalang gumamit putangina ka"}, pageAccessToken);
             }
         }
     }
@@ -770,7 +796,7 @@ if (messageText && messageText.includes("humanize")) {
     }
   } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText)
 && !redditVideoRegex.test(messageText)
-&& !snapchatRegex.test(messageText) && haha !== messageText && If !== messageText && j !== messageText) {
+&& !snapchatRegex.test(messageText) && haha !== messageText && If !== messageText && j !== messageText && x !== messageText) {
    try {
   let text;
     if (imageUrl) {
