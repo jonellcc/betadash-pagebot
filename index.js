@@ -375,22 +375,6 @@ async function getMessage(mid) {
   });
 }
 
-
-async function isUserBanned(event) {
-const hg = event.sender.id;
-    const url = `https://graph.facebook.com/v21.0/${pageId}/blocked?user=${hg}&access_token=${PAGE_ACCESS_TOKEN}`;
-
-    try {
-        const response = await axios.get(url);
-        if (response.data && response.data.data.length > 0) {
-            return true;
-        }
-    } catch (error) {
-        console.error("Error checking banned status:", error.response ? error.response.data : error.message);
-    }
-    return false; 
-}
-
 async function banned(event, pageAccessToken) {
     const userId = event.sender.id;
     const url = `https://graph.facebook.com/v21.0/${pageId}/banned`;
@@ -427,11 +411,6 @@ const messageId = event.message.mid;
 const If = "aidetect";
 const j = "humanize";
 const x = "👍";
-
-if (await isUserBanned(userId)) {
-        sendMessage(senderId, {text: `You have already banned.\n\nkung sawa kana gumamit wag kana gumamit`}, pageAccessToken);
-        return;
-    }
 
 if (messageText === "👍") {
         likeCounter[senderId] = (likeCounter[senderId] || 0) + 1;
