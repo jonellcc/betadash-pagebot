@@ -375,22 +375,6 @@ async function getMessage(mid) {
   });
 }
 
-async function banned(event, pageAccessToken) {
-    const userId = event.sender.id;
-    const url = `https://graph.facebook.com/v21.0/${pageId}/banned`;
-    const data = {
-        user: userId,
-        access_token: PAGE_ACCESS_TOKEN,
-    };
-
-    await axios.post(url, data).then(async () => {
-    console.log(`User ${userId} has been banned successfully.`);
-    }).catch((error) => {
-        console.error("Error banning user:", error.response ? error.response.data : error.message);
-    });
-}
-
-
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id)  {
     return;
@@ -411,17 +395,6 @@ const messageId = event.message.mid;
 const If = "aidetect";
 const j = "humanize";
 const x = "👍";
-
-if (messageText === "👍") {
-        likeCounter[senderId] = (likeCounter[senderId] || 0) + 1;
-
-        if (likeCounter[senderId] >= 2) {
-            if (!admin.includes(senderId)) {
-                await banned(event);
-                await sendMessage(senderId, {text: "You have been banned for spamming likes.\n\nWag ka nalang gumamit putangina ka"}, pageAccessToken);
-            }
-        }
-    }
 
 let content = "";
 
@@ -783,12 +756,18 @@ const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURI
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
         const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&&imageUrl=${imgurLink}`;
+const s = ["▞", "✦", "✧", "✦", "⟡", "ᯤ"];
+  const sy = s[Math.floor(Math.random() * s.length)];
         const response = await axios.get(apiUrl, { headers });
-        text = convertToBold(response.data.response);
+       const cg = convertToBold(response.data.response);
+        text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━━\n${cg}\n━━━━━━━━━━━━━━`;
       } else {
-        const api = `https://api.joshweb.click/api/mixtral-8b?q=${encodeURIComponent(combinedContent)}`;
-        const response = await axios.get(api, { headers });
-        text = convertToBold(response.data.result);
+     const s = ["▞", "✦", "✧", "✦", "⟡", "ᯤ"];
+  const sy = s[Math.floor(Math.random() * s.length)];
+        const api = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}`;
+     const response = await axios.get(api);
+      const anss = convertToBold(response.data.response);
+        text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━\n${anss}\n━━━━━━━━━━━━━`;
 }
 
 

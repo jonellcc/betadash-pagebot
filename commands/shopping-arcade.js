@@ -1,9 +1,9 @@
 const axios = require('axios');
 
 module.exports = {
-  name: 'affect',
-  description: 'Generate canvas affect',
-  usage: 'affect<userid>',
+  name: 'shopping-arcade',
+  description: 'shopping-arcade canvas',
+  usage: 'shopping-arcade <userid>',
   author: 'cliff',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     if (!args || !Array.isArray(args) || args.length === 0) {
@@ -13,13 +13,16 @@ module.exports = {
 
     const uid = args.join(' ');
 
-    try {
-      const apiUrl = `https://apiv2.kenliejugarap.com/affect?url=https://api-canvass.vercel.app/profile?uid=${uid}`;
+    try {    
+      const apiUrl = `https://api-canvass.vercel.app/shopping-arcade?userid=${encodeURIComponent(uid)}`;
+
+const nya = await axios.get(apiUrl);
+const res = nya.data.imageUrl;
 
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: apiUrl } } }, pageAccessToken);
 
     } catch (error) {
-      await sendMessage(senderId, { text: 'Error: Could not generate image.' }, pageAccessToken);
+      await sendMessage(senderId, { text: "This canvas is automatically face detected if the profile photo of user is no face detected can't generate canvas."}, pageAccessToken);
     }
   }
 };

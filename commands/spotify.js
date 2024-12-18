@@ -12,7 +12,6 @@ module.exports = {
     }
 
   try {
-sendMessage(senderId, { text: `🔍 | Searching music ${query}`}, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/spt?search=${encodeURIComponent(query)}&apikey=syugg`;
       const response = await axios.get(apiUrl);
 
