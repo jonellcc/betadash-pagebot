@@ -74,10 +74,6 @@ app.post('/webhook', (req, res) => {
          handlePayload(event, PAGE_ACCESS_TOKEN);
 } else if (event.response_feedback?.feedback) {
           handleResponseFeedback(event);
-} else if (event) {
-          isUserBanned(event);
-} else if (event) {
-          banned(event);
         }
       });
     });
@@ -87,75 +83,72 @@ app.post('/webhook', (req, res) => {
   }
 });
 
-
-function handlePayload(event, pageAccessToken) {
-  const senderId = event.sender.id;
+async function handlePayload(event, pageAccessToken) {
   const payload = event.postback.payload;
-
-  try {
-    if (payload === 'GET_STARTED_PAYLOAD') {
-      sendMessage(senderId, {
-        attachment: {
-          type: 'template',
-          payload: {
-            template_type: 'button',
-            text: "Hello, I'm 𝗕𝗲𝗹𝘂𝗴𝗮! I'm your friendly AI assistant, here to help with any questions, tasks, or just about anything else you need. I'm constantly learning and improving, so please bear with me if ever I make any mistakes. I'm excited to work with you and make your day a little brighter. What's on your mind today?\n\nUse the 'Help' button to show a list of commands. 𝗕𝗲𝗹𝘂𝗴𝗮 is for educational and fun purposes, so now you can explore all the commands. Like/Follow for more.",
-            buttons: [
-              {
-                type: 'web_url',
-                url: "https://www.facebook.com/61567757543707",
-                title: "Like/Follow"
-              },
-              {
-                type: 'postback',
-                title: "Help",
-                payload: "HELP_PAYLOAD"
-              }
-            ]
-          }
+  const senderId = event.sender.id;
+  if (payload === 'GET_STARTED_PAYLOAD') {
+    await sendMessage(senderId, {
+      attachment: {
+        type: 'template',
+        payload: {
+          template_type: 'button',
+          text: "Hello, I'm 𝗕𝗲𝗹𝘂𝗴𝗮! I'm your friendly AI assistant, here to help with any questions, tasks, or just about anything else you need. I'm constantly learning and improving, so please bear with me if ever I make any mistakes. I'm excited to work with you and make your day a little brighter. What's on your mind today?\n\nUse the 'Help' button to show a list of commands. 𝗕𝗲𝗹𝘂𝗴𝗮 is for educational and fun purposes, so now you can explore all the commands. Like/Follow for more.",
+          buttons: [
+            {
+              type: 'web_url',
+              url: "https://www.facebook.com/61567757543707",
+              title: "Like/Follow"
+            },
+            {
+              type: 'postback',
+              title: "Help",
+              payload: "HELP_PAYLOAD"
+            }
+          ]
+        }
+      },
+      quick_replies: [
+        {
+          content_type: "text",
+          title: "Help",
+          payload: "HELP"
         },
-        quick_replies: [
-          {
-            content_type: "text",
-            title: "Help",
-            payload: "HELP"
-          },
-          {
-            content_type: "text",
-            title: "Privacy Policy",
-            payload: "PRIVACY_POLICY"
-          }
-        ]
-      }, pageAccessToken);
-    }
-  } catch (error) {
+        {
+          content_type: "text",
+          title: "Privacy Policy",
+          payload: "PRIVACY_POLICY"
+        }
+      ]
+    }, pageAccessToken);
   }
+}
 
-  if (event.postback && event.postback.payload) {
-   handlePayload(event.postback.payload);
-  }
-
+async function initializeMessengerProfile() {
   const url = `https://graph.facebook.com/v21.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
-  const profilePayload = {
+  const payload = {
     get_started: { payload: "GET_STARTED_PAYLOAD" },
     greeting: [
       {
-        locale: "en_US",
+        locale: "default",
         text: "Hello, {{user_first_name}}! I'm 𝗕𝗲𝗹𝘂𝗴𝗮! Your friendly AI assistant, here to help with questions, tasks, and more."
       }
     ]
   };
 
-  axios.post(url, profilePayload, {
+  await axios.post(url, payload, {
     headers: {
       "Content-Type": "application/json"
     }
-  })
-  .then(response => {
-  })
-  .catch(error => {
   });
-} 
+}
+
+async function processEvent(event) {
+  if (event.postback && event.postback.payload) {
+    await handlePayload(event.postback.payload);
+  }
+}
+
+initializeMessengerProfile();
 
 
 /** function handleLongTask(senderId) {
@@ -711,16 +704,13 @@ if (messageText && messageText.includes("humanize")) {
             return;
         }
 
-        const kupal = `${formatFont("HUMANIZED TEXT")}:\n━━━━━━━━━━━━━━━━\n${result.message}\n`;
+        const kupal = `${formatFont("HUMANIZED TEXT")}:\n━━━━━━━━━━━━━━\n${result.message}\n`;
 
         sendMessage(senderId, { text: kupal }, pageAccessToken);
     } catch (error) {
         sendMessage(senderId, { text: "An error occurred while processing your request. Please try again later." }, pageAccessToken);
     }
 }
-
-
-
 
   const commandName = args.shift()?.toLowerCase();
 
@@ -756,13 +746,13 @@ const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURI
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
         const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&&imageUrl=${imgurLink}`;
-const s = ["▞", "✦", "✧", "✦", "⟡", "ᯤ"];
+const s = [ "✦", "✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
         const response = await axios.get(apiUrl, { headers });
        const cg = convertToBold(response.data.response);
         text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━━\n${cg}\n━━━━━━━━━━━━━━`;
       } else {
-     const s = ["▞", "✦", "✧", "✦", "⟡", "ᯤ"];
+     const s = ["✦", "✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
         const api = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}`;
      const response = await axios.get(api);
@@ -918,17 +908,17 @@ const headResponse = await axios.head(shotiUrl, { headers });
   } else if (youtubeLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Youtube, please wait...' }, pageAccessToken);
-      const yts = `https://yt-video-production.up.railway.app/ytdl?url=${encodeURIComponent(messageText)}`;
+      const yts = `https://yt-video-production.up.railway.app/ytdlv3?url=${encodeURIComponent(messageText)}`;
      const yu = await axios.get(yts, { headers });
-      const vid = yu.data.video;
-      const duration = `${yu.data.duration.seconds}\t${yu.data.duration.label}`;
+      const vid = yu.data.download_url;
+/**  const duration = `${yu.data.duration.seconds}\t${yu.data.duration.label}`;
       const thumbnail = yu.data.thumbnail;
       const title = yu.data.title;
 
  const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${title}`;
       sendMessage(senderId, { text: kupal }, pageAccessToken); 
 
-/**  sendMessage(
+sendMessage(
         senderId,
         {
           attachment: {
