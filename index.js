@@ -578,6 +578,23 @@ if (!imageUrl) {
     return;
   }
 
+
+if (messageText && messageText.includes("upscale")) {
+    try {
+if (!imageUrl) {
+      sendMessage(senderId, { text: "Reply a photo to Enhancing image" }, pageAccessToken);
+      return;
+    }     
+        const upsc = `https://yt-video-production.up.railway.app/upscale?imageUrl=${encodeURIComponent(imageUrl)}`;
+const en = await axios.get(upsc);
+     const ups = en.data.imageUrl;
+      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: ups } } }, pageAccessToken);
+    } catch (error) {
+     }
+    return;
+  }
+
+
 if (messageText && messageText.includes("imgbb")) {
     try { 
        if (!imageUrl) {

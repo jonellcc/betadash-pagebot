@@ -7,23 +7,20 @@ module.exports = {
   async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
     const query = args.join(' ');
 
-if (!query) {
+ if (!query) {
           sendMessage(senderId, { text: 'please provide music you want to get the lyrics' }, pageAccessToken);
         return;
     }
 
     try {
-      const apiUrl = `https://lyrist.vercel.app/api/${encodeURIComponent(query)}`;
-      const response = await axios.get(apiUrl);
-      const { lyrics, title, artist, image } = response.data;
+      const apiUrl = `https://betadash-api-swordslush.vercel.app/lyrics-finder?title=${encodeURIComponent(query)}`;
+      const responsee = await axios.get(apiUrl);
+      const { response, Title, artist, Thumbnail } = responsee.data;
 
       if (lyrics) {
-        const lyricsMessage = `𝗧𝗶𝘁𝗹𝗲: ${title}
-𝗔𝗿𝘁𝗶𝘀𝘁: ${artist}
+        const lyricsMessage = `𝗧𝗶𝘁𝗹𝗲: ${Title}
 
-𖢨°•°•——[ 𝗟𝗬𝗥𝗜𝗖𝗦 ]——•°•°𖢨
-${lyrics}
-𖢨°•°•——[ 𝗟𝗬𝗥𝗜𝗖𝗦 ]——•°•°𖢨`;
+${response}`;
 
         const maxMessageLength = 2000;
         if (lyricsMessage.length > maxMessageLength) {
@@ -40,7 +37,7 @@ ${lyrics}
             attachment: {
               type: 'image',
               payload: {
-                url: image,
+                url: Thumbnail,
                 is_reusable: true
               }
             }
@@ -54,3 +51,4 @@ ${lyrics}
     }
   }
 };
+
