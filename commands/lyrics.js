@@ -4,7 +4,7 @@ module.exports = {
   name: 'lyrics',
   description: 'Fetch song lyrics',
   author: 'Cliff',
-  async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
+  async execute(senderId, args, pageAccessToken, sendMessage) {
     const query = args.join(' ');
 
  if (!query) {
@@ -19,14 +19,6 @@ module.exports = {
 
       if (response) {
         const lyricsMessage = `𝗧𝗶𝘁𝗹𝗲: ${Title}\n\n${response}`;
-
-        const maxMessageLength = 2000;
-        if (lyricsMessage.length > maxMessageLength) {
-          const messages = splitMessageIntoChunks(lyricsMessage, maxMessageLength);
-          for (const message of messages) {
-            sendMessage(senderId, { text: message }, pageAccessToken);
-          }
-        } else {
           sendMessage(senderId, { text: lyricsMessage }, pageAccessToken);
         }
 
