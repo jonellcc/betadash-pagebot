@@ -17,10 +17,8 @@ module.exports = {
       const responsee = await axios.get(apiUrl);
       const { response, Title, artist, Thumbnail } = responsee.data;
 
-      if (lyrics) {
-        const lyricsMessage = `𝗧𝗶𝘁𝗹𝗲: ${Title}
-
-${response}`;
+      if (response) {
+        const lyricsMessage = `𝗧𝗶𝘁𝗹𝗲: ${Title}\n\n${response}`;
 
         const maxMessageLength = 2000;
         if (lyricsMessage.length > maxMessageLength) {
@@ -32,7 +30,7 @@ ${response}`;
           sendMessage(senderId, { text: lyricsMessage }, pageAccessToken);
         }
 
-        if (image) {
+        if (Thumbnail) {
           sendMessage(senderId, {
             attachment: {
               type: 'image',
@@ -51,4 +49,3 @@ ${response}`;
     }
   }
 };
-
