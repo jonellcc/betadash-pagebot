@@ -7,9 +7,9 @@ module.exports = {
   async execute(senderId, args, pageAccessToken, sendMessage) {
     const query = args.join(' ');
 
- if (!query) {
-          sendMessage(senderId, { text: 'please provide music you want to get the lyrics' }, pageAccessToken);
-        return;
+    if (!query) {
+      sendMessage(senderId, { text: 'please provide music you want to get the lyrics' }, pageAccessToken);
+      return;
     }
 
     try {
@@ -19,22 +19,19 @@ module.exports = {
 
       if (response) {
         const lyricsMessage = `𝗧𝗶𝘁𝗹𝗲: ${Title}\n\n${response}`;
-          sendMessage(senderId, { text: lyricsMessage }, pageAccessToken);
-        }
+        sendMessage(senderId, { text: lyricsMessage }, pageAccessToken);
+      }
 
-        if (Thumbnail) {
-          sendMessage(senderId, {
-            attachment: {
-              type: 'image',
-              payload: {
-                url: Thumbnail,
-                is_reusable: true
-              }
+      if (Thumbnail) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'image',
+            payload: {
+              url: Thumbnail,
+              is_reusable: true
             }
-          }, pageAccessToken);
-        }
-      } else {
-        sendMessage(senderId, { text: 'Sorry, no lyrics were found for your query.' }, pageAccessToken);
+          }
+        }, pageAccessToken);
       }
     } catch (error) {
       sendMessage(senderId, { text: `Sorry, no lyrics were found for your query. ${query}` }, pageAccessToken);
