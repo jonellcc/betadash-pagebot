@@ -1,8 +1,8 @@
 const axios = require('axios');
 
 module.exports = {
-  name: 'openai',
-  description: 'Ask a question to openai ai',
+  name: 'therapist',
+  description: 'Ask a question to lotus therapist Ai',
   author: 'Cliff(rest api)',
   async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
     const prompt = args.join(' ');
@@ -12,7 +12,7 @@ if (!prompt) {
     }
 
     try {
-      const apiUrl = `https://betadash-api-swordslush.vercel.app/openai?ask=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://betadash-api-swordslush.vercel.app/therapist?ask=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
       const text = response.data.response;
 
@@ -20,11 +20,11 @@ if (!prompt) {
       if (text.length > maxMessageLength) {
         const messages = splitMessageIntoChunks(text, maxMessageLength);
         for (const message of messages) {
-const kupal = `🦆 | 𝗗𝗨𝗖𝗞𝗚𝗢\n━━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━━`;
+const kupal = `🐼 | 𝗣𝗔𝗡𝗗𝗔\n━━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━━`;
           sendMessage(senderId, { text: message}, pageAccessToken);
         }
       } else {
-const kupal2 = `🦆 | 𝗗𝗨𝗖𝗞𝗚𝗢\n━━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━━`;
+const kupal2 = `🐼 | 𝗣𝗔𝗡𝗗𝗔\n━━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━━`;
         sendMessage(senderId, { text }, pageAccessToken);
       }
     } catch (error) {
@@ -32,4 +32,5 @@ const kupal2 = `🦆 | 𝗗𝗨𝗖𝗞𝗚𝗢\n━━━━━━━━━━�
     }
   }
 };
+
 

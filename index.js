@@ -925,17 +925,17 @@ const headResponse = await axios.head(shotiUrl, { headers });
   } else if (youtubeLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Youtube, please wait...' }, pageAccessToken);
-      const yts = `https://yt-video-production.up.railway.app/ytdlv3?url=${encodeURIComponent(messageText)}`;
+      const yts = `https://yt-video-production.up.railway.app/ytdl?url=${encodeURIComponent(messageText)}`;
      const yu = await axios.get(yts, { headers });
-      const vid = yu.data.download_url;
-/**  const duration = `${yu.data.duration.seconds}\t${yu.data.duration.label}`;
+      const vid = yu.data.video;
+   const duration = `${yu.data.duration.seconds}\t${yu.data.duration.label}`;
       const thumbnail = yu.data.thumbnail;
       const title = yu.data.title;
 
  const kupal = `🎥 Now playing\n\n𝗧𝗶𝘁𝗹𝗲: ${title}`;
       sendMessage(senderId, { text: kupal }, pageAccessToken); 
 
-sendMessage(
+/** sendMessage(
         senderId,
         {
           attachment: {
