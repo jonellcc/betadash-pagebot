@@ -1,6 +1,4 @@
 const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
 
 module.exports = {
   name: 'freepik',
@@ -24,28 +22,10 @@ module.exports = {
 
       if (images.length > 0) {
         const selectedImages = images.slice(0, 5);
-        const img = [];
-        const filePaths = [];
 
-        for (let i = 0; i < selectedImages.length; i++) {
-          const imageBuffer = (
-            await axios.get(selectedImages[i], { responseType: "arraybuffer" })
-          ).data;
-          const filePath = path.join(__dirname, 'cache', `image${i}.jpg`);
-          fs.writeFileSync(filePath, imageBuffer);
-          img.push(fs.createReadStream(filePath));
-          filePaths.push(filePath);
+        for (const img of selectedImages) {
+          await sendMessage(senderId, { attachment: { type: 'image', payload: { url: img } } }, pageAccessToken);
         }
-
-        await sendMessage(senderId, { attachment: { type: 'image', payload: { url: img } } }, pageAccessToken);
-
-        filePaths.forEach(filePath => {
-          fs.unlink(filePath, (err) => {
-            if (err) {
-              console.error(`Error deleting file ${filePath}:`, err);
-            }
-          });
-        });
       } else {
         await sendMessage(senderId, { text: 'No images found.' }, pageAccessToken);
       }
