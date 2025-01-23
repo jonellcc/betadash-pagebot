@@ -8,10 +8,10 @@ module.exports = {
   async execute(senderId, args, pageAccessToken, sendMessage) {
     try {
       const input = args.join(" ");
-      const [one, two] = input.split(" ");
+      const [one, two] = input.split(" | ");
 
       if (!one || !two) {
-        return sendMessage(senderId, { text: "Invalid Usage: Use hack <name> <uid>" }, pageAccessToken);
+        return sendMessage(senderId, { text: "Invalid Usage: Use hack <name> | <uid>" }, pageAccessToken);
       }
 
       const apiUrl = `https://api-canvass.vercel.app/hack?name=${one}&uid=${two}`;

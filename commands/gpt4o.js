@@ -1,10 +1,18 @@
 const axios = require('axios');
 
+function splitMessageIntoChunks(message, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < message.length; i += chunkSize) {
+    chunks.push(message.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
 module.exports = {
   name: 'gpt4o',
   description: 'Ask a question to GPT-4',
   author: 'Cliff (rest api)',
-  async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
+  async execute(senderId, args, pageAccessToken, sendMessage) {
     const prompt = args.join(' ');
 if (!prompt) {
           sendMessage(senderId, { text: 'please provide a question first' }, pageAccessToken);

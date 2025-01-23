@@ -2,7 +2,7 @@ const axios = require("axios");
 
 module.exports = {
   name: 'flux',
-  description: 'Generate images via prompt',
+  description: 'Generate images from flux pro',
   usage: 'flux <prompt>',
   author: 'Cliff', 
   async execute(senderId, args, pageAccessToken, sendMessage) {
@@ -18,7 +18,7 @@ module.exports = {
       const apiUrl = `https://betadash-api-swordslush.vercel.app/flux?prompt=${encodeURIComponent(prompt)}`;
 
 const response = await axios.get(apiUrl);
-const yep = response.data.imageUrl;
+const yep = response.data.data.imageUrl;
 
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: yep } } }, pageAccessToken);
 

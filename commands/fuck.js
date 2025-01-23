@@ -16,10 +16,10 @@ const kupal = ["8505900689447357", "8269473539829237", "7913024942132935"];
 
     try {
       const input = args.join(" ");
-      const [one, two] = input.split(" ");
+      const [one, two] = input.split(" | ");
 
       if (!one || !two) {
-        return sendMessage(senderId, { text: "Invalid Usage: Use fuck <uid1> <uid2>" }, pageAccessToken);
+        return sendMessage(senderId, { text: "Invalid Usage: Use fuck <uid1> | <uid2>" }, pageAccessToken);
       }
 
       const apiUrl = `https://api-canvass.vercel.app/fuck?one=${one}&two=${two}`;

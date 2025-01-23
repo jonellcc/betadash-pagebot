@@ -8,10 +8,10 @@ module.exports = {
   async execute(senderId, args, pageAccessToken, sendMessage) {
     try {
       const input = args.join(" ");
-      const [one, two, three] = input.split(" ");
+      const [one, two, three] = input.split(" | ");
 
       if (!one || !two) {
-        return sendMessage(senderId, { text: "Invalid Usage: Use fampair <uid1> <uid2> <uid3>" }, pageAccessToken);
+        return sendMessage(senderId, { text: "Invalid Usage: Use fampair <uid1> | <uid2> | <uid3>" }, pageAccessToken);
       }
 
       const apiUrl = `https://api-canvass.vercel.app/fampair?mother=${one}& father=${two}&son=${three}`;

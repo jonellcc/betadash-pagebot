@@ -1,5 +1,13 @@
 const axios = require('axios');
 
+function splitMessageIntoChunks(message, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < message.length; i += chunkSize) {
+    chunks.push(message.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
 const fontMapping = {
     'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚',
     'H': '𝗛', 'I': '𝗜', 'J': '𝗝', 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡',
@@ -20,9 +28,9 @@ function convertToBold(text) {
 
 module.exports = {
   name: 'ai',
-  description: 'Ask a question to Openai',
+  description: 'Ask a question to Aria ai',
   author: 'Cliff (rest api)',
-  async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
+  async execute(senderId, args, pageAccessToken, sendMessage) {
     const prompt = args.join(' ');
 if (!prompt) {
           sendMessage(senderId, { text: 'please provide a question first' }, pageAccessToken);
@@ -30,9 +38,9 @@ if (!prompt) {
     }
 
     try {
-      const apiUrl = `https://openai-rest-api.vercel.app/hercai?ask=${encodeURIComponent(prompt)}&model=v3`;
+      const apiUrl = `https://yt-video-production.up.railway.app/Aria?q=${encodeURIComponent(prompt)}&userid=${senderId}`;
       const response = await axios.get(apiUrl);
-      const text = convertToBold(response.data.reply);
+      const text = response.data.response;
 
       const maxMessageLength = 2000;
       if (text.length > maxMessageLength) {
