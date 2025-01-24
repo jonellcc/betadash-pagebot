@@ -38,6 +38,7 @@ if (!prompt) {
     }
 
     try {
+      sendMessage(senderId, { text: '🗨 | 𝙰𝚛𝚒𝚊 𝙰𝙸 𝚒𝚜 𝚝𝚑𝚒𝚗𝚔𝚒𝚗𝚐 𝚙𝚕𝚎𝚊𝚜𝚎 𝚠𝚊𝚒𝚝...' }, pageAccessToken);
       const apiUrl = `https://yt-video-production.up.railway.app/Aria?q=${encodeURIComponent(prompt)}&userid=${senderId}`;
       const response = await axios.get(apiUrl);
       const text = response.data.response;
