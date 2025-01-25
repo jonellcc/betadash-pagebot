@@ -29,7 +29,7 @@ const PORT = process.env.PORT || 8080;
 const VERIFY_TOKEN = 'shipazu';
 const pageid = "493920247130641";
 const admin = ["8786755161388846", "8376765705775283", "8552967284765085"];
-const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO7D11OcLZBZCeUZAX5IMxncfJrULsqcGUBbSrp6yVIwXuM4YRCtEwZCjk3ZAeS7wc29AZBsjRJG9UVK0r4VJKabTBVe4Rye0a7yoPLGhTuzCATKond7WP6LXJPIVJddOzZA1nDtzg0ZBMZCe4hiz4D1e606vg2RAiXZBZCDLDRPMrg1DhQPX6FZBqoSqHwZDZD";
+const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO5WloVZCKNkw8Q8ZAxE5qFJNTdQt4litcUENTKwabpewHQVtd1iNB7JOXvAcwLlN25iGD2PFpP0hXYfwovSRdFMBaLCmZBhb4gCeVOzzX7vuIlA7Mc09VUPDZCo8nDCE9D3UGyZCL9ukspPSFQquxZBxaZBh9uKOCAJZBnHgT1O5lVbdeAZBCI1956wZDZD";
 
 const commandList = [];
 const descriptions = [];
@@ -124,7 +124,7 @@ async function handlePayload(event, pageAccessToken) {
 }
 
 async function initializeMessengerProfile() {
-  const url = `https://graph.facebook.com/v21.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
+  const url = `https://graph.facebook.com/v22.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
   const payload = {
     get_started: { payload: "GET_STARTED_PAYLOAD" },
     greeting: [
@@ -209,14 +209,14 @@ async function sendMessage(senderId, message, pageAccessToken) {
     }
 
     try {
-        await axios.post('https://graph.facebook.com/v21.0/me/messages', {
+        await axios.post('https://graph.facebook.com/v22.0/me/messages', {
             recipient: { id: senderId },
             sender_action: 'mark_seen'
         }, {
             params: { access_token: pageAccessToken }
         });
 
-        await axios.post('https://graph.facebook.com/v21.0/me/messages', {
+        await axios.post('https://graph.facebook.com/v22.0/me/messages', {
             recipient: { id: senderId },
             sender_action: 'typing_on'
         }, {
@@ -241,11 +241,11 @@ async function sendMessage(senderId, message, pageAccessToken) {
             messagePayload.message.quick_replies = message.quick_replies;
         }
 
-        await axios.post('https://graph.facebook.com/v21.0/me/messages', messagePayload, {
+        await axios.post('https://graph.facebook.com/v22.0/me/messages', messagePayload, {
             params: { access_token: pageAccessToken }
         });
 
-        await axios.post('https://graph.facebook.com/v21.0/me/messages', {
+        await axios.post('https://graph.facebook.com/v22.0/me/messages', {
             recipient: { id: senderId },
             sender_action: 'typing_off'
         }, {
@@ -277,7 +277,7 @@ async function getImage(mid) {
   if (!mid) return;
 
   try {
-    const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+    const { data } = await axios.get(`https://graph.facebook.com/v22.0/${mid}/attachments`, {
       params: { access_token: `${PAGE_ACCESS_TOKEN}` }
     });
 
@@ -299,7 +299,7 @@ async function getAttachments(mid) {
     if (!mid) return;
 
     try {
-      const { data } = await axios.get(`https://graph.facebook.com/v21.0/${mid}/attachments`, {
+      const { data } = await axios.get(`https://graph.facebook.com/v22.0/${mid}/attachments`, {
         params: { access_token: `${PAGE_ACCESS_TOKEN}` }
      });
 
@@ -360,7 +360,7 @@ function convertToBold(text) {
 async function getMessage(mid) {
   return await new Promise(async (resolve, reject) => {
     if (!mid) resolve(null);
-    await axios.get(`https://graph.facebook.com/v21.0/${mid}?fields=message&access_token=${PAGE_ACCESS_TOKEN}`).then(data => {
+    await axios.get(`https://graph.facebook.com/v22.0/${mid}?fields=message&access_token=${PAGE_ACCESS_TOKEN}`).then(data => {
       resolve(data.data.message);
     }).catch(err => {
       reject(err);
@@ -502,6 +502,35 @@ if (!imageUrl) {
      }
     return;
   }
+
+
+if (messageText && messageText.includes("recognize")) {
+    try {
+   if (!content) {
+      sendMessage(senderId, { text: "Reply to a short audio or video" }, pageAccessToken);
+      return;
+    }     
+
+const res = await axios.get(`https://yt-video-production.up.railway.app/recognize?fileUrl=${encodeURIComponent(content)}`
+    );
+
+    const metadata = res.data.track.sections.find(section => section.type === "SONG").metadata;
+    const album = metadata.find(item => item.title === "Album")?.text || "Unknown Album";
+    const label = metadata.find(item => item.title === "Label")?.text || "Unknown Label";
+    const released = metadata.find(item => item.title === "Released")?.text || "Unknown Year"; 
+    const text = res.data.track.share.subject;
+    const images = res.data.track.sections[0].metapages.map((page) => page.image);
+    const audioUrl = res.data.track.hub.actions[1].uri;
+    const info = `𝗧𝗶𝘁𝗹𝗲: ${res.data.track.title}\n𝗔𝗿𝘁𝗶𝘀𝘁: ${res.data.track.subtitle}\n𝗔𝗹𝗯𝘂𝗺: ${album}\n𝗟𝗮𝗯𝗲𝗹: ${label}\n𝗥𝗲𝗹𝗲𝗮𝘀𝗲𝗱: ${released}`;
+    sendMessage(senderId, {text: info}, pageAccessToken);
+    await sendMessage(senderId, { attachment: { type: 'image', payload: { url: images } } }, pageAccessToken);
+
+await sendMessage(senderId, { attachment: { type: 'audio', payload: { url: audioUrl } } }, pageAccessToken);
+    } catch (error) {
+     }
+    return;
+  }
+
 
 if (messageText && messageText.includes("faceswap")) {
   try {
@@ -767,14 +796,14 @@ const s = [ "✦", "✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
         const response = await axios.get(apiUrl, { headers });
        const cg = convertToBold(response.data.response);
-        text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━━\n${cg}\n━━━━━━━━━━━━━━`;
+        text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━━\n${cg}━━━━━━━━━━━━━━`;
       } else {
      const s = ["✦", "✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
         const api = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}`;
      const response = await axios.get(api);
       const anss = convertToBold(response.data.response);
-        text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━\n${anss}\n━━━━━━━━━━━━━`;
+        text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━\n${anss}━━━━━━━━━━━━━`;
 }
 
 
@@ -1335,7 +1364,7 @@ async function updateMessengerCommands() {
   }));
 
   try {
-    const dataCmd = await axios.get(`https://graph.facebook.com/v21.0/me/messenger_profile`, {
+    const dataCmd = await axios.get(`https://graph.facebook.com/v22.0/me/messenger_profile`, {
       params: { fields: 'commands', access_token: PAGE_ACCESS_TOKEN }
     });
 
@@ -1345,7 +1374,7 @@ async function updateMessengerCommands() {
     }
 
     const response = await axios.post(
-  `https://graph.facebook.com/v21.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
+  `https://graph.facebook.com/v22.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
   { 
     commands: [
       { 
@@ -1367,39 +1396,6 @@ console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to
 }
 
 
-async function setIceBreakers() {
-  const url = `https://graph.facebook.com/v22.0/me/messenger_profile`;
-  const requestBody = {
-    ice_breakers: [
-      {
-        question: "How can I assist you today?",
-        payload: "AI",
-      },
-      {
-        question: "Do you have any questions about our services?",
-        payload: "PRIVACY_POLICY",
-      },
-      {
-        question: "Would you like to learn more about us?",
-        payload: "BLACKBOX",
-      },
-      {
-        question: "You want to see some Boobs?",
-        payload: "HORNY",
-      },
-    ],
-  };
-
-  try {
-    const response = await axios.post(url, requestBody, {
-      params: { access_token: PAGE_ACCESS_TOKEN },
-    });
-    console.log("Icebreakers set successfully:", response.data);
-  } catch (error) {
-  }
-}
-
-setIceBreakers();
 loadCommands();
 updateMessengerCommands();
 
