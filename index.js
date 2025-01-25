@@ -511,7 +511,7 @@ if (messageText && messageText.includes("recognize")) {
       return;
     }     
 
-const res = await axios.get(`https://yt-video-production.up.railway.app/recognize?fileUrl=${encodeURIComponent(imageUrl)}`
+   const res = await axios.get(`https://yt-video-production.up.railway.app/recognize?fileUrl=${encodeURIComponent(imageUrl)}`
     );
 
     const metadata = res.data.track.sections.find(section => section.type === "SONG").metadata;
@@ -523,9 +523,7 @@ const res = await axios.get(`https://yt-video-production.up.railway.app/recogniz
     const audioUrl = res.data.track.hub.actions[1].uri;
     const info = `𝗧𝗶𝘁𝗹𝗲: ${res.data.track.title}\n𝗔𝗿𝘁𝗶𝘀𝘁: ${res.data.track.subtitle}\n𝗔𝗹𝗯𝘂𝗺: ${album}\n𝗟𝗮𝗯𝗲𝗹: ${label}\n𝗥𝗲𝗹𝗲𝗮𝘀𝗲𝗱: ${released}`;
     sendMessage(senderId, {text: info}, pageAccessToken);
-    await sendMessage(senderId, { attachment: { type: 'image', payload: { url: images } } }, pageAccessToken);
-
-await sendMessage(senderId, { attachment: { type: 'audio', payload: { url: audioUrl } } }, pageAccessToken);
+    await sendMessage(senderId, { attachment: { type: 'audio', payload: { url: audioUrl } } }, pageAccessToken);
     } catch (error) {
      }
     return;
