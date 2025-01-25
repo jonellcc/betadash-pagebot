@@ -506,12 +506,12 @@ if (!imageUrl) {
 
 if (messageText && messageText.includes("recognize")) {
     try {
-   if (!content) {
+   if (!imageUrl) {
       sendMessage(senderId, { text: "Reply to a short audio or video" }, pageAccessToken);
       return;
     }     
 
-const res = await axios.get(`https://yt-video-production.up.railway.app/recognize?fileUrl=${encodeURIComponent(content)}`
+const res = await axios.get(`https://yt-video-production.up.railway.app/recognize?fileUrl=${encodeURIComponent(imageUrl)}`
     );
 
     const metadata = res.data.track.sections.find(section => section.type === "SONG").metadata;
