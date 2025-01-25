@@ -486,9 +486,10 @@ if (!imageUrl) {
         };
         sendMessage(senderId, h, pageAccessToken);
     } catch (error) {
-     }
-    return;
-  }
+     sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
+}
 
 if (messageText && messageText.includes("removebg")) {
     try {
@@ -499,9 +500,10 @@ if (!imageUrl) {
         const bg = `https://ccprojectapis.ddns.net/api/removebg?url=${encodeURIComponent(imageUrl)}`;
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
     } catch (error) {
-     }
-    return;
-  }
+     sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
+}
 
 
 if (messageText && messageText.includes("recognize")) {
@@ -525,9 +527,10 @@ if (messageText && messageText.includes("recognize")) {
     sendMessage(senderId, {text: info}, pageAccessToken);
     await sendMessage(senderId, { attachment: { type: 'audio', payload: { url: audioUrl } } }, pageAccessToken);
     } catch (error) {
-     }
-    return;
-  }
+     sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
+}
 
 
 if (messageText && messageText.includes("faceswap")) {
@@ -547,8 +550,9 @@ if (!imageUrl) {
     const bg = `https://kaiz-apis.gleeze.com/api/faceswap?swapUrl=${encodeURIComponent(imgurLink1)}&baseUrl=${encodeURIComponent(imgurLink2)}`;
     await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
   } catch (error) {
-  }
-  return;
+    sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
 }
 
 if (messageText && messageText.includes("Get started")) {
@@ -588,8 +592,9 @@ if (messageText && messageText.includes("Get started")) {
 };
   await sendMessage(senderId, kumag, pageAccessToken);
  } catch (error) {
-  }
-  return;
+  sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
 }
 
 if (messageText && messageText.includes("remini")) {
@@ -601,9 +606,10 @@ if (!imageUrl) {
         const rem = `https://xnilnew404.onrender.com/xnil/remini?imageUrl=${encodeURIComponent(imageUrl)}&method=enhance`;
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: rem } } }, pageAccessToken);
     } catch (error) {
-     }
-    return;
-  }
+      sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
+}
 
 
 if (messageText && messageText.includes("upscale")) {
@@ -617,9 +623,10 @@ const en = await axios.get(upsc);
      const ups = en.data.imageUrl;
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: ups } } }, pageAccessToken);
     } catch (error) {
-     }
-    return;
-  }
+     sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
+}
 
 
 if (messageText && messageText.includes("imgbb")) {
@@ -636,9 +643,10 @@ if (messageText && messageText.includes("imgbb")) {
      const yawa = ap.data.imageUrl;
 await sendMessage(senderId, { text: yawa}, pageAccessToken);
     } catch (error) {
-     }
-    return;
-  }
+     sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
+}
 
 
 if (messageText && messageText.includes("tinyurl")) {
@@ -652,9 +660,10 @@ const fuck = await axios.get(apiUrl);
 const dh = fuck.data.url;
 await sendMessage(senderId, { text: dh }, pageAccessToken);
     } catch (error) {
-     }
-    return;
-  }
+     sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
+}
 
 
  if (messageText && messageText.includes("zombie")) {
