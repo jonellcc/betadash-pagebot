@@ -1366,7 +1366,41 @@ console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to
   }
 }
 
- loadCommands();
+
+async function setIceBreakers() {
+  const url = `https://graph.facebook.com/v22.0/me/messenger_profile`;
+  const requestBody = {
+    ice_breakers: [
+      {
+        question: "How can I assist you today?",
+        payload: "AI",
+      },
+      {
+        question: "Do you have any questions about our services?",
+        payload: "PRIVACY_POLICY",
+      },
+      {
+        question: "Would you like to learn more about us?",
+        payload: "BLACKBOX",
+      },
+      {
+        question: "You want to see some Boobs?",
+        payload: "HORNY",
+      },
+    ],
+  };
+
+  try {
+    const response = await axios.post(url, requestBody, {
+      params: { access_token: PAGE_ACCESS_TOKEN },
+    });
+    console.log("Icebreakers set successfully:", response.data);
+  } catch (error) {
+  }
+}
+
+setIceBreakers();
+loadCommands();
 updateMessengerCommands();
 
 app.listen(PORT, () => {
