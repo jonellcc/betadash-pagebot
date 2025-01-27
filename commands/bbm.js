@@ -11,7 +11,7 @@ module.exports = {
       const [one, two] = input.split(" | ");
 
       if (!one || !two) {
-        return sendMessage(senderId, { text: "Invalid Usage: Use bbm <text1> <text2>" }, pageAccessToken);
+        return sendMessage(senderId, { text: "Invalid Usage: Use bbm <text1> | <text2>" }, pageAccessToken);
       }
 
       const apiUrl = `https://api-canvass.vercel.app/bbm?text1=${one}&text2=${two}`;
