@@ -701,67 +701,77 @@ attachment: {
     return;
   } **/
 
-
-
 if (messageText && messageText.includes("aidetect")) {
     try {
-        if (!content) {
+        if (!messageText || !content) {
             sendMessage(senderId, { text: "Please provide a text or reply by message" }, pageAccessToken);
             return;
         }
 
-        let result = await axios.get(`https://haji-mix.onrender.com/aidetect?text=${encodeURIComponent(content)}`);
-        const { raw_result } = result.data;
-        const { grade_level, probability_fake, probability_real, readability_score, reading_ease } = raw_result;
+        let result = await axios.get(`https://betadash-api-swordslush.vercel.app/aidetect?text=${encodeURIComponent(content)}`);
+        const { success, data } = result.data;
 
-        const fakePercentage = (probability_fake * 100).toFixed(2);
-        const realPercentage = (probability_real * 100).toFixed(2);
+        if (!success) {
+            sendMessage(senderId, { text: "Failed to process the request. Please try again later." }, pageAccessToken);
+            return;
+        }
 
-        const certaintyMessage =
-            fakePercentage > realPercentage
-                ? `The text is ${fakePercentage}% likely to be written by an AI and ${realPercentage}% likely to be written by a human.`
-                : `The text is ${realPercentage}% likely to be written by a human and ${fakePercentage}% likely to be written by an AI.`;
+        const {
+            isHuman,
+            additional_feedback,
+            textWords,
+            aiWords,
+            fakePercentage,
+            originalParagraph,
+            feedback,
+            detected_language
+        } = data;
+
+        const humanPercentage = (isHuman).toFixed(2);
+        const aiPercentage = (100 - isHuman).toFixed(2);
+
+        const certaintyMessage = feedback 
+            ? `${feedback} (${humanPercentage}% human, ${aiPercentage}% AI)`
+            : `The text is ${humanPercentage}% likely to be written by a human and ${aiPercentage}% likely to be written by an AI.`;
 
         const response = `${formatFont("Detection Result")}:
-- ${formatFont("Grade Level")}: ${grade_level}
-- ${formatFont("Probability Fake")}: ${fakePercentage}%
-- ${formatFont("Probability Real")}: ${realPercentage}%
-- ${formatFont("Readability Score")}: ${readability_score}
-- ${formatFont("Reading Ease")}: ${reading_ease !== null ? reading_ease : "N/A"}
+- ${formatFont("Original Paragraph")}: ${originalParagraph || "N/A"}
+- ${formatFont("Detected Language")}: ${detected_language || "N/A"}
+- ${formatFont("Human Probability")}: ${humanPercentage}%
+- ${formatFont("AI Probability")}: ${aiPercentage}%
+- ${formatFont("Text Words")}: ${textWords || 0}
+- ${formatFont("AI Words")}: ${aiWords || 0}
 
-${certaintyMessage}`;
+${certaintyMessage}
+
+${additional_feedback || ""}`;
 
         sendMessage(senderId, { text: response }, pageAccessToken);
     } catch (error) {
-        sendMessage(senderId, { text: "Error connecting to the detection API. Please try again later." }, pageAccessToken);
-        }
-      return;
+        sendMessage(senderId, {text: error.message }, pageAccessToken);
+    }
+    return;
 }
 
 
 if (messageText && messageText.includes("humanize")) {
     try {
-        if (!content) {
+        if (!content || !messageText) {
             sendMessage(senderId, { text: "Please provide a text or reply by message" }, pageAccessToken);
             return;
         }
 
-        const result = await axios.get(`https://ccprojectapis.ddns.net/api/aihuman?text=${encodeURIComponent(content)}`)
+        const result = await axios.get(`https://betadash-api-swordslush.vercel.app/humanize?text=${encodeURIComponent(content)}`)
             .then((res) => res.data)
             .catch((err) => {
                 return null;
-            });
-
-        if (!result || result.error !== "No") {
-            sendMessage(senderId, { text: "An error occurred while processing the text. Please try again later." }, pageAccessToken);
-            return;
-        }
+            });      
 
         const kupal = `${formatFont("HUMANIZED TEXT")}:\n━━━━━━━━━━━━━━\n${result.message}\n`;
 
         sendMessage(senderId, { text: kupal }, pageAccessToken);
     } catch (error) {
-        sendMessage(senderId, { text: "An error occurred while processing your request. Please try again later." }, pageAccessToken);
+        sendMessage(senderId, { text: error.message }, pageAccessToken);
     }
 }
 

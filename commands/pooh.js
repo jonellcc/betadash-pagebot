@@ -8,10 +8,10 @@ module.exports = {
   async execute(senderId, args, pageAccessToken, sendMessage) {
     try {
       const input = args.join(" ");
-      const [one, two] = input.split(" ");
+      const [one, two] = input.split(" | ");
 
       if (!one || !two) {
-        return sendMessage(senderId, { text: "Invalid Usage: Use Pooh <text1> <text2>" }, pageAccessToken);
+        return sendMessage(senderId, { text: "Invalid Usage: Use Pooh <text1> | <text2>" }, pageAccessToken);
       }
 
       const apiUrl = `https://api-canvass.vercel.app/pooh?text1=${one}&text2=${two}`;
