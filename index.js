@@ -703,8 +703,8 @@ attachment: {
 
 if (messageText && messageText.includes("aidetect")) {
     try {
-        if (!messageText || !content) {
-            sendMessage(senderId, { text: "Please provide a text or reply by message" }, pageAccessToken);
+        if (!content) {
+            sendMessage(senderId, { text: "Please reply by message" }, pageAccessToken);
             return;
         }
 
@@ -735,7 +735,6 @@ if (messageText && messageText.includes("aidetect")) {
             : `The text is ${humanPercentage}% likely to be written by a human and ${aiPercentage}% likely to be written by an AI.`;
 
         const response = `${formatFont("Detection Result")}:
-- ${formatFont("Original Paragraph")}: ${originalParagraph || "N/A"}
 - ${formatFont("Detected Language")}: ${detected_language || "N/A"}
 - ${formatFont("Human Probability")}: ${humanPercentage}%
 - ${formatFont("AI Probability")}: ${aiPercentage}%
@@ -756,8 +755,8 @@ ${additional_feedback || ""}`;
 
 if (messageText && messageText.includes("humanize")) {
     try {
-        if (!content || !messageText) {
-            sendMessage(senderId, { text: "Please provide a text or reply by message" }, pageAccessToken);
+        if (!content) {
+            sendMessage(senderId, { text: "Please reply by a message first" }, pageAccessToken);
             return;
         }
 
