@@ -812,14 +812,14 @@ const s = [ "✦", "✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
         const response = await axios.get(apiUrl, { headers });
        const cg = convertToBold(response.data.response);
-        text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━━\n\n${cg}━━━━━━━━━━━━━━`;
+        text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━━\n${cg}\n━━━━━━━━━━━━━━`;
       } else {
      const s = ["✦", "✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
         const api = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}`;
      const response = await axios.get(api);
       const anss = convertToBold(response.data.response);
-        text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━\n\n${anss}━━━━━━━━━━━━━`;
+        text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━\n${anss}\n━━━━━━━━━━━━━`;
 }
 
 
