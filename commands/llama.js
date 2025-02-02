@@ -1,32 +1,44 @@
-const axios = require('axios');
+const as = require('axios');
+
+function s(m, c) {
+  const r = [];
+  for (let i = 0; i < m.length; i += c) {
+    r.push(m.slice(i, i + c));
+  }
+  return r;
+}
 
 module.exports = {
   name: 'llama',
-  description: 'Ask a question to Llama 3.1',
-  author: 'Cliff (rest api)',
-  async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
-    const prompt = args.join(' ');
-if (!prompt) {
-          sendMessage(senderId, { text: 'please provide a question first' }, pageAccessToken);
-        return;
+  description: 'Ask a question to llama AI',
+  author: 'yazky (rest api)',
+  async execute({senderId: s, args: a, pageAccessToken: p, sendMessage: m}) {
+
+    const q = a.join(' ');
+
+    if (!q) {
+      m(s, { text: 'Please provide a question first.' }, p);
+      return;
     }
 
     try {
-      const apiUrl = `https://api.kenliejugarap.com/llama/?question=${encodeURIComponent(prompt)}`;
-      const response = await axios.get(apiUrl);
-      const text = response.data.response;
+      const u = `https://yt-video-production.up.railway.app/Llama90b?ask=${encodeURIComponent(q)}`;
+      const r = await as.get(u);
+      const t = r.data.response;
 
-      const maxMessageLength = 2000;
-      if (text.length > maxMessageLength) {
-        const messages = splitMessageIntoChunks(text, maxMessageLength);
-        for (const message of messages) {
-          sendMessage(senderId, { text: message }, pageAccessToken);
+      const l = 2000;
+      if (t.length > l) {
+        const c = s(t, l);
+        for (const x of c) {
+          const f = `🦙 𝗟𝗟𝗔𝗠𝗔 𝟵𝟬𝗕\n━━━━━━━━━━━━\n${x}\n━━━━━ ✕ ━━━━━`;
+          m(s, { text: f }, p);
         }
       } else {
-        sendMessage(senderId, { text }, pageAccessToken);
+        const f = `🦙 𝗟𝗟𝗔𝗠𝗔 𝟵𝟬𝗕\n━━━━━━━━━━━━━\n${t}\n━━━━━ ✕ ━━━━━`;
+        m(s, { text: f }, p);
       }
-    } catch (error) {
-      sendMessage(senderId, { text: 'Sorry, there was an error processing your request.' }, pageAccessToken);
+    } catch (e) {
+      m(s, { text: e.message }, p);
     }
   }
 };
