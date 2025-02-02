@@ -1,3 +1,4 @@
+
 const fs = require('fs');
 const path = require('path');
 
@@ -155,13 +156,13 @@ const kupal = {
           },
            {
             content_type: "text",
-            title: "besh",
-            payload: "BESH"
+            title: "deepseek",
+            payload: "DEEPSEEK"
           },        
           {
             content_type: "text",
-            title: "okeyai",
-            payload: "OKEYAI"
+            title: "goody",
+            payload: "GOODY"
           },
             {
             content_type: "text",
@@ -188,3 +189,4 @@ const kupal = {
     sendMessage(senderId, kupal, pageAccessToken);
   }
 };
+
