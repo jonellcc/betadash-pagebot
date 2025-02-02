@@ -12,8 +12,13 @@ module.exports = {
   name: 'wizard',
   description: 'Ask a question to Wiard AI',
   author: 'yazky (rest api)',
-  async execute(senderId: s, args: a, pageAccessToken: p, sendMessage: m) {
+  async execute(senderId, args, pageAccessToken, sendMessage) {
 
+const s = senderId;
+const a = args;
+const p = pageAccessToken;
+const m = sendMessage;
+    
     const q = a.join(' ');
 
     if (!q) {
