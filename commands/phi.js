@@ -12,7 +12,7 @@ module.exports = {
   name: 'phi',
   description: 'Ask a question to Phi AI',
   author: 'yazky (rest api)',
-  async execute({senderId: s, args: a, pageAccessToken: p, sendMessage: m}) {
+  async execute(senderId: s, args: a, pageAccessToken: p, sendMessage: m) {
 
     const q = a.join(' ');
 
