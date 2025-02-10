@@ -53,7 +53,7 @@ if (!prompt) {
         sendMessage(senderId, { text }, pageAccessToken);
       }
     } catch (error) {
-      sendMessage(senderId, { text: 'Sorry, there was an error processing your request.' }, pageAccessToken);
+      sendMessage(senderId, { text: error.response?.data || error.message }, pageAccessToken);
     }
   }
 };
