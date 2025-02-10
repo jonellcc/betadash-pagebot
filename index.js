@@ -447,7 +447,7 @@ function escapeRegex(keyword) {
 
 const containsBannedKeyword = bannedKeywords.some(keyword => {
   const pattern = new RegExp(`\\b${escapeRegex(keyword)}\\b`, 'i');
-  return pattern.test(args);
+  return pattern.test(commands + args);
 });
 
 if (containsBannedKeyword) {
