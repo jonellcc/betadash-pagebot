@@ -101,11 +101,7 @@ module.exports = {
         );
       }
     } catch (error) {
-      sendMessage(
-        senderId,
-        { text: 'Music not found. Please try again.' },
-        pageAccessToken
-      );
+      sendMessage(senderId, { text: error.response?.data || error.message }, pageAccessToken);
     }
   },
 };
