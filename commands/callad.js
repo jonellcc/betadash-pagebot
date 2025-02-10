@@ -4,7 +4,7 @@ module.exports = {
   usage: 'callad <message>',
   author: 'cliff',
   async execute(senderId, args, pageAccessToken, sendMessage) {
-    const admin = "8269473539829237";
+    const admin = "7913024942132935";
 
     if (!args || !Array.isArray(args) || args.length === 0) {
       await sendMessage(
