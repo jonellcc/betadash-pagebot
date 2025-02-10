@@ -20,9 +20,9 @@ if (!prompt) {
     }
 
     try {
-      const apiUrl = `https://betadash-api-swordslush.vercel.app/gpt4-turbo?message=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://yt-video-production.up.railway.app/duck-o3-mini?ask=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
-      const text = response.data.result;
+      const text = response.data.response;
 
       const maxMessageLength = 2000;
       if (text.length > maxMessageLength) {
@@ -34,7 +34,7 @@ if (!prompt) {
         sendMessage(senderId, { text }, pageAccessToken);
       }
     } catch (error) {
-      sendMessage(senderId, { text: 'Sorry, there was an error processing your request.' }, pageAccessToken);
+      sendMessage(senderId, { text: error.message}, pageAccessToken);
     }
   }
 };
