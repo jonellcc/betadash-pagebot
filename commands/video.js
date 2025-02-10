@@ -66,7 +66,7 @@ const videos = vid.data.video;
         }
       }
     } catch (error) {
-      sendMessage(senderId, { text: 'Error: Video not found\t' + error.message }, pageAccessToken);
+      sendMessage(senderId, { text: error.response?.data || error.message }, pageAccessToken);
     }
   }
 };
