@@ -29,7 +29,7 @@ const videoUrl = videoData.url;
 const kupal = `https://yt-video-production.up.railway.app/ytdl?url=${videoUrl}`;
         const vid = await axios.get(kupal, { headers });
        const videos = vid.data.video;
-      const message = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${time}\n𝗩𝗶𝗲𝘄𝘀: ${views}`;
+      const message = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${time}`;
 
 await sendMessage(
         senderId,
