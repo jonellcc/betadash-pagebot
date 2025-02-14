@@ -53,13 +53,21 @@ module.exports = {
                     url: thumbnail,
                     webview_height_ratio: 'tall',
                   },
-                },
+                  buttons: [
+                     {
+                     type: 'web_url',
+                     title: 'Download Mp3',
+                     url: audio,
+                     webview_height_ratio: 'compact',
+                   },
               ],
             },
-          },
-        },
-        pageAccessToken
-      );
+         ],
+      },
+    },
+  },
+  pageAccessToken
+);
 
       const headResponse = await axios.head(audio, { headers });
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
@@ -101,7 +109,7 @@ module.exports = {
         );
       }
     } catch (error) {
-      sendMessage(senderId, { text: error.response?.data || error.message }, pageAccessToken);
+      sendMessage(senderId, { text: "The google audio Url cannot be sent:\t" + error.response?.data || error.message }, pageAccessToken);
     }
   },
 };
