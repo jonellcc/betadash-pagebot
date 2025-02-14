@@ -36,6 +36,8 @@ module.exports = {
         return;
       }
 
+const shet = await axios.get(audio, {responseType: "stream"} );
+
       await sendMessage(
         senderId,
         {
@@ -100,7 +102,7 @@ module.exports = {
             attachment: {
               type: 'audio',
               payload: {
-                url: audio,
+                url: shet,
                 is_reusable: true,
               },
             },
