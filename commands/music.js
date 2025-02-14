@@ -31,6 +31,8 @@ module.exports = {
       const response = await axios.get(youtubeTrackUrl, { headers });
       const { audio, title, thumbnail, duration } = response.data;
 
+      const shet = await axios.get(audio, { responseType: "stream"});
+
       if (!audio) {
         sendMessage(senderId, { text: `Sorry, no download link found for "${query}"` }, pageAccessToken);
         return;
@@ -70,8 +72,7 @@ module.exports = {
   pageAccessToken
 );    
 
-      const shet = await axios.get(audio, { responseType: "stream"});
-
+      
       const headResponse = await axios.head(audio, { headers });
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
@@ -103,7 +104,7 @@ module.exports = {
             attachment: {
               type: 'audio',
               payload: {
-                url: shet,
+                url: shet.data,
                 is_reusable: true,
               },
             },
