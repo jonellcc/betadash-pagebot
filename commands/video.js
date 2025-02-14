@@ -28,9 +28,41 @@ const videoUrl = videoData.url;
 
 const kupal = `https://yt-video-production.up.railway.app/ytdl?url=${videoUrl}`;
         const vid = await axios.get(kupal, { headers });
-const videos = vid.data.video;
+       const videos = vid.data.video;
       const message = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${time}\n𝗩𝗶𝗲𝘄𝘀: ${views}`;
-      sendMessage(senderId, { text: message }, pageAccessToken);
+
+await sendMessage(
+        senderId,
+        {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'generic',
+              elements: [
+                {
+                  title: message,
+                  image_url: thumbnail,
+                  subtitle: `test`,
+                  default_action: {
+                    type: 'web_url',
+                    url: thumbnail,
+                    webview_height_ratio: 'tall',
+                  },
+                  buttons: [
+                     {
+                     type: 'web_url',
+                     title: 'Download Mp4',
+                     url: videos,
+                     webview_height_ratio: 'compact',
+                   },
+              ],
+            },
+         ],
+      },
+    },
+  },
+  pageAccessToken
+);
 
       if (videos) {
         const headResponse = await axios.head(videos, { headers });
@@ -66,7 +98,7 @@ const videos = vid.data.video;
         }
       }
     } catch (error) {
-      sendMessage(senderId, { text: error.response?.data || error.message }, pageAccessToken);
+      sendMessage(senderId, { text: "The google redirected video Url cannot be sent:\n" + error.message }, pageAccessToken);
     }
   }
 };
