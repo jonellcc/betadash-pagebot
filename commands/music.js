@@ -109,7 +109,7 @@ module.exports = {
         );
       }
     } catch (error) {
-      sendMessage(senderId, { text: "The google audio Url cannot be sent:\t" + error.response?.data || error.message }, pageAccessToken);
+      sendMessage(senderId, { text: "The google audio Url cannot be sent\t" +  error.message }, pageAccessToken);
     }
   },
 };
