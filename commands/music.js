@@ -36,8 +36,7 @@ module.exports = {
         return;
       }
 
-const shet = await axios.get(audio, {responseType: "stream"} );
-
+     
       await sendMessage(
         senderId,
         {
@@ -69,7 +68,9 @@ const shet = await axios.get(audio, {responseType: "stream"} );
     },
   },
   pageAccessToken
-);
+);    
+
+      const shet = await axios.get(audio, { responseType: "stream"});
 
       const headResponse = await axios.head(audio, { headers });
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
