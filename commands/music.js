@@ -60,11 +60,6 @@ module.exports = {
                       url: _0xmp10,
                       title: 'Download Mp3',
                     },
-                    {
-                      type: 'web_url',
-                      url: _0xur7,
-                      title: 'Watch on YouTube',
-                    },
                   ],
                 },
               ],
@@ -99,21 +94,18 @@ module.exports = {
           pageAccessToken
         );
       } else {
-        await _0xdg1.post(
-          `https://graph.facebook.com/v22.0/me/messages?access_token=${pageAccessToken}`,
+        sendMessage(
+          senderId,
           {
-            recipient: { id: senderId },
-            message: {
-              attachment: {
-                type: 'audio',
-                payload: {
-                  url: _0xmp10,
-                  is_reusable: true,
-                },
+            attachment: {
+              type: 'audio',
+              payload: {
+                url: _0xmp10,
+                is_reusable: true,
               },
             },
           },
-          { headers: { ..._0xkh2, 'Content-Type': 'audio/mpeg' } }
+          pageAccessToken
         );
       }
     } catch (_0xerr16) {
