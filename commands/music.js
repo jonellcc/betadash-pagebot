@@ -55,20 +55,19 @@ sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂�
                   default_action: {
                     type: 'web_url',
                     url: thumbnail,
+                    messenger_extensions: "TRUE",
                     webview_height_ratio: 'tall',
                   },
                   buttons: [
                      {
-                     type: 'web_url',
-                     title: 'Download Mp3',
+                     type: 'web_url',           
                      url: audio,
-                     webview_height_ratio: 'compact',
+                     title: 'Download Mp3',
                    },
                   {
-                     type: 'web_url',
-                     title: 'Watch on YouTube',
+                     type: 'web_url',             
                      url: videoUrl,
-                     webview_height_ratio: 'compact',
+                     title: 'Watch on YouTube',
                    },
               ],
             },
