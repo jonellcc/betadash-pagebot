@@ -369,35 +369,11 @@ async function getMessage(mid) {
   });
 }
 
-async function isSpam(event) {
-  const now = Date.now();
-  if (!userMessages[event.sender.id]) userMessages[event.sender.id] = [];
-  userMessages[event.sender.id].push(now);
-  userMessages[event.sender.id] = userMessages[event.sender.id].slice(-5);
-  return userMessages[event.sender.id].length >= 5 &&
-         now - userMessages[event.sender.id][0] < 10000;
-}
-
 
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id)  {
     return;
   }
-
-if (isSpam(event.sender.id)) {
-    const sht = `User ${event.sender.id} is spamming! Ignoring messages.`;
-    sendMessage("7913024942132935", { text: sht }, pageAccessToken);
-}
-
-if (event.policy_enforcement) {
-    const reason = event.policy_enforcement.reason || "Unknown reason";
-    const action = event.policy_enforcement.action || "Unknown action";
-
-    if (admin.length > 0) {
-        const nya = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
-        sendMessage("7913024942132935", { text: nya }, pageAccessToken);
-    }
-}
 
   
 const image = event.message.attachments &&
@@ -415,6 +391,18 @@ const messageId = event.message.mid;
 const If = "aidetect";
 const j = "humanize";
 const x = "👍";
+
+
+if (event.policy_enforcement) {
+    const reason = event.policy_enforcement.reason || "Unknown reason";
+    const action = event.policy_enforcement.action || "Unknown action";
+
+    if (admin.length > 0) {
+        const nya = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
+        sendMessage("7913024942132935", { text: nya }, pageAccessToken);
+    }
+}
+
 
 let content = "";
 
