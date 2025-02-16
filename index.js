@@ -33,6 +33,7 @@ const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO5WloVZCKNkw8Q8ZAxE5qFJNTdQt4litcUENTKwa
 
 const commandList = [];
 const descriptions = [];
+const userMessages = {};
 const commands = new Map();
 
 app.get('/', (req, res) => {
@@ -368,16 +369,11 @@ async function getMessage(mid) {
   });
 }
 
-const userMessages = {};
-
-function isSpam(event) {
+async function isSpam(event) {
   const now = Date.now();
   if (!userMessages[event.sender.id]) userMessages[event.sender.id] = [];
-  
   userMessages[event.sender.id].push(now);
-  
   userMessages[event.sender.id] = userMessages[event.sender.id].slice(-5);
-
   return userMessages[event.sender.id].length >= 5 &&
          now - userMessages[event.sender.id][0] < 10000;
 }
