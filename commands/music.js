@@ -67,7 +67,7 @@ const { artists, download_url } = shet.data;
                     },
                     {
                       type: 'web_url',
-                      url: videoUrl,
+                      url: _0xur7,
                       title: 'Watch on YouTube',
                     },
                   ],
