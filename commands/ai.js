@@ -53,7 +53,7 @@ if (!prompt) {
         sendMessage(senderId, { text }, pageAccessToken);
       }
     } catch (error) {
-      sendMessage(senderId, { text: error.response?.data || error.message }, pageAccessToken);
+      sendMessage(senderId, { text: "I'm sorry i can't answer stupid question!" || error.message }, pageAccessToken);
     }
   }
 };
