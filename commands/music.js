@@ -16,7 +16,7 @@ module.exports = {
     }
 
 
-sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂𝘀𝗶𝗰 𝗳𝗼𝗿: '${search}', please wait...` }, pageAccessToken);
+sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂𝘀𝗶𝗰 𝗳𝗼𝗿: '${query}', please wait...` }, pageAccessToken);
 
     try {
       const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(query)}`;
@@ -24,7 +24,7 @@ sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂�
       const videoData = videoResponse.data[0];
 
       if (!videoData) {
-        sendMessage(senderId, { text: 'Video not found. Please try another search.' }, pageAccessToken);
+        sendMessage(senderId, { text: 'Audio not found. Please try another search.' }, pageAccessToken);
         return;
       }
 
