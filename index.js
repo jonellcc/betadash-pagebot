@@ -384,27 +384,22 @@ async function handleMessage(event, pageAccessToken) {
     return;
   }
 
-  if (isSpam(event.sender.id)) {
-    admin.forEach(adminId => {
-const sht = `User ${event.sender.id} is spamming! Ignoring messages.`;
-      sendMessage(adminId, { text: sht }, pageAccessToken);
-    });
+if (isSpam(event.sender.id)) {
+    const sht = `User ${event.sender.id} is spamming! Ignoring messages.`;
+    sendMessage("7913024942132935", { text: sht }, pageAccessToken);
 }
-
 
 if (event.policy_enforcement) {
-        const reason = event.policy_enforcement.reason || "Unknown reason";
-        const action = event.policy_enforcement.action || "Unknown action";
+    const reason = event.policy_enforcement.reason || "Unknown reason";
+    const action = event.policy_enforcement.action || "Unknown action";
 
-     
-       if (admin.length > 0) {
-    admin.forEach(adminId => {
-     const nya = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;      
-        sendMessage(adminId, { 
-            text: nya }, pageAccessToken);
-    });
+    if (admin.length > 0) {
+        const nya = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
+        sendMessage("7913024942132935", { text: nya }, pageAccessToken);
+    }
 }
 
+  
 const image = event.message.attachments &&
   (event.message.attachments[0]?.type === 'image');
 const video = event.message.attachments &&
