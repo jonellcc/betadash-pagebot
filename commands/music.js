@@ -15,6 +15,9 @@ module.exports = {
       return;
     }
 
+
+sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂𝘀𝗶𝗰 𝗳𝗼𝗿: '${search}', please wait...` }, pageAccessToken);
+
     try {
       const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(query)}`;
       const videoResponse = await axios.get(videoSearchUrl, { headers });
@@ -48,7 +51,7 @@ module.exports = {
                 {
                   title: title,
                   image_url: thumbnail,
-                  subtitle: `Duration: ${duration.label} (${duration.seconds}s)`,
+                  subtitle: `Views: ${videoData.views}\nDuration: ${duration.label} (${duration.seconds}s)`,
                   default_action: {
                     type: 'web_url',
                     url: thumbnail,
@@ -59,6 +62,12 @@ module.exports = {
                      type: 'web_url',
                      title: 'Download Mp3',
                      url: audio,
+                     webview_height_ratio: 'compact',
+                   },
+                  {
+                     type: 'web_url',
+                     title: 'Watch on YouTube',
+                     url: videoUrl,
                      webview_height_ratio: 'compact',
                    },
               ],
