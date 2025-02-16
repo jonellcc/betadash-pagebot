@@ -396,8 +396,8 @@ async function handleMessage(event, pageAccessToken) {
 
 
 if (event.policy_enforcement) {
-        const reason = webhookEvent.policy_enforcement.reason || "Unknown reason";
-        const action = webhookEvent.policy_enforcement.action || "Unknown action";
+        const reason = event.policy_enforcement.reason || "Unknown reason";
+        const action = event.policy_enforcement.action || "Unknown action";
 
      
        if (admin.length > 0) {
