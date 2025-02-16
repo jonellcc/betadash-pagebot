@@ -368,10 +368,45 @@ async function getMessage(mid) {
   });
 }
 
+const userMessages = {};
+
+function isSpam(userId) {
+  const now = Date.now();
+  if (!userMessages[userId]) userMessages[userId] = [];
+  
+  userMessages[userId].push(now);
+  
+  userMessages[userId] = userMessages[userId].slice(-5);
+
+  return userMessages[userId].length >= 5 &&
+         now - userMessages[userId][0] < 10000;
+}
+
+
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id)  {
     return;
   }
+
+  if (isSpam(senderId)) {
+    admin.forEach(adminId => {
+        sendMessage(adminId, { text: `User ${senderId} is spamming! Ignoring messages.` }, pageAccessToken);
+    });
+}
+
+
+if (event.policy_enforcement) {
+        const reason = webhookEvent.policy_enforcement.reason || "Unknown reason";
+        const action = webhookEvent.policy_enforcement.action || "Unknown action";
+
+     
+       if (admin.length > 0) {
+    admin.forEach(adminId => {
+        sendMessage(adminId, { 
+            text: `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!` 
+        }, pageAccessToken);
+    });
+}
 
 const image = event.message.attachments &&
   (event.message.attachments[0]?.type === 'image');
