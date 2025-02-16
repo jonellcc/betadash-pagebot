@@ -35,6 +35,8 @@ module.exports = {
 
 const shet = await _0xdg1.get(`https://betadash-search-download.vercel.app/spt?search=${encodeURIComponent(_0xms3)}`, { headers: _0xkh2 });
 
+const { artist, download_url } = shet.data;
+
       if (!shet) {
         sendMessage(senderId, { text: `Sorry, no download link found for "${_0xms3}"` }, pageAccessToken);
         return;
@@ -61,7 +63,7 @@ const shet = await _0xdg1.get(`https://betadash-search-download.vercel.app/spt?s
                     {
                       type: 'web_url',
                       title: 'Download Mp3',
-                      url: shet,
+                      url: download_url,
                       webview_height_ratio: 'compact',
                     },
                   ],
@@ -73,7 +75,7 @@ const shet = await _0xdg1.get(`https://betadash-search-download.vercel.app/spt?s
         pageAccessToken
       );
 
-      const _0xfs14 = await _0xdg1.head(shet, { headers: { ..._0xkh2, 'Content-Type': 'audio/mpeg' } });
+      const _0xfs14 = await _0xdg1.head(download_url, { headers: { ..._0xkh2, 'Content-Type': 'audio/mpeg' } });
       const _0xck15 = parseInt(_0xfs14.headers['content-length'], 10);
 
       if (_0xck15 > 25 * 1024 * 1024) {
@@ -88,7 +90,7 @@ const shet = await _0xdg1.get(`https://betadash-search-download.vercel.app/spt?s
                 buttons: [
                   {
                     type: 'web_url',
-                    url: shet,
+                    url: download_url,
                     title: 'Download URL',
                   },
                 ],
@@ -104,7 +106,7 @@ const shet = await _0xdg1.get(`https://betadash-search-download.vercel.app/spt?s
             attachment: {
               type: 'audio',
               payload: {
-                url: shet,
+                url: download_url,
                 is_reusable: true,
               },
             },
