@@ -386,7 +386,8 @@ async function handleMessage(event, pageAccessToken) {
 
   if (isSpam(event.sender.id)) {
     admin.forEach(adminId => {
-      await sendMessage(adminId, { text: `User ${senderId} is spamming! Ignoring messages.` }, pageAccessToken);
+const sht = `User ${event.sender.id} is spamming! Ignoring messages.`;
+      sendMessage(adminId, { text: sht }, pageAccessToken);
     });
 }
 
@@ -398,9 +399,9 @@ if (event.policy_enforcement) {
      
        if (admin.length > 0) {
     admin.forEach(adminId => {
-        await sendMessage(adminId, { 
-            text: `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!` 
-        }, pageAccessToken);
+     const nya = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;      
+        sendMessage(adminId, { 
+            text: nya }, pageAccessToken);
     });
 }
 
