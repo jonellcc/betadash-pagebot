@@ -79,7 +79,7 @@ const { artists, download_url } = shet.data;
         pageAccessToken
       );
 
-      const _0xfs14 = await _0xdg1.head(download_url, { headers: _0xkh2 });
+      const _0xfs14 = await _0xdg1.head(download_url, { headers });
       const _0xck15 = parseInt(_0xfs14.headers['content-length'], 10);
 
       if (_0xck15 > 25 * 1024 * 1024) {
@@ -94,7 +94,7 @@ const { artists, download_url } = shet.data;
                 buttons: [
                   {
                     type: 'web_url',
-                    url: download_url || _0xmp10,
+                    url: download_url,
                     title: 'Download URL',
                   },
                 ],
@@ -110,7 +110,7 @@ const { artists, download_url } = shet.data;
             attachment: {
               type: 'audio',
               payload: {
-                url: download_url || _0xmp10,
+                url: download_url,
                 is_reusable: true,
               },
             },
