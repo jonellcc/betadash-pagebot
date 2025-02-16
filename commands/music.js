@@ -55,7 +55,7 @@ sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂�
                   default_action: {
                     type: 'web_url',
                     url: thumbnail,
-                    webview_height_ratio: 'compact',
+                    webview_height_ratio: 'full',
                   },
                   buttons: [
                      {
