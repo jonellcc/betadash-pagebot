@@ -35,7 +35,7 @@ module.exports = {
 
       const shet = await _0xdg1.get(`https://betadash-search-download.vercel.app/spt?search=${encodeURIComponent(_0xms3)}`);
 
-      const { artists, download_url } = shet.data;
+      const download_url  = shet.data.download_url;
 
       if (!shet) {
         sendMessage(senderId, { text: `Sorry, no download link found for "${_0xms3}"` }, pageAccessToken);
