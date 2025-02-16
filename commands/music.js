@@ -57,8 +57,9 @@ module.exports = {
                   buttons: [
                     {
                       type: 'web_url',
-                      url: _0xmp10,
                       title: 'Download Mp3',
+                      url: _0xmp10,
+                      webview_height_ratio: 'compact',
                     },
                   ],
                 },
