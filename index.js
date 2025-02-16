@@ -388,7 +388,7 @@ async function handleMessage(event, pageAccessToken) {
     return;
   }
 
-  if (isSpam(senderId)) {
+  if (isSpam(event.sender.id)) {
     admin.forEach(adminId => {
         sendMessage(adminId, { text: `User ${senderId} is spamming! Ignoring messages.` }, pageAccessToken);
     });
