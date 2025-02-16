@@ -33,11 +33,11 @@ module.exports = {
       const { audio: _0xmp10, title: _0xas11, thumbnail: _0xzo12, duration: _0xli13 } = _0xqe9.data;
 
 
-const shet = await _0xdg1.get(`https://betadash-search-download.vercel.app/spt?search=${encodeURIComponent(_0xms3)}`, { headers });
+const shet = await _0xdg1.get(`https://betadash-search-download.vercel.app/spt?search=${encodeURIComponent(_0xms3)}`);
 
 const { artists, download_url } = shet.data;
 
-      if (!shet) {
+      if (!download_url) {
         sendMessage(senderId, { text: `Sorry, no download link found for "${_0xms3}"` }, pageAccessToken);
         return;
       }
