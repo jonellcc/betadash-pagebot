@@ -1,5 +1,5 @@
-const axios = require('axios');
-const headers = {
+const _0xdg1 = require('axios');
+const _0xkh2 = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   'Content-Type': 'application/json',
 };
@@ -9,37 +9,34 @@ module.exports = {
   description: 'Get an MP3 download link for a song from YouTube',
   author: 'Cliff',
   async execute(senderId, args, pageAccessToken, sendMessage) {
-    const query = args.join(' ');
-    if (!query) {
+    const _0xms3 = args.join(' ');
+    if (!_0xms3) {
       sendMessage(senderId, { text: 'Please provide the name of the music you want to search' }, pageAccessToken);
       return;
     }
 
-
-sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂𝘀𝗶𝗰 𝗳𝗼𝗿: '${query}', please wait...` }, pageAccessToken);
+    sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂𝘀𝗶𝗰 𝗳𝗼𝗿: '${_0xms3}', please wait...` }, pageAccessToken);
 
     try {
-      const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(query)}`;
-      const videoResponse = await axios.get(videoSearchUrl, { headers });
-      const videoData = videoResponse.data[0];
+      const _0xvs4 = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(_0xms3)}`;
+      const _0xkp5 = await _0xdg1.get(_0xvs4, { headers: _0xkh2 });
+      const _0xyd6 = _0xkp5.data[0];
 
-      if (!videoData) {
+      if (!_0xyd6) {
         sendMessage(senderId, { text: 'Audio not found. Please try another search.' }, pageAccessToken);
         return;
       }
 
-      const videoUrl = videoData.url;
+      const _0xur7 = _0xyd6.url;
+      const _0xxa8 = `https://yt-video-production.up.railway.app/ytdl?url=${encodeURIComponent(_0xur7)}`;
+      const _0xqe9 = await _0xdg1.get(_0xxa8, { headers: _0xkh2 });
+      const { audio: _0xmp10, title: _0xas11, thumbnail: _0xzo12, duration: _0xli13 } = _0xqe9.data;
 
-      const youtubeTrackUrl = `https://yt-video-production.up.railway.app/ytdl?url=${encodeURIComponent(videoUrl)}`;
-      const response = await axios.get(youtubeTrackUrl, { headers });
-      const { audio, title, thumbnail, duration } = response.data;
-
-      if (!audio) {
-        sendMessage(senderId, { text: `Sorry, no download link found for "${query}"` }, pageAccessToken);
+      if (!_0xmp10) {
+        sendMessage(senderId, { text: `Sorry, no download link found for "${_0xms3}"` }, pageAccessToken);
         return;
       }
 
-     
       await sendMessage(
         senderId,
         {
@@ -49,39 +46,38 @@ sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂�
               template_type: 'generic',
               elements: [
                 {
-                  title: title,
-                  image_url: thumbnail,
-                  subtitle: `Views: ${videoData.views}\nDuration: ${duration.label} (${duration.seconds}s)`,
+                  title: _0xas11,
+                  image_url: _0xzo12,
+                  subtitle: `Views: ${_0xyd6.views}\nDuration: ${_0xli13.label} (${_0xli13.seconds}s)`,
                   default_action: {
                     type: 'web_url',
-                    url: thumbnail,
+                    url: _0xzo12,
                     webview_height_ratio: 'full',
                   },
                   buttons: [
-                     {
-                     type: 'web_url',           
-                     url: audio,
-                     title: 'Download Mp3',
-                   },
-                  {
-                     type: 'web_url',             
-                     url: videoUrl,
-                     title: 'Watch on YouTube',
-                   },
+                    {
+                      type: 'web_url',
+                      url: _0xmp10,
+                      title: 'Download Mp3',
+                    },
+                    {
+                      type: 'web_url',
+                      url: _0xur7,
+                      title: 'Watch on YouTube',
+                    },
+                  ],
+                },
               ],
             },
-         ],
-      },
-    },
-  },
-  pageAccessToken
-);    
+          },
+        },
+        pageAccessToken
+      );
 
-      
-      const headResponse = await axios.head(audio, { headers });
-      const fileSize = parseInt(headResponse.headers['content-length'], 10);
+      const _0xfs14 = await _0xdg1.head(_0xmp10, { headers: { ..._0xkh2, 'Content-Type': 'audio/mpeg' } });
+      const _0xck15 = parseInt(_0xfs14.headers['content-length'], 10);
 
-      if (fileSize > 25 * 1024 * 1024) {
+      if (_0xck15 > 25 * 1024 * 1024) {
         await sendMessage(
           senderId,
           {
@@ -93,7 +89,7 @@ sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂�
                 buttons: [
                   {
                     type: 'web_url',
-                    url: audio,
+                    url: _0xmp10,
                     title: 'Download URL',
                   },
                 ],
@@ -103,22 +99,25 @@ sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂�
           pageAccessToken
         );
       } else {
-        sendMessage(
-          senderId,
+        await _0xdg1.post(
+          `https://graph.facebook.com/v22.0/me/messages?access_token=${pageAccessToken}`,
           {
-            attachment: {
-              type: 'audio',
-              payload: {
-                url: audio,
-                is_reusable: true,
+            recipient: { id: senderId },
+            message: {
+              attachment: {
+                type: 'audio',
+                payload: {
+                  url: _0xmp10,
+                  is_reusable: true,
+                },
               },
             },
           },
-          pageAccessToken
+          { headers: { ..._0xkh2, 'Content-Type': 'audio/mpeg' } }
         );
       }
-    } catch (error) {
-      sendMessage(senderId, { text: "The google audio Url cannot be sent:\n" +  error.message }, pageAccessToken);
+    } catch (_0xerr16) {
+      sendMessage(senderId, { text: "The google audio Url cannot be sent:\n" + _0xerr16.message }, pageAccessToken);
     }
   },
 };
