@@ -33,9 +33,9 @@ module.exports = {
       const { audio: _0xmp10, title: _0xas11, thumbnail: _0xzo12, duration: _0xli13 } = _0xqe9.data;
 
 
-const shet = await _0xdg1.get(`https://betadash-search-download.vercel.app/spt?search=${encodeURIComponent(_0xms3)}`, { headers: _0xkh2 });
+      const shet = await _0xdg1.get(`https://betadash-search-download.vercel.app/spt?search=${encodeURIComponent(_0xms3)}`);
 
-const { artist, download_url } = shet.data;
+      const { artists, download_url } = shet.data;
 
       if (!shet) {
         sendMessage(senderId, { text: `Sorry, no download link found for "${_0xms3}"` }, pageAccessToken);
@@ -75,7 +75,7 @@ const { artist, download_url } = shet.data;
         pageAccessToken
       );
 
-      const _0xfs14 = await _0xdg1.head(download_url, { headers: { ..._0xkh2, 'Content-Type': 'audio/mpeg' } });
+      const _0xfs14 = await _0xdg1.head(download_url, { headers });
       const _0xck15 = parseInt(_0xfs14.headers['content-length'], 10);
 
       if (_0xck15 > 25 * 1024 * 1024) {
