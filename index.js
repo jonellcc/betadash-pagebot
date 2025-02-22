@@ -807,7 +807,11 @@ if (messageText && messageText.includes("humanize")) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await ghj(command, { senderId, args, pageAccessToken, sendMessage, font });
+      if (typeof args === 'object') {
+            await command.execute(senderId, args, pageAccessToken, sendMessage, font);
+        } else {
+            await command.execute({ senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks });
+        }
     } catch (error) {
       const kupall = {
      text: "❌ There was an error processing that command\n\nType 'Help' to see more useful commands" || error.message || error.response?.data,
