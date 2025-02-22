@@ -798,7 +798,7 @@ if (messageText && messageText.includes("humanize")) {
     try {
       await (command.run ?? command.main ?? command.execute ?? command.start)?.({
       senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks, font
-    }) ?? command(senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks, font);
+    }) ?? command.execute(senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks, font);
   } catch (error) {
       const kupall = {
      text: "❌ There was an error processing that command\n\nType 'Help' to see more useful commands",
