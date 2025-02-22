@@ -372,6 +372,17 @@ async function getMessage(mid) {
 }
 
 
+async function ghj(command, params) {
+    if (typeof params === 'object' && !Array.isArray(params)) {
+        const { senderId, args, pageAccessToken, sendMessage, font } = params;
+        await command.execute({ senderId, args, pageAccessToken, sendMessage, font });
+    } else {
+        const [senderId, args, pageAccessToken, sendMessage, font] = params;
+        await command.execute(senderId, args, pageAccessToken, sendMessage, font);
+    }
+}
+
+
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id)  {
     return;
@@ -796,7 +807,7 @@ if (messageText && messageText.includes("humanize")) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks, font);
+      await ghj(command, { senderId, args, pageAccessToken, sendMessage, font });
     } catch (error) {
       const kupall = {
      text: "❌ There was an error processing that command\n\nType 'Help' to see more useful commands" || error.message || error.response?.data,
