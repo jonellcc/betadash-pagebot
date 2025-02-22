@@ -15,7 +15,7 @@ module.exports = {
       return;
     }
 
-    sendMessage(senderId, { text: `🔍Searching for '${search}', please wait...` }, pageAccessToken);
+    sendMessage(senderId, { text: `[ 🔍 ] 𝗦𝗲𝗮𝗿𝗰𝗵𝗶𝗻𝗴 𝗳𝗼𝗿: '${search}', please wait...` }, pageAccessToken);
 
     try {
       const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(search)}`;
