@@ -28,14 +28,22 @@ module.exports = {
         return;
       }
 
-      const jsonResponse = JSON.stringify(response.data, null, 2);
-      const messageChunks = splitMessageIntoChunks(jsonResponse, 2000);
+      const jh = JSON.stringify(response.data, null, 2);
 
-      for (const chunk of messageChunks) {
-        sendMessage(senderId, { text: "𝗥𝗲𝘀𝗽𝗼𝗻𝘀𝗲:\n" + chunk }, pageAccessToken);
+     const sheshh = `𝗥𝗲𝘀𝗽𝗼𝗻𝘀𝗲:\n\n${jh}`;
+      
+   const maxMessageLength = 2000;
+      if (sheshh.length > maxMessageLength) {
+        const messages = splitMessageIntoChunks(sheshh, maxMessageLength);
+        for (const message of messages) {
+          await sendMessage(senderId, { text: message }, pageAccessToken);
+        }
+      } else {
+     await  sendMessage(senderId, { text: sheshh }, pageAccessToken);
       }
     } catch (error) {
       sendMessage(senderId, { text: "Error: " + error.message }, pageAccessToken);
     }
   }
 };
+     
