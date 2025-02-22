@@ -1,11 +1,11 @@
-const { sendMessage } = require("../kupal");
+/** const { sendMessage } = require("../kupal"); **/
 
 module.exports = {
   name: 'eval',
   description: 'test code',
   usage: '<eval> <code>',
   author: 'Cliff',
-  async execute(senderId, args, pageAccessToken, pageid, splitMessageIntoChunks, events, font) {
+  async execute(senderId, args, sendMessage, pageAccessToken, pageid, splitMessageIntoChunks, events, font) {
 const kupal = ["8505900689447357", "8269473539829237", "7913024942132935"];
 
    if (!kupal.some(kupal_ka => kupal_ka === senderId)) {
