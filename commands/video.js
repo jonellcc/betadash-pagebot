@@ -29,7 +29,7 @@ const videoUrl = videoData.url;
 const kupal = `https://yt-video-production.up.railway.app/ytdl?url=${videoUrl}`;
         const vid = await axios.get(kupal, { headers });
        const videos = vid.data.video;
-      const message = `𝗧𝗶𝘁𝗹𝗲: ${title}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${time}`;
+      const message = `𝗩𝗶𝗲𝘄𝘀: ${videoData.views}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${time}`;
 
 await sendMessage(
         senderId,
@@ -40,20 +40,24 @@ await sendMessage(
               template_type: 'generic',
               elements: [
                 {
-                  title: message,
+                  title: title,
                   image_url: thumbnail,
-                  subtitle: `test`,
+                  subtitle: message,
                   default_action: {
                     type: 'web_url',
                     url: thumbnail,
-                    webview_height_ratio: 'tall',
+                    webview_height_ratio: 'compact',
                   },
                   buttons: [
                      {
                      type: 'web_url',
-                     title: 'Download Mp4',
                      url: videos,
-                     webview_height_ratio: 'compact',
+                     title: 'Download Mp4',
+                   },
+                    {
+                     type: 'web_url',
+                     url: videoUrl,
+                     title: 'Watch on YouTube',
                    },
               ],
             },
