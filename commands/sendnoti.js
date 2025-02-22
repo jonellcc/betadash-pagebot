@@ -5,7 +5,7 @@ const kupal = ["8505900689447357", "8269473539829237", "7913024942132935"];
 async function getAllPSIDs(pageAccessToken) {
   try {
     let psids = [];
-    let previous = `https://graph.facebook.com/v21.0/${pageid}/conversations?fields=participants&access_token=${pageAccessToken}`;
+    let previous = `https://graph.facebook.com/v22.0/${pageid}/conversations?fields=participants&access_token=${pageAccessToken}`;
 
     while (previous) {
       const response = await axios.get(previous);
@@ -28,27 +28,53 @@ async function getAllPSIDs(pageAccessToken) {
   }
 }
 
-async function sendNotificationToAllUsers(message, pageAccessToken) {
+async function sendNotificationToAllUsers(senderId, message, pageAccessToken) {
   const users = await getAllPSIDs(pageAccessToken);
+  let attachmentType = null;
+  let attachmentUrl = null;
+
+  if (message.match(/\.(mp4|mov|avi)$/i)) {
+    attachmentType = 'video';
+    attachmentUrl = message;
+  } else if (message.match(/\.(gif)$/i)) {
+    attachmentType = 'gif';
+    attachmentUrl = message;
+  } else if (message.match(/\.(jpeg|jpg|png)$/i)) {
+    attachmentType = 'image';
+    attachmentUrl = message;
+  }
 
   for (const psid of users) {
     try {
-      await axios.post(`https://graph.facebook.com/v21.0/me/messages?access_token=${pageAccessToken}`, {
-        recipient: { id: psid },
-        message: { text: message },
-      });
-    } catch (error) {
-    }
+      if (attachmentType) {
+        await axios.post(`https://graph.facebook.com/v22.0/me/messages?access_token=${pageAccessToken}`, {
+          recipient: { id: psid },
+          message: {
+            attachment: {
+              type: attachmentType,
+              payload: {
+                url: attachmentUrl,
+                is_reusable: true
+              }
+            }
+          }
+        });
+      } else {
+        await axios.post(`https://graph.facebook.com/v22.0/me/messages?access_token=${pageAccessToken}`, {
+          recipient: { id: psid },
+          message: { text: message },
+        });
+      }
+    } catch (error) {}
   }
 }
 
 module.exports = {
   name: 'sendnoti',
-  description: 'send notification to all user',
+  description: 'send notification to all users',
   author: 'Cliff',
   usage: "sendnoti <message>",
   async execute(senderId, args, pageAccessToken, sendMessage) {
-
     if (!kupal.some(kupal_ka => kupal_ka === senderId)) {
       sendMessage(senderId, { text: "This command is only for pagebot owner." }, pageAccessToken);
       return;
@@ -62,10 +88,9 @@ module.exports = {
 
     try {
       sendMessage(senderId, { text: 'Sending notifications...' }, pageAccessToken);
-      await sendNotificationToAllUsers(`𝗡𝗢𝗧𝗜𝗙𝗜𝗖𝗔𝗧𝗜𝗢𝗡 \n━━━━━━━━━━━━━━\n╭💬-𝗠𝗘𝗦𝗦𝗔𝗚𝗘: \n╰┈➤ ${message}\n━━━━━━━━━━━━━━`, pageAccessToken);
+      await sendNotificationToAllUsers(senderId, `𝗡𝗢𝗧𝗜𝗙𝗜𝗖𝗔𝗧𝗜𝗢𝗡 \n━━━━━━━━━━━━━━\n╭💬-𝗠𝗘𝗦𝗦𝗔𝗚𝗘: \n╰┈➤ ${message}\n━━━━━━━━━━━━━━`, pageAccessToken);
       sendMessage(senderId, { text: '📢 Notifications sent successfully.' }, pageAccessToken);
     } catch (error) {
-      sendMessage(senderId, { text: 'An error occurred while sending notifications.' }, pageAccessToken);
       sendMessage(senderId, { text: error.message }, pageAccessToken);
     }
   }
