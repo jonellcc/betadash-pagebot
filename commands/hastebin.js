@@ -3,7 +3,6 @@ const path = require('path');
 const axios = require('axios');
 const { sendMessage } = require("../kupal");
 
-
 module.exports = {
     name: 'hastebin',
     description: 'Send bot specified file',
@@ -44,7 +43,7 @@ const kupal = ["8505900689447357", "8269473539829237", "7913024942132935"];
 
             await sendMessage(senderId, { text: responseMessage }, pageAccessToken);
         } catch (error) {
-            await sendMessage(senderId, { text: 'An error occurred while processing your request.' }, pageAccessToken);
+            await sendMessage(senderId, { text: error.message }, pageAccessToken);
         }
     }
 };
