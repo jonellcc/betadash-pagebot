@@ -372,17 +372,6 @@ async function getMessage(mid) {
 }
 
 
-async function ghj(command, params) {
-    if (typeof params === 'object' && !Array.isArray(params)) {
-        const { senderId, args, pageAccessToken, sendMessage, font } = params;
-        await command.execute({ senderId, args, pageAccessToken, sendMessage, font });
-    } else {
-        const [senderId, args, pageAccessToken, sendMessage, font] = params;
-        await command.execute(senderId, args, pageAccessToken, sendMessage, font);
-    }
-}
-
-
 async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id)  {
     return;
@@ -810,7 +799,7 @@ if (messageText && messageText.includes("humanize")) {
       if (typeof args === 'object') {
             await command.execute(senderId, args, pageAccessToken, sendMessage, font);
         } else {
-            await command.execute({ senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks });
+            await command.execute({ senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks, font });
         }
     } catch (error) {
       const kupall = {
