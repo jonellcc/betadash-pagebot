@@ -358,6 +358,8 @@ function convertToBold(text) {
     });
 }
 
+const font = (text) => [...text].map(c => fontMapping[c] || c).join('');  
+
 async function getMessage(mid) {
   return await new Promise(async (resolve, reject) => {
     if (!mid) resolve(null);
@@ -794,8 +796,10 @@ if (messageText && messageText.includes("humanize")) {
   if (commands.has(commandName)) {
     const command = commands.get(commandName);
     try {
-      await command.execute(senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks);
-    } catch (error) {
+      await (command.run ?? command.main ?? command.execute ?? command.start)?.({
+      senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks, font
+    }) ?? command(senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks, font);
+  } catch (error) {
       const kupall = {
      text: "❌ There was an error processing that command\n\nType 'Help' to see more useful commands",
     quick_replies: [
