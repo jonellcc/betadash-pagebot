@@ -26,7 +26,7 @@ module.exports = {
             type: 'video',
             payload: {
               url: videoUrl,
-              is_reusable: true
+              is_reusable: false
             }
           }
         }, pageAccessToken);
@@ -34,7 +34,7 @@ module.exports = {
         sendMessage(senderId, { text: '⚠️ No video found '}, pageAccessToken);
       }
     } catch (error) {
-      sendMessage(senderId, { text: '🚨 An error occurred while searching. Please try again later.' }, pageAccessToken);
+      sendMessage(senderId, { text: error.message}, pageAccessToken);
     }
   }
 };
