@@ -17,7 +17,7 @@ module.exports = {
     try {
       sendMessage(senderId, { text: `[ 🔍 ] Searching for: '${searchTerm}', please wait...` }, pageAccessToken);
 
-      const response = await axios.get(apiUrl, { headers });
+      const response = await axios.get(apiUrl);
       const videoUrl = response.data.url;
 
       if (videoUrl) {
