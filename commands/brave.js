@@ -21,7 +21,7 @@ module.exports = {
 
     try {
 await sendMessage(senderId, { text: '🦁 | 𝙱𝚛𝚊𝚟𝚎 𝙰𝙸 𝚒𝚜 𝚝𝚑𝚒𝚗𝚔𝚒𝚗𝚐 𝚙𝚕𝚎𝚊𝚜𝚎 𝚠𝚊𝚒𝚝...' }, pageAccessToken);
-      const apiUrl =
+
       const apiUrl = `https://yt-video-production.up.railway.app/brave?search=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
       const text = response.data.response;
