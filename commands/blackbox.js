@@ -16,7 +16,7 @@ module.exports = {
     const prompt = args.join(' ');
 
     if (!prompt) {
-      sendMessage(senderId, { text: 'Please provide a question first!' }, pageAccessToken);
+      await sendMessage(senderId, { text: 'Please provide a question first!' }, pageAccessToken);
       return;
     }
 
@@ -41,10 +41,10 @@ module.exports = {
           await sendMessage(senderId, { text: message }, pageAccessToken);
         }
       } else {
-     await  sendMessage(senderId, { text: formattedResponse }, pageAccessToken);
+     await sendMessage(senderId, { text: formattedResponse }, pageAccessToken);
       }
     } catch (error) {
-      sendMessage(senderId, { text: 'Sorry, there was an error processing your request.' }, pageAccessToken);
+      await sendMessage(senderId, { text: 'Sorry, there was an error processing your request.' }, pageAccessToken);
     }
   }
 };
