@@ -1,4 +1,3 @@
-
 const axios = require('axios');
 
 function splitMessageIntoChunks(message, chunkSize) {
@@ -15,9 +14,9 @@ module.exports = {
   author: 'Cliff(rest api)',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     const prompt = args.join(' ');
-if (!prompt) {
-          sendMessage(senderId, { text: 'please provide a question first' }, pageAccessToken);
-        return;
+    if (!prompt) {
+      await sendMessage(senderId, { text: 'Please provide a question first' }, pageAccessToken);
+      return;
     }
 
     try {
@@ -29,14 +28,13 @@ if (!prompt) {
       if (text.length > maxMessageLength) {
         const messages = splitMessageIntoChunks(text, maxMessageLength);
         for (const message of messages) {
-          sendMessage(senderId, { text: message}, pageAccessToken);
+          await sendMessage(senderId, { text: message }, pageAccessToken);
         }
       } else {
-        sendMessage(senderId, { text: text }, pageAccessToken);
+        await sendMessage(senderId, { text: text }, pageAccessToken);
       }
     } catch (error) {
-      sendMessage(senderId, { text: error.message }, pageAccessToken);
+      await sendMessage(senderId, { text: error.message }, pageAccessToken);
     }
   }
 };
-
