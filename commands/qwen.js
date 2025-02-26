@@ -17,7 +17,7 @@ module.exports = {
     const prompt = args.join(' ');
 
     if (!prompt) {
-      sendMessage(senderId, { text: 'Please provide a question first.' }, pageAccessToken);
+      await sendMessage(senderId, { text: 'Please provide a question first.' }, pageAccessToken);
       return;
     }
 
@@ -31,14 +31,14 @@ module.exports = {
         const messages = splitMessageIntoChunks(text, maxMessageLength);
         for (const message of messages) {
           const formattedMessage = `֎ | 𝗤𝘄𝗲𝗻𝟮.𝟱-𝟳𝟮𝗕\n━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━`;
-          sendMessage(senderId, { text: formattedMessage }, pageAccessToken);
+         await sendMessage(senderId, { text: formattedMessage }, pageAccessToken);
         }
       } else {
         const formattedMessages = `֎ | 𝗤𝘄𝗲𝗻𝟮.𝟱-𝟳𝟮𝗕\n━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━`;
-        sendMessage(senderId, { text: formattedMessages }, pageAccessToken);
+       await sendMessage(senderId, { text: formattedMessages }, pageAccessToken);
       }
     } catch (error) {
-      sendMessage(senderId, { text: error.message }, pageAccessToken);
+      await sendMessage(senderId, { text: error.message }, pageAccessToken);
     }
   }
 };
