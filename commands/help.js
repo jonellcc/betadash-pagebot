@@ -71,7 +71,7 @@ function paginate(array, page_size, page_number) {
 module.exports = {
   name: 'help',
   description: 'Show available commands or details of a specific command',
-  usage: "help 1 to any pages | help name_command to see how to use command",
+  usage: "𝗁𝖾𝗅𝗉 <𝗇𝗎𝗆𝖻𝖾𝗋𝗉𝖺𝗀𝖾> | <𝖼𝗆𝖽𝖭𝖺𝗆𝖾>",
   author: 'Cliff',
   execute(senderId, args, pageAccessToken, sendMessage) {
     const commandsDir = path.join(__dirname, '../commands');
