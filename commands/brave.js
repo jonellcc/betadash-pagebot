@@ -15,11 +15,13 @@ module.exports = {
   async execute(senderId, args, pageAccessToken, sendMessage) {
     const prompt = args.join(' ');
     if (!prompt) {
-      await sendMessage(senderId, { text: 'Please provide a question first' }, pageAccessToken);
+      await sendMessage(senderId, { text: '𝙿𝚕𝚎𝚊𝚜𝚎 𝚙𝚛𝚘𝚟𝚒𝚍𝚎 𝚊 𝚚𝚞𝚎𝚜𝚝𝚒𝚘𝚗 𝚏𝚒𝚛𝚜𝚝' }, pageAccessToken);
       return;
     }
 
     try {
+await sendMessage(senderId, { text: '🦁 | 𝙱𝚛𝚊𝚟𝚎 𝙰𝙸 𝚒𝚜 𝚝𝚑𝚒𝚗𝚔𝚒𝚗𝚐 𝚙𝚕𝚎𝚊𝚜𝚎 𝚠𝚊𝚒𝚝...' }, pageAccessToken);
+      const apiUrl =
       const apiUrl = `https://yt-video-production.up.railway.app/brave?search=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
       const text = response.data.response;
@@ -28,13 +30,16 @@ module.exports = {
       if (text.length > maxMessageLength) {
         const messages = splitMessageIntoChunks(text, maxMessageLength);
         for (const message of messages) {
-          await sendMessage(senderId, { text: message }, pageAccessToken);
+const dk = `[𝗕𝗥𝗔𝗩𝗘] 𝖠𝖨/𝖲𝖤𝖠𝖱𝖢𝖧\n━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━`;
+          await sendMessage(senderId, { text: dk }, pageAccessToken);
         }
       } else {
-        await sendMessage(senderId, { text: text }, pageAccessToken);
+const k = `[𝗕𝗥𝗔𝗩𝗘] 𝖠𝖨/𝖲𝖤𝖠𝖱𝖢𝖧\n━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━`;
+        await sendMessage(senderId, { text: k }, pageAccessToken);
       }
     } catch (error) {
       await sendMessage(senderId, { text: error.message }, pageAccessToken);
     }
   }
 };
+
