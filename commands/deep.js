@@ -22,7 +22,7 @@ const m = sendMessage;
     const q = a.join(' ');
 
     if (!q) {
-      m(s, { text: 'Please provide a question first.' }, p);
+      await m(s, { text: 'Please provide a question first.' }, p);
       return;
     }
 
@@ -36,14 +36,14 @@ const m = sendMessage;
         const c = s(t, l);
         for (const x of c) {
           const f = `🐬 𝗗𝗲𝗲𝗽𝘀𝗲𝗲𝗸 𝗩𝟯\n━━━━━━━━━━━━\n${x}\n━━━━━ ✕ ━━━━━`;
-          m(s, { text: f }, p);
+         await m(s, { text: f }, p);
         }
       } else {
         const f = `🐬 𝗗𝗲𝗲𝗽𝘀𝗲𝗲𝗸 𝗩𝟯\n━━━━━━━━━━━━━\n${t}\n━━━━━ ✕ ━━━━━`;
-        m(s, { text: f }, p);
+       await m(s, { text: f }, p);
       }
     } catch (e) {
-      m(s, { text: e.message }, p);
+      await m(s, { text: e.message }, p);
     }
   }
 };
