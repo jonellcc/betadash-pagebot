@@ -16,7 +16,7 @@ module.exports = {
     const u = args.join(" ");
 
     if (!u || !/^https?:\/\//.test(u)) {
-      sendMessage(senderId, { text: 'Please provide a valid API URL with an endpoint.' }, pageAccessToken);
+     await sendMessage(senderId, { text: 'Please provide a valid API URL with an endpoint.' }, pageAccessToken);
       return;
     }
 
@@ -24,7 +24,7 @@ module.exports = {
       const response = await axios.get(u, { headers: { Accept: "application/json" } });
 
       if (typeof response.data !== "object") {
-        sendMessage(senderId, { text: "Invalid JSON response" }, pageAccessToken);
+        await sendMessage(senderId, { text: "Invalid JSON response" }, pageAccessToken);
         return;
       }
 
@@ -39,10 +39,10 @@ module.exports = {
           await sendMessage(senderId, { text: message }, pageAccessToken);
         }
       } else {
-     await  sendMessage(senderId, { text: sheshh }, pageAccessToken);
+     await sendMessage(senderId, { text: sheshh }, pageAccessToken);
       }
     } catch (error) {
-      sendMessage(senderId, { text: "Error: " + error.message }, pageAccessToken);
+      await sendMessage(senderId, { text: "Error: " + error.message }, pageAccessToken);
     }
   }
 };
