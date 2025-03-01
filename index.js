@@ -451,7 +451,7 @@ if (event.message && event.message.reply_to && event.message.reply_to.mid) {
   const args = messageText ? messageText.split(' ') : [];
 
 const bannedKeywords = [
-  'pussy', 'dick', 'nude', 'xnxx', 'pornhub', 'hot', 'clothes', 'sugar', 'fuck', 'fucked', 'step',
+  'pussy', 'dick', 'nude', 'xnxx', 'pornhub', 'hot', 'clothes', 'sugar', 'fucked', 'step',
   'shit', 'bitch', 'hentai', 'sex', 'boobs', 'cute girl undressed', 'undressed', 
   'naked', 'underwear', 'sexy', 'panty', 'fuckers', 'fck', 'fucking', 'vagina', 'intercourse', 
   'penis', 'gae', 'panties', 'fellatio', 'blow job', 'blow', 'skin', 'segs', 'porn', 'loli', 'kantutan','lulu', 'kayat', 'bilat',
@@ -470,7 +470,7 @@ const containsBannedKeyword = bannedKeywords.some(keyword => {
 if (containsBannedKeyword) {
   await sendMessage(
     senderId,
-    { text: '🚫 Your prompt contains inappropriate content. Please try again with a different prompt.',
+    { text: '🚫 Your message detected Badwords contains inappropriate content. Please try again with a different prompt',
     quick_replies: [
     {
       content_type: "text",
