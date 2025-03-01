@@ -128,11 +128,11 @@ module.exports = {
     "https://i.imgur.com/kaAdYb4.mp4",
     "https://i.imgur.com/EaW6bLY.mp4",
     "https://i.imgur.com/gMP8xJb.mp4",
-    "https://i.imgur.com/pmkcvr4.mp4",
     "https://i.imgur.com/WKvMqID.mp4",
     "https://i.imgur.com/1WNjGdq.mp4"
 ]; 
 
+try {
     const randomIndex = Math.floor(Math.random() * links.length);
     const videoUrl = links[randomIndex];
 
@@ -168,8 +168,11 @@ module.exports = {
           }
         ]
       }, pageAccessToken);
-    } else {
-      sendMessage(senderId, { text: 'Sorry, no video found.' }, pageAccessToken);
+     } else {
+      await sendMessage(senderId, { text: 'Sorry, no video found.' }, pageAccessToken);
+      }
+    } catch (error) {
+      await sendMessage(senderId, { text: error.message }, pageAccessToken);
     }
   }
 };
