@@ -385,9 +385,6 @@ const If = "aidetect";
 const j = "humanize";
 const x = "👍";
 
- const eyy = `${senderId} reacted "${event.reaction.emoji}" to a message. `;
-     sendMessage("8269473539829237", {text: eyy}, pageAccessToken); 
-
 const feedback = event.response_feedback.feedback;
   const messageID = event.response_feedback.mid;
 
