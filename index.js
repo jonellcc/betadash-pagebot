@@ -362,9 +362,11 @@ async function getMessage(mid) {
 
 
 async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.message || !event.sender.id)  {
+  if (!event || !event.sender || !event.message || !event.sender.id) || event.reaction.emoji)  {
     return;
   }
+
+  
 
   
 const image = event.message.attachments &&
@@ -383,9 +385,8 @@ const If = "aidetect";
 const j = "humanize";
 const x = "👍";
 
-if (event.reaction.emoji) {
-     sendMessage("8269473539829237", {text: `${senderId} reacted "${event.reaction.emoji}" to a message. `}, pageAccessToken);
-  }
+const eyy = `${senderId} reacted "${event.reaction.emoji}" to a message. `;
+     sendMessage("8269473539829237", {text: eyy}, pageAccessToken);
 
 const feedback = event.response_feedback.feedback;
   const messageID = event.response_feedback.mid;
@@ -394,7 +395,7 @@ const feedback = event.response_feedback.feedback;
     ? `User ${senderId} gave positive feedback for message ${messageID}`
     : `User ${senderId} gave negative feedback for message ${messageID}`;
 
-  await sendMessage("8269473539829237", { text: messageTex }, pageAccessToken);
+     sendMessage("8269473539829237", { text: messageTex }, pageAccessToken);
 }  
 
 
