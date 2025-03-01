@@ -362,7 +362,7 @@ async function getMessage(mid) {
 
 
 async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.message || !event.sender.id || event.reaction.emoji)  {
+  if (!event || !event.sender || !event.message || !event.sender.id || event.reaction)  {
     return;
   }
 
