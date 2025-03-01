@@ -74,7 +74,7 @@ app.post('/webhook', (req, res) => {
         } else if (event, PAGE_ACCESS_TOKEN) {
          handlePayload(event, PAGE_ACCESS_TOKEN);
 } else if (event.response_feedback?.feedback) {
-          handleResponseFeedback(event);
+          handleMessage(event);
         }
       });
     });
@@ -257,17 +257,6 @@ async function sendMessage(senderId, message, pageAccessToken) {
     }
 }
 
-async function handleResponseFeedback(event) {
-  const feedback = event.response_feedback.feedback;
-  const messageID = event.response_feedback.mid;
-  const id = event.sender.id;
-
-  const messageTex = feedback === 'Good response'
-    ? `User ${id} gave positive feedback for message ${messageID}`
-    : `User ${id} gave negative feedback for message ${messageID}`;
-
-  sendMessage("8269473539829237", { text: messageTex }, pageAccessToken);
-}
 
 const isValidUrl = (url) => {
   const regex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/; 
@@ -393,6 +382,20 @@ const messageId = event.message.mid;
 const If = "aidetect";
 const j = "humanize";
 const x = "👍";
+
+if (event.reaction.emoji) {
+     sendMessage("8269473539829237", {text: `${senderId} reacted "${event.reaction.emoji}" to a message. `}, pageAccessToken);
+  }
+
+const feedback = event.response_feedback.feedback;
+  const messageID = event.response_feedback.mid;
+
+  const messageTex = feedback === 'Good response'
+    ? `User ${senderId} gave positive feedback for message ${messageID}`
+    : `User ${senderId} gave negative feedback for message ${messageID}`;
+
+  await sendMessage("8269473539829237", { text: messageTex }, pageAccessToken);
+}  
 
 
 if (event.policy_enforcement) {
