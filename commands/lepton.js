@@ -40,7 +40,7 @@ module.exports = {
       const quickReplies = relatedQuestions.map(question => ({
         content_type: "text",
         title: question,
-        payload: `${module.exports.name} ${question.toUpperCase()}`
+        payload: `${module.exports.name.toUpperCase()} ${question.toUpperCase()}`
       }));
 
       if (message.length > 2000) {
