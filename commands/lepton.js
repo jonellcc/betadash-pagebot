@@ -8,6 +8,14 @@ function splitArray(array, chunkSize) {
   return result;
 }
 
+function cleanJsonString(jsonString) {
+  // Remove unnecessary characters
+  let cleanedString = jsonString.replace(/\\/g, '');
+  // Remove unwanted characters
+  cleanedString = cleanedString.replace(/[|{}()[\]^$+*?.-]/g, '');
+  return cleanedString;
+}
+
 module.exports = {
   name: 'lepton',
   description: 'Lepton search',
@@ -23,7 +31,10 @@ module.exports = {
     try {
       const url = `https://betadash-api-swordslush.vercel.app/lepton?search=${encodeURIComponent(query)}`;
       const response = await axios.get(url);
-      const data = response.data;
+      let data = response.data;
+
+      // Clean the JSON string
+      data = cleanJsonString(data);
 
       let formattedResponse = `𝗟𝗲𝗽𝘁𝗼𝗻 𝗦𝗲𝗮𝗿𝗰𝗵\n━━━━━━━━━━━━\n`;
 
