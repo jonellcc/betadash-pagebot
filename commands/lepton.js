@@ -29,10 +29,10 @@ module.exports = {
       const sources = data.SOURCES;
       const relatedQuestions = data.RELATED.QUESTIONS;
 
-      let message = `󰦅 | 𝗟𝗲𝗽𝘁𝗼𝗻 𝗦𝗲𝗮𝗿𝗰𝗵\n━━━━━━━━━━━━\n${answer}\n\nSOURCES:\n`;
+      let message = `󰦅 | 𝗟𝗲𝗽𝘁𝗼𝗻 𝗦𝗲𝗮𝗿𝗰𝗵\n━━━━━━━━━━━━\n${answer}\n\n𝗦𝗢𝗨𝗥𝗖𝗘:\n`;
 
       sources.forEach((source, index) => {
-        message += `Title: ${source.title}\nURL: ${source.url}\nSnippet: ${source.snippet}\n\n`;
+        message += `𝗧𝗶𝘁𝗹𝗲: ${source.title}\n𝗟𝗶𝗻𝗸: ${source.url}\n𝗦𝗻𝗶𝗽𝗽𝗲𝘁: ${source.snippet}\n\n`;
       });
 
       message += `━━━━━ ✕ ━━━━━`;
@@ -40,7 +40,7 @@ module.exports = {
       const quickReplies = relatedQuestions.map(question => ({
         content_type: "text",
         title: question,
-        payload: `${module.exports.name} ${question}`
+        payload: `${module.exports.name} ${question.toUpperCase()}`
       }));
 
       if (message.length > 2000) {
