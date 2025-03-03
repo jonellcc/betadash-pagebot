@@ -470,7 +470,7 @@ const containsBannedKeyword = bannedKeywords.some(keyword => {
 if (containsBannedKeyword) {
   await sendMessage(
     senderId,
-    { text: '🚫 Your message detected Badwords contains inappropriate content. Please try again with a different prompt',
+    { text: '🚫 Your message detected Badwords it contains inappropriate content. Please try again with a different prompt',
     quick_replies: [
     {
       content_type: "text",
@@ -676,6 +676,22 @@ if (!imageUrl) {
 const fuck = await axios.get(apiUrl);
 const dh = fuck.data.url;
 await sendMessage(senderId, { text: dh }, pageAccessToken);
+    } catch (error) {
+     sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
+}
+
+if (messageText && messageText.includes("ocr")) {
+    try { 
+if (!imageUrl) {
+      sendMessage(senderId, { text: "Please reply by image to get the text" }, pageAccessToken);
+      return;
+    }     
+      const _odjs = `https://betadash-api-swordslush.vercel.app/ocr?url=${encodeURIComponent(imageUrl)}`;
+const _pdh = await axios.get(_odjs);
+const _0ch = _pdh.data.text;
+await sendMessage(senderId, { text: _0ch }, pageAccessToken);
     } catch (error) {
      sendMessage(senderId, { text: error.message}, pageAccessToken);
         }
