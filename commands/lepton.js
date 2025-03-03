@@ -27,8 +27,13 @@ module.exports = {
 
       let formattedResponse = `𝗟𝗲𝗽𝘁𝗼𝗻 𝗦𝗲𝗮𝗿𝗰𝗵\n━━━━━━━━━━━━\n`;
 
-      const contexts = JSON.parse(data).contexts;
-      const relatedQuestions = JSON.parse(data).relatedQuestions || [];
+      // Extract contexts using regex
+      const contextsMatch = data.match(/"contexts":\s*(\[.*?\])/s);
+      const contexts = contextsMatch ? JSON.parse(contextsMatch[1]) : [];
+
+      // Extract relatedQuestions using regex
+      const relatedQuestionsMatch = data.match(/"relatedQuestions":\s*(\[.*?\])/s);
+      const relatedQuestions = relatedQuestionsMatch ? JSON.parse(relatedQuestionsMatch[1]) : [];
 
       contexts.forEach((context, index) => {
         formattedResponse += `SOURCE ${index + 1}:\n`;
