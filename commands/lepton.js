@@ -31,7 +31,7 @@ module.exports = {
 
       let message = `󰦅 | 𝗟𝗲𝗽𝘁𝗼𝗻 𝗦𝗲𝗮𝗿𝗰𝗵\n━━━━━━━━━━━━\n${answer}\n\n𝗦𝗢𝗨𝗥𝗖𝗘:\n`;
 
-      sources.forEach((source, index) => {
+      sources.forEach((source) => {
         message += `𝗧𝗶𝘁𝗹𝗲: ${source.title}\n𝗟𝗶𝗻𝗸: ${source.url}\n𝗦𝗻𝗶𝗽𝗽𝗲𝘁: ${source.snippet}\n\n`;
       });
 
@@ -39,22 +39,22 @@ module.exports = {
 
       const quickReplies = relatedQuestions.map(question => ({
         content_type: "text",
-        title: `${module.exports.name}` + question,
+        title: question,
         payload: `${module.exports.name.toUpperCase()} ${question.toUpperCase()}`
       }));
 
       if (message.length > 2000) {
         const chunks = chunkArray(message, 2000);
-        for (const chunk of chunks) {
-          await sendMessage(senderId, { text: chunk }, pageAccessToken);
+        for (let i = 0; i < chunks.length; i++) {
+          if (i === chunks.length - 1) {
+            await sendMessage(senderId, { text: chunks[i], quick_replies: quickReplies }, pageAccessToken);
+          } else {
+            await sendMessage(senderId, { text: chunks[i] }, pageAccessToken);
+          }
         }
       } else {
-        await sendMessage(senderId, { text: message }, pageAccessToken);
+        await sendMessage(senderId, { text: message, quick_replies: quickReplies }, pageAccessToken);
       }
-
-      await sendMessage(senderId, {
-        quick_replies: quickReplies
-      }, pageAccessToken);
 
     } catch (error) {
       await sendMessage(senderId, { text: error.message }, pageAccessToken);
