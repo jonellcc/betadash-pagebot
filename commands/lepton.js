@@ -39,7 +39,7 @@ module.exports = {
 
       const quickReplies = relatedQuestions.map(question => ({
         content_type: "text",
-        title: question,
+        title: `${module.exports.name}` + question,
         payload: `${module.exports.name.toUpperCase()} ${question.toUpperCase()}`
       }));
 
