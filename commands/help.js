@@ -71,7 +71,7 @@ function paginate(array, page_size, page_number) {
 module.exports = {
   name: 'help',
   description: 'Show available commands or details of a specific command',
-  usage: "𝗁𝖾𝗅𝗉 <𝗇𝗎𝗆𝖻𝖾𝗋𝗉𝖺𝗀𝖾> | <𝖼𝗆𝖽𝖭𝖺𝗆𝖾>",
+  usage: "𝗁𝖾𝗅𝗉 <𝗇𝗎𝗆𝖻𝖾𝗋𝗉𝖺𝗀𝖾> | <𝖼𝗆𝖽𝖭𝖺𝗆𝖾> | <all>",
   author: 'Cliff',
   execute(senderId, args, pageAccessToken, sendMessage) {
     const commandsDir = path.join(__dirname, '../commands');
@@ -86,16 +86,25 @@ module.exports = {
       if (commandFile) {
         const command = require(path.join(commandsDir, commandFile));
         const name = command.name ? `➟ Name: ${command.name}\n` : "";
-        const author = command.author ? `➟ Author: ${command.author}\n` : "";
+        const author = command.author ? `➟ Author: ${command.author}\n` : "No author";
        const usage = (command && command.usage) || usages
   ? `➟ Usage: ${(command && command.usage) || usages}\n`
-  : "No Usage found";
-        const description = command.description ? `➟ description: ${command.description}\n` : "";
+  : "No Found usages";
+        const description = command.description ? `➟ description: ${command.description}\n` : "Not found description";
         const commandDetails = `${name}${author}${usage}${description}`;
 
         return sendMessage(senderId, { text: commandDetails }, pageAccessToken);
+      } else if (commandName === 'all') {
+        const allCommandsList = commandFiles.map(file => {
+          const command = require(path.join(commandsDir, file));
+          return `│ ✧ ${command.name}`;
+        });
+
+        const allCommandsMessage = `🛠️ 𝗔𝘃𝗮𝗶𝗹𝗮𝗯𝗹𝗲 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀\n\n╭─❍「 𝗡𝗢 𝗣𝗥𝗘𝗙𝗜𝗫 」\n${allCommandsList.join('\n')}\n╰───────────◊\n\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀:〔 ${totalCommands} 〕\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
+
+        return sendMessage(senderId, { text: allCommandsMessage }, pageAccessToken);
       } else {
-        return sendMessage(senderId, { text: `❌ Command not found: ${formatFont(commandName)}` }, pageAccessToken);
+        return sendMessage(senderId, { text: `❌ 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝗇𝗈𝗍 𝖿𝗈𝗎𝗇𝖽: ${formatFont(commandName)}` }, pageAccessToken);
       }
     }
 
@@ -103,7 +112,7 @@ module.exports = {
     const paginatedCommands = paginate(commandFiles, commandsPerPage, pageNumber);
 
     if (paginatedCommands.length === 0) {
-      return sendMessage(senderId, { text: `❌ No commands found for page ${pageNumber}` }, pageAccessToken);
+      return sendMessage(senderId, { text: `❌ 𝖭𝗈 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌 𝖿𝗈𝗎𝗇𝖽 𝖿𝗈𝗋 𝗉𝖺𝗀𝖾: ${pageNumber}` }, pageAccessToken);
     }
 
     const commandsList = paginatedCommands.map(file => {
@@ -113,7 +122,7 @@ module.exports = {
 
 const huys = "\t「 𝗛𝗜𝗗𝗘𝗡 𝗙𝗘𝗔𝗧𝗨𝗥𝗘𝗦 」\n● Autodownloader - 𝖨𝗇𝗌𝗍𝖺, 𝖳𝗂𝗄𝗍𝗈𝗄, 𝖥𝖺𝖼𝖾𝖻𝗈𝗈𝗄, 𝖸𝗈𝗎𝗍𝗎𝖻𝖾, 𝖢𝖺𝗉𝖼𝗎𝗍, 𝖲𝗈𝗎𝗇𝖽𝖢𝗅𝗈𝗎𝖽, 𝖲𝗉𝗈𝗍𝗂𝖿𝗒, 𝖲𝗇𝖺𝗉𝖼𝗁𝖺𝗍, 𝖱𝖾𝖽𝖽𝗂𝗍.\n● aidetect - 𝗋𝖾𝗉𝗅𝗒 𝖻𝗒 𝖺 𝗍𝖾𝗑𝗍.\n● humanize - 𝗋𝖾𝗉𝗅𝗒 𝖻𝗒 𝖺 𝗍𝖾𝗑𝗍.\n● imgur - 𝖱𝖾𝗉𝗅𝗒 𝗍𝗈 𝖺𝗇 𝗂𝗆𝖺𝗀𝖾 𝗍𝗈 𝗎𝗉𝗅𝗈𝖺𝖽 𝗂𝗇 𝗂𝗆𝗀𝗎𝗋.\n● imgbb - 𝖱𝖾𝗉𝗅𝗒 𝗂𝗆𝖺𝗀𝖾 𝗍𝗈 𝗀𝖾𝗍 𝗍𝗁𝖾 𝗂𝗆𝗀𝖻𝖻 𝗎𝗋𝗅.\n● tinyurl - 𝖱𝖾𝗉𝗅𝗒 𝗍𝗈 𝗂𝗆𝖺𝗀𝖾 𝗍𝗈 𝗌𝗁𝗈𝗋𝗍𝖾𝗋 𝗎𝗋𝗅.\n● removebg - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝖱𝖾𝗆𝗈𝗏𝖾 𝖻𝖺𝖼𝗄𝗀𝗋𝗈𝗎𝗇𝖽 𝗂𝗆𝖺𝗀𝖾.\n● remini - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝖤𝗇𝗁𝖺𝗇𝖼𝗂𝗇𝗀 𝗂𝗆𝖺𝗀𝖾\n● upscale - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝖤𝗇𝗁𝖺𝗇𝖼𝗂𝗇𝗀 𝗂𝗆𝖺𝗀𝖾\n● zombie - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝗍𝗈 𝗀𝖾𝗇𝖾𝗋𝖺𝗍𝖾 𝖼𝖺𝗇𝗏𝖺𝗌 𝗓𝗈𝗆𝖻𝗂𝖾 𝖿𝖺𝖼𝖾\n● faceswap - 𝖱𝖾𝗉𝗅𝗒 𝗐𝗂𝗍𝗁 𝗍𝗐𝗈 𝗂𝗆𝖺𝗀𝖾𝗌 𝗍𝗈 𝖼𝗈𝗆𝖻𝗂𝗇𝖾 𝖿𝖺𝖼𝖾\n● recognize - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗌𝗁𝗈𝗋𝗍 𝗏𝗂𝖽𝖾𝗈 𝗈𝗋 𝖺𝗎𝖽𝗂𝗈 𝗍𝗈 𝗋𝖾𝖼𝗈𝗀𝗇𝗂𝗓𝖾 𝗍𝗁𝖾 𝗆𝗎𝗌𝗂𝖼";
 
-    const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commandsList.join('\n')}\n╰───────────◊\n\n${huys}\n\n» 𝗣𝗮𝗴𝗲: <${pageNumber}/${Math.ceil(totalCommands / commandsPerPage)}>\n» 𝗚𝘂𝗶𝗱𝗲: "𝖳𝗒𝗉𝖾 “𝗁𝖾𝗅𝗉” <𝗇𝗎𝗆𝖻𝖾𝗋𝗉𝖺𝗀𝖾> | <𝖼𝗆𝖽𝖭𝖺𝗆𝖾>"\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀:〔 ${totalCommands} 〕\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
+    const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commandsList.join('\n')}\n╰───────────◊\n\n${huys}\n\n» 𝗣𝗮𝗴𝗲: <${pageNumber}/${Math.ceil(totalCommands / commandsPerPage)}>\n» 𝗚𝘂𝗶𝗱𝗲: "𝖳𝗒𝗉𝖾 “𝗁𝖾𝗅𝗉” <𝗇𝗎𝗆𝖻𝖾𝗋𝗉𝖺𝗀𝖾> | <𝖼𝗆𝖽𝖭𝖺𝗆𝖾> | <all>"\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀:〔 ${totalCommands} 〕\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
 
 const kupal = {
       text: helpMessage,
@@ -188,3 +197,4 @@ const kupal = {
     sendMessage(senderId, kupal, pageAccessToken);
   }
 };
+   
