@@ -1,11 +1,11 @@
 const axios = require('axios');
 
-function chunkText(text, size) {
-  const chunks = [];
-  for (let i = 0; i < text.length; i += size) {
-    chunks.push(text.slice(i, i + size));
+function splitArray(array, chunkSize) {
+  const result = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    result.push(array.slice(i, i + chunkSize));
   }
-  return chunks;
+  return result;
 }
 
 module.exports = {
@@ -25,24 +25,28 @@ module.exports = {
       const response = await axios.get(url);
       const data = response.data;
 
-      if (typeof data !== 'object') {
-        await sendMessage(senderId, { text: 'Invalid response from API.' }, pageAccessToken);
-        return;
-      }
+      let formattedResponse = `𝗟𝗲𝗽𝘁𝗼𝗻 𝗦𝗲𝗮𝗿𝗰𝗵\n━━━━━━━━━━━━\n`;
 
-      let formattedResponse = `𝗟𝗲𝗽𝘁𝗼𝗻 𝗦𝗲𝗮𝗿𝗰𝗵\n━━━━━━━━━━━━\n${data.LLM_RESPONSE || ''}\n\n`;
+      const contexts = JSON.parse(data).contexts;
+      const relatedQuestions = JSON.parse(data).relatedQuestions || [];
 
-      if (data.contexts && Array.isArray(data.contexts)) {
-        for (const context of data.contexts) {
-          formattedResponse += `𝗦𝗢𝗨𝗥𝗖𝗘:\nName: ${context.name}\nURL: ${context.url}\nSnippet: ${context.snippet}\n\n`;
-        }
-      }
+      contexts.forEach((context, index) => {
+        formattedResponse += `SOURCE ${index + 1}:\n`;
+        formattedResponse += `Name: ${context.name}\n`;
+        formattedResponse += `URL: ${context.url}\n`;
+        formattedResponse += `Snippet: ${context.snippet}\n`;
+        formattedResponse += `Description: ${context.description || 'No description available.'}\n`;
+        formattedResponse += `━━━━━ ✕ ━━━━━\n`;
+      });
 
-      formattedResponse += `━━━━━ ✕ ━━━━━`;
+      const quickReplies = relatedQuestions.map(question => ({
+        content_type: "text",
+        title: question.question,
+        payload: `${module.exports.name} ${question.question}`
+      }));
 
-      const messageLimit = 2000;
-      if (formattedResponse.length > messageLimit) {
-        const chunks = chunkText(formattedResponse, messageLimit);
+      if (formattedResponse.length > 2000) {
+        const chunks = splitArray(formattedResponse, 2000);
         for (const chunk of chunks) {
           await sendMessage(senderId, { text: chunk }, pageAccessToken);
         }
@@ -50,15 +54,10 @@ module.exports = {
         await sendMessage(senderId, { text: formattedResponse }, pageAccessToken);
       }
 
-      if (data.RELATED_QUESTIONS && Array.isArray(data.RELATED_QUESTIONS)) {
-        const quickReplies = data.RELATED_QUESTIONS.map((question) => ({
-          content_type: 'text',
-          title: question.question,
-          payload: `${module.exports.name} ${question.question.toUpperCase()}`
-        }));
+      await sendMessage(senderId, {
+        quick_replies: quickReplies
+      }, pageAccessToken);
 
-        await sendMessage(senderId, { quick_replies: quickReplies }, pageAccessToken);
-      }
     } catch (error) {
       await sendMessage(senderId, { text: error.message }, pageAccessToken);
     }
