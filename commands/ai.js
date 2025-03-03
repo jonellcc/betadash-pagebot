@@ -53,7 +53,7 @@ if (!prompt) {
        await sendMessage(senderId, { text }, pageAccessToken);
       }
     } catch (error) {
-      await sendMessage(senderId, { text: "I'm sorry i can't answer stupid question!" || error.message }, pageAccessToken);
+      await sendMessage(senderId, { text: "have reached your daily request limit. Please come back tomorrow." || "I'm sorry i can't answer stupid question!" || error.message }, pageAccessToken);
     }
   }
 };
