@@ -120,7 +120,7 @@ module.exports = {
       return `│ ✧ ${command.name}`;
     });
 
-const huys = `\t「 $formatFont("HIDEN FEATURES")} 」\n● Autodownloader - 𝖨𝗇𝗌𝗍𝖺, 𝖳𝗂𝗄𝗍𝗈𝗄, 𝖥𝖺𝖼𝖾𝖻𝗈𝗈𝗄, 𝖸𝗈𝗎𝗍𝗎𝖻𝖾, 𝖢𝖺𝗉𝖼𝗎𝗍, 𝖲𝗈𝗎𝗇𝖽𝖢𝗅𝗈𝗎𝖽, 𝖲𝗉𝗈𝗍𝗂𝖿𝗒, 𝖲𝗇𝖺𝗉𝖼𝗁𝖺𝗍, 𝖱𝖾𝖽𝖽𝗂𝗍.\n● aidetect - 𝗋𝖾𝗉𝗅𝗒 𝖻𝗒 𝖺 𝗍𝖾𝗑𝗍.\n● humanize - 𝗋𝖾𝗉𝗅𝗒 𝖻𝗒 𝖺 𝗍𝖾𝗑𝗍.\n● imgur - 𝖱𝖾𝗉𝗅𝗒 𝗍𝗈 𝖺𝗇 𝗂𝗆𝖺𝗀𝖾 𝗍𝗈 𝗎𝗉𝗅𝗈𝖺𝖽 𝗂𝗇 𝗂𝗆𝗀𝗎𝗋.\n● imgbb - 𝖱𝖾𝗉𝗅𝗒 𝗂𝗆𝖺𝗀𝖾 𝗍𝗈 𝗀𝖾𝗍 𝗍𝗁𝖾 𝗂𝗆𝗀𝖻𝖻 𝗎𝗋𝗅.\n● tinyurl - 𝖱𝖾𝗉𝗅𝗒 𝗍𝗈 𝗂𝗆𝖺𝗀𝖾 𝗍𝗈 𝗌𝗁𝗈𝗋𝗍𝖾𝗋 𝗎𝗋𝗅.\n● removebg - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝖱𝖾𝗆𝗈𝗏𝖾 𝖻𝖺𝖼𝗄𝗀𝗋𝗈𝗎𝗇𝖽 𝗂𝗆𝖺𝗀𝖾.\n● remini - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝖤𝗇𝗁𝖺𝗇𝖼𝗂𝗇𝗀 𝗂𝗆𝖺𝗀𝖾\n● upscale - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝖤𝗇𝗁𝖺𝗇𝖼𝗂𝗇𝗀 𝗂𝗆𝖺𝗀𝖾\n● zombie - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝗍𝗈 𝗀𝖾𝗇𝖾𝗋𝖺𝗍𝖾 𝖼𝖺𝗇𝗏𝖺𝗌 𝗓𝗈𝗆𝖻𝗂𝖾 𝖿𝖺𝖼𝖾\n● faceswap - 𝖱𝖾𝗉𝗅𝗒 𝗐𝗂𝗍𝗁 𝗍𝗐𝗈 𝗂𝗆𝖺𝗀𝖾𝗌 𝗍𝗈 𝖼𝗈𝗆𝖻𝗂𝗇𝖾 𝖿𝖺𝖼𝖾\n● ocr - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝗀𝖾𝗍 𝗍𝗁𝖾 𝗍𝖾𝗑𝗍`;
+const huys = `\t「 ${formatFont("HIDEN FEATURES")} 」\n● Autodownloader - 𝖨𝗇𝗌𝗍𝖺, 𝖳𝗂𝗄𝗍𝗈𝗄, 𝖥𝖺𝖼𝖾𝖻𝗈𝗈𝗄, 𝖸𝗈𝗎𝗍𝗎𝖻𝖾, 𝖢𝖺𝗉𝖼𝗎𝗍, 𝖲𝗈𝗎𝗇𝖽𝖢𝗅𝗈𝗎𝖽, 𝖲𝗉𝗈𝗍𝗂𝖿𝗒, 𝖲𝗇𝖺𝗉𝖼𝗁𝖺𝗍, 𝖱𝖾𝖽𝖽𝗂𝗍.\n● aidetect - 𝗋𝖾𝗉𝗅𝗒 𝖻𝗒 𝖺 𝗍𝖾𝗑𝗍.\n● humanize - 𝗋𝖾𝗉𝗅𝗒 𝖻𝗒 𝖺 𝗍𝖾𝗑𝗍.\n● imgur - 𝖱𝖾𝗉𝗅𝗒 𝗍𝗈 𝖺𝗇 𝗂𝗆𝖺𝗀𝖾 𝗍𝗈 𝗎𝗉𝗅𝗈𝖺𝖽 𝗂𝗇 𝗂𝗆𝗀𝗎𝗋.\n● imgbb - 𝖱𝖾𝗉𝗅𝗒 𝗂𝗆𝖺𝗀𝖾 𝗍𝗈 𝗀𝖾𝗍 𝗍𝗁𝖾 𝗂𝗆𝗀𝖻𝖻 𝗎𝗋𝗅.\n● tinyurl - 𝖱𝖾𝗉𝗅𝗒 𝗍𝗈 𝗂𝗆𝖺𝗀𝖾 𝗍𝗈 𝗌𝗁𝗈𝗋𝗍𝖾𝗋 𝗎𝗋𝗅.\n● removebg - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝖱𝖾𝗆𝗈𝗏𝖾 𝖻𝖺𝖼𝗄𝗀𝗋𝗈𝗎𝗇𝖽 𝗂𝗆𝖺𝗀𝖾.\n● remini - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝖤𝗇𝗁𝖺𝗇𝖼𝗂𝗇𝗀 𝗂𝗆𝖺𝗀𝖾\n● upscale - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝖤𝗇𝗁𝖺𝗇𝖼𝗂𝗇𝗀 𝗂𝗆𝖺𝗀𝖾\n● zombie - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝗍𝗈 𝗀𝖾𝗇𝖾𝗋𝖺𝗍𝖾 𝖼𝖺𝗇𝗏𝖺𝗌 𝗓𝗈𝗆𝖻𝗂𝖾 𝖿𝖺𝖼𝖾\n● faceswap - 𝖱𝖾𝗉𝗅𝗒 𝗐𝗂𝗍𝗁 𝗍𝗐𝗈 𝗂𝗆𝖺𝗀𝖾𝗌 𝗍𝗈 𝖼𝗈𝗆𝖻𝗂𝗇𝖾 𝖿𝖺𝖼𝖾\n● ocr - 𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝗀𝖾𝗍 𝗍𝗁𝖾 𝗍𝖾𝗑𝗍`;
 
     const helpMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("NO PREFIX")} 」\n${commandsList.join('\n')}\n╰───────────◊\n\n${huys}\n\n» 𝗣𝗮𝗴𝗲: <${pageNumber}/${Math.ceil(totalCommands / commandsPerPage)}>\n» 𝗚𝘂𝗶𝗱𝗲: "𝖳𝗒𝗉𝖾 “𝗁𝖾𝗅𝗉” <𝗇𝗎𝗆𝖻𝖾𝗋𝗉𝖺𝗀𝖾> | <𝖼𝗆𝖽𝖭𝖺𝗆𝖾> | <all>"\n» 𝗧𝗼𝘁𝗮𝗹 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀:〔 ${totalCommands} 〕\n» 𝗥𝗔𝗡𝗗𝗢𝗠 𝗙𝗔𝗖𝗧: ${randomQuote}`;
 
