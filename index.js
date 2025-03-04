@@ -262,11 +262,16 @@ async function handleResponseFeedback(event) {
   const messageID = event.response_feedback.mid;
   const id = event.sender.id;
 
-  const messageTex = feedback === 'Good response'
-    ? `User ${id} gave positive feedback for message ${messageID}`
-    : `User ${id} gave negative feedback for message ${messageID}`;
+   let con = "Unknown message";
+  if (messageId) {
+    con = await getMessage(messageId).catch(() => "Failed to fetch message");
+  }
 
-  sendMessage("8269473539829237", { text: messageTex }, pageAccessToken);
+  const messageTex = feedback === 'Good response'
+    ? `User ${id} gave positive feedback for message ${con}`
+    : `User ${id} gave negative feedback for message ${con}`;
+
+  sendMessage("8505900689447357", { text: messageTex }, pageAccessToken);
 }
 
 const isValidUrl = (url) => {
