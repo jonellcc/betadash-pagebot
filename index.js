@@ -263,13 +263,13 @@ async function handleResponseFeedback(event) {
   const id = event.sender.id;
 
    let con = "Unknown message";
-  if (messageId) {
+  if (messageID) {
     con = await getMessage(messageId).catch(() => "Failed to fetch message");
   }
 
   const messageTex = feedback === 'Good response'
-    ? `User ${id} gave positive feedback for message ${con}`
-    : `User ${id} gave negative feedback for message ${con}`;
+    ? `User ${id} gave positive feedback for message\n\n"${con}"`
+    : `User ${id} gave negative feedback for message\n\n"${con}"`;
 
   sendMessage("8505900689447357", { text: messageTex }, pageAccessToken);
 }
