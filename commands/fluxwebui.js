@@ -1,6 +1,4 @@
 const axios = require('axios');
-const path = require('path');
-const fs = require('fs');
 
 module.exports = {
   name: 'fluxwebui',
@@ -17,18 +15,21 @@ module.exports = {
 
     try {
       const apiUrl = `https://betadash-api-swordslush.vercel.app/fluxwebui?prompt=${encodeURIComponent(prompt)}`;
-      const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
-      const imagePath = path.join(__dirname, '../backups', `${Date.now()}.png`);
 
-      fs.writeFileSync(imagePath, response.data);
-      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: imagePath } } }, pageAccessToken);
+      const response = await axios.get(apiUrl, { responseType: "stream" });
 
-      setTimeout(() => {
-        fs.unlinkSync(imagePath);
-      }, 60000);
+      await sendMessage(senderId, { 
+        attachment: { 
+          type: 'image', 
+          payload: { 
+            url: response.data, 
+            is_reusable: false 
+          } 
+        } 
+      }, pageAccessToken);
 
     } catch (error) {
-      await sendMessage(senderId, { text: 'Error: Could not generate image.' }, pageAccessToken);
+      await sendMessage(senderId, { text: error.message }, pageAccessToken);
     }
   }
 };
