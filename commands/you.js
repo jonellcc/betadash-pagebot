@@ -12,12 +12,11 @@ module.exports = {
   name: 'you',
   description: 'Ask a question to You Ai',
   author: 'yazky (rest api)',
-    async execute(senderId, args, pageAccessToken, sendMessage) {
-
-const s = senderId;
-const a = args;
-const p = pageAccessToken;
-const m = sendMessage;
+  async execute(senderId, args, pageAccessToken, sendMessage) {
+    const s = senderId;
+    const a = args;
+    const p = pageAccessToken;
+    const m = sendMessage;
 
     const q = a.join(' ');
 
@@ -32,16 +31,20 @@ const m = sendMessage;
       const t = r.data.response;
 
       const l = 2000;
-      if (t.length > l) {
-        const c = si(t, l);
-        for (const x of c) {
-          const f = `󰦐 | 𝗬𝗢𝗨 𝗔𝗜\n━━━━━━━━━━━\n${x}\n━━━━━ ✕ ━━━━━`;
-         await m(s, { text: f }, p);
+      const c = si(t, l);
+
+      for (let i = 0; i < c.length; i++) {
+        const x = c[i];
+
+        if (i === 0) {
+          const f = `󰦐 | 𝗬𝗢𝗨 𝗔𝗜\n━━━━━━━━━━━\n${x}`;
+          await m(s, { text: f }, p);
+        } else {
+          await m(s, { text: x }, p);
         }
-      } else {
-        const f = `󰦐 | 𝗬𝗢𝗨 𝗔𝗜\n━━━━━━━━━━━━\n${t}\n━━━━━ ✕ ━━━━━`;
-       await m(s, { text: f }, p);
       }
+
+      await m(s, { text: '━━━━━ ✕ ━━━━━' }, p);
     } catch (e) {
       await m(s, { text: e.message }, p);
     }
