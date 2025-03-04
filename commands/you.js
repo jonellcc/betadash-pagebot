@@ -1,6 +1,6 @@
 const as = require('axios');
 
-function s(m, c) {
+function si(m, c) {
   const r = [];
   for (let i = 0; i < m.length; i += c) {
     r.push(m.slice(i, i + c));
@@ -33,7 +33,7 @@ const m = sendMessage;
 
       const l = 2000;
       if (t.length > l) {
-        const c = s(t, l);
+        const c = si(t, l);
         for (const x of c) {
           const f = `󰦐 | 𝗬𝗢𝗨 𝗔𝗜\n━━━━━━━━━━━\n${x}\n━━━━━ ✕ ━━━━━`;
          await m(s, { text: f }, p);
