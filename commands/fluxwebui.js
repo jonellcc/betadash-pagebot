@@ -14,7 +14,7 @@ module.exports = {
     const prompt = args.join(' ');
 
     try {
-      const apiUrl = `https://betadash-api-swordslush.vercel.app/fluxwebui?prompt=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://betadash-api-swordslush.vercel.app/fluxwebui?prompt=${prompt}`;
 
       const response = await axios.get(apiUrl, { responseType: "stream" });
 
@@ -22,7 +22,7 @@ module.exports = {
         attachment: { 
           type: 'image', 
           payload: { 
-            url: response.data, 
+            url: apiUrl, 
             is_reusable: false 
           } 
         } 
