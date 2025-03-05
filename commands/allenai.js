@@ -16,40 +16,32 @@ function splitMessageIntoChunks(message, chunkSize) {
   return chunks;
 }
 
-const fontMapping = {
-  'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚',
-  'H': '𝗛', 'I': '𝗜', 'J': '𝗝', 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡',
-  'O': '𝗢', 'P': '𝗣', 'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧', 'U': '𝗨',
-  'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 'Y': '𝗬', 'Z': '𝗭',
-  'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴',
-  'h': '𝗵', 'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻',
-  'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂',
-  'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 'y': '𝘆', 'z': '𝘇'
-};
-
-function convertToBold(text) {
-  return text.replace(/(?:\*\*(.*?)\*\*|## (.*?)|### (.*?))/g, (match, boldText, h2Text, h3Text) => {
-    const targetText = boldText || h2Text || h3Text;
-    return [...targetText].map(char => fontMapping[char] || char).join('');
-  });
-}
-
 module.exports = {
   name: 'allenai',
-  description: 'Ask a question to Allen ai',
-  author: 'Cliff (rest api)',
+  description: 'Ask a question to Allen AI',
+  author: 'Cliff (REST API)',
   async execute(senderId, args, pageAccessToken, sendMessage) {
-    const prompt = args.join(' ');
-    if (!prompt) {
-      sendMessage(senderId, { text: '𝙿𝚕𝚎𝚊𝚜𝚎 𝚙𝚛𝚘𝚟𝚒𝚍𝚎 𝚊 𝚚𝚞𝚎𝚜𝚝𝚒𝚘𝚗 𝚏𝚒𝚛𝚜𝚝' }, pageAccessToken);
+    if (args.length === 0) {
+      sendMessage(senderId, { text: '𝙿𝚕𝚎𝚊𝚜𝚎 𝚙𝚛𝚘𝚟𝚒𝚍𝚎 𝚊 𝚖𝚘𝚍𝚎𝚕 𝚊𝚗𝚍 𝚊 𝚚𝚞𝚎𝚜𝚝𝚒𝚘𝚗.' }, pageAccessToken);
       return;
     }
 
     const modelNumber = parseInt(args[0]);
-    const selectedModel = model[modelNumber] || 'invalid model';
+    if (isNaN(modelNumber) || !model[modelNumber]) {
+      sendMessage(senderId, { text: '𝙸𝚗𝚟𝚊𝚕𝚒𝚍 𝚖𝚘𝚍𝚎𝚕 𝚘𝚗𝚕𝚢 𝟷-𝟻' }, pageAccessToken);
+      return;
+    }
+
+    const prompt = args.slice(1).join(' ');
+    if (!prompt) {
+      sendMessage(senderId, { 
+        text: `𝙿𝚕𝚎𝚊𝚜𝚎 𝚙𝚛𝚘𝚟𝚒𝚍𝚎 𝚊 𝚚𝚞𝚎𝚜𝚝𝚒𝚘𝚗 𝚏𝚒𝚛𝚜𝚝\n\n𝙼𝚘𝚍𝚎𝚕𝚜:\n1. ${model[1]}\n2. ${model[2]}\n3. ${model[3]}\n4. ${model[4]}\n5. ${model[5]}\n\nExample usage: allenai 1 hi`
+      }, pageAccessToken);
+      return;
+    }
 
     try {
-      const apiUrl = `https://betadash-api-swordslush.vercel.app/allenai?ask=${encodeURIComponent(prompt)}&model=${selectedModel}`;
+      const apiUrl = `https://betadash-api-swordslush.vercel.app/allenai?ask=${encodeURIComponent(prompt)}&model=${model[modelNumber]}`;
       const response = await axios.get(apiUrl);
       const text = response.data.response;
 
