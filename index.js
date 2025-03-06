@@ -255,8 +255,7 @@ async function sendMessage(senderId, message, pageAccessToken) {
 }
 
 function admins(message) {
-    admin.forEach(adminId => {
-        sendMessage(adminId, message, pageAccessToken);
+    admin.forEach(adminId => {        
     });
 }
 
@@ -391,7 +390,7 @@ if (event.policy_enforcement) {
 
         if (admin.length > 0) {
             const nya = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
-            admins({ text: nya });
+            await sendMessage(admins, { text: nya }, pageAccessToken);
         }
     }
 
@@ -404,7 +403,7 @@ if (event.policy_enforcement) {
         let mj = '';
         mj = await getMessage(erm);
         const reactionMessage = `User ${senderId} reacted with ${ere} (${err}) to message:\n\n${mj || "Attachment"}.`;
-        admins({ text: reactionMessage });
+        await sendMessage(admins, { text: reactionMessage }, pageAccessToken);
     }
 
 if (event.response_feedback) {
@@ -421,8 +420,8 @@ if (event.response_feedback) {
             ? `User ${id} gave positive feedback for message\n\n"${con || "attachment"}"`
             : `User ${id} gave negative feedback for message\n\n"${con || "attachment"}"`;
 
-        admins({ text: messageTex });
-        sendMessage(senderId, { text: "𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝖿𝖾𝖾𝖽𝖻𝖺𝖼𝗄! 😊" }, pageAccessToken);
+        await sendMessage(admins, { text: messageTex }, pageAccessToken);
+        await sendMessage(senderId, { text: "𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝖿𝖾𝖾𝖽𝖻𝖺𝖼𝗄! 😊" }, pageAccessToken);
     }
 
 let content = "";
