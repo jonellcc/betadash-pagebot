@@ -364,7 +364,7 @@ async function getMessage(mid) {
 
 
 async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.message || !event.sender.id)  {
+  if (!event || !event.sender || !event.message || !event.sender.id || event.response_feedback || event.response_feedback?.feedback)  {
     return;
   }
 
