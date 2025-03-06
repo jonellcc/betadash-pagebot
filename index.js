@@ -58,12 +58,13 @@ app.get('/webhook', (req, res) => {
 
 app.post('/webhook', (req, res) => {
   const body = req.body;
-  if (body.object === 'page') {
-    if (!Array.isArray(entry.messaging)) return;
-    
+
+  if (body.object === 'page' && Array.isArray(body.entry)) {
     body.entry.forEach(entry => {
+      if (!Array.isArray(entry.messaging)) return; // Ensure entry.messaging is an array
+
       entry.messaging.forEach(event => {
-          if (event.message) {
+        if (event.message) {
           handleMessage(event, PAGE_ACCESS_TOKEN);
         } else if (event.sender.id) {
           handleMessage(event, PAGE_ACCESS_TOKEN);
