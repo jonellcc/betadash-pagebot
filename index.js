@@ -59,6 +59,8 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', (req, res) => {
   const body = req.body;
   if (body.object === 'page') {
+    if (!Array.isArray(entry.messaging)) return;
+    
     body.entry.forEach(entry => {
       entry.messaging.forEach(event => {
           if (event.message) {
