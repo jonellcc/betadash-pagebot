@@ -256,7 +256,10 @@ async function sendMessage(senderId, message, pageAccessToken, mid) {
 }
 
 function admins(message) {
-    admin.forEach(adminId => {        
+    if (!Array.isArray(admin)) {
+        return;
+    }    
+    admin.forEach(adminId => {
     });
 }
 
