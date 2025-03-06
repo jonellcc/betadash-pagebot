@@ -225,7 +225,7 @@ async function sendMessage(senderId, message, pageAccessToken, mid) {
             recipient: { id: senderId },
             messaging_type: "RESPONSE",
             message: {},
-            reply_to_message_id: mid
+            reply_to: mid
         };
 
         if (message.text) {
