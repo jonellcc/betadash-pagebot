@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const config = require("./config.json");
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
@@ -26,11 +27,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 8080;
 
-const VERIFY_TOKEN = 'shipazu';
-const pageid = "493920247130641";
-const admin = ["8786755161388846", "8376765705775283", "8552967284765085"];
-const PAGE_ACCESS_TOKEN = "EAAOGSnFGWtcBO1ZBK6qBs8rvDmSL3GCSaSKw1lW2nWZAAC1B54vJ9usbraXWzAtbyLKCDWi0ZBpdFcvjjcmDxoLy5iKS4pRweZCyMDmI9edEh7gR9NoJblQ61lXs5rYEdHgu05JR92UwkPUWntbMNZAJbGsHe01cwJkXfQfLsRJ88J3R1WZCZACatbcYL4MWwKxrwZDZD";
-
+const VERIFY_TOKEN = config.VERIFY_TOKEN;
+const admin = config.ADMINS;
+const PAGE_ACCESS_TOKEN = config.PAGE_ACCESS_TOKEN;
 const commandList = [];
 const descriptions = [];
 const userMessages = {};
@@ -73,8 +72,6 @@ app.post('/webhook', (req, res) => {
           handlePostback(event, PAGE_ACCESS_TOKEN);
         } else if (event, PAGE_ACCESS_TOKEN) {
          handlePayload(event, PAGE_ACCESS_TOKEN);
-} else if (event.response_feedback?.feedback) {
-          handleResponseFeedback(event);
         }
       });
     });
@@ -257,21 +254,10 @@ async function sendMessage(senderId, message, pageAccessToken) {
     }
 }
 
-async function handleResponseFeedback(event) {
-  const feedback = event.response_feedback.feedback;
-  const messageID = event.response_feedback.mid;
-  const id = event.sender.id;
-
-   let con = "Unknown message";
-  if (messageID) {
-    con = await getMessage(messageId).catch(() => "Failed to fetch message");
-  }
-
-  const messageTex = feedback === 'Good response'
-    ? `User ${id} gave positive feedback for message\n\n"${con}"`
-    : `User ${id} gave negative feedback for message\n\n"${con}"`;
-
-  sendMessage("8505900689447357", { text: messageTex }, pageAccessToken);
+function admins(message) {
+    admin.forEach(adminId => {
+        sendMessage(adminId, message, pageAccessToken);
+    });
 }
 
 const isValidUrl = (url) => {
@@ -399,17 +385,45 @@ const If = "aidetect";
 const j = "humanize";
 const x = "👍";
 
-
 if (event.policy_enforcement) {
-    const reason = event.policy_enforcement.reason || "Unknown reason";
-    const action = event.policy_enforcement.action || "Unknown action";
+        const reason = event.policy_enforcement.reason || "Unknown reason";
+        const action = event.policy_enforcement.action || "Unknown action";
 
-    if (admin.length > 0) {
-        const nya = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
-        sendMessage("7913024942132935", { text: nya }, pageAccessToken);
+        if (admin.length > 0) {
+            const nya = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
+            admins({ text: nya });
+        }
     }
-}
 
+ if (event.reaction) {
+        let pageId = event.recipient.id;
+        let err = event.reaction.reaction;
+        let ere = event.reaction.emoji;
+        let arc = event.reaction.action;
+        let erm = event.reaction.mid;
+        let mj = '';
+        mj = await getMessage(erm);
+        const reactionMessage = `User ${senderId} reacted with ${ere} (${err}) to message:\n\n${mj || "Attachment"}.`;
+        admins({ text: reactionMessage });
+    }
+
+if (event.response_feedback) {
+        const feedback = event.response_feedback.feedback;
+        const messageID = event.response_feedback.mid;
+        const id = event.sender.id;
+
+        let con = "Unknown message";
+        if (messageID) {
+            con = await getMessage(messageId).catch(() => "Failed to fetch message");
+        }
+
+        const messageTex = feedback === 'Good response'
+            ? `User ${id} gave positive feedback for message\n\n"${con || "attachment"}"`
+            : `User ${id} gave negative feedback for message\n\n"${con || "attachment"}"`;
+
+        admins({ text: messageTex });
+        sendMessage(senderId, { text: "𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝖿𝖾𝖾𝖽𝖻𝖺𝖼𝗄! 😊" }, pageAccessToken);
+    }
 
 let content = "";
 
