@@ -206,6 +206,14 @@ async function sendMessage(senderId, message, pageAccessToken, mid) {
         return;
     }
 
+    if (!Array.isArray(senderId)) {
+        senderId = [senderId];
+    }
+
+    senderId.forEach(senderf => {
+    });
+}
+
     try {
         await axios.post('https://graph.facebook.com/v22.0/me/messages', {
             recipient: { id: senderId },
@@ -255,13 +263,7 @@ async function sendMessage(senderId, message, pageAccessToken, mid) {
     }
 }
 
-function admins(message) {
-    if (!Array.isArray(admin)) {
-        return;
-    }    
-    admin.forEach(adminId => {
-    });
-}
+
 
 const isValidUrl = (url) => {
   const regex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/; 
@@ -394,7 +396,7 @@ if (event.policy_enforcement) {
 
         if (admin.length > 0) {
             const nya = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
-            await sendMessage(admins, { text: nya }, pageAccessToken);
+            await sendMessage(admin, { text: nya }, pageAccessToken);
         }
     }
 
@@ -407,7 +409,7 @@ if (event.policy_enforcement) {
         let mj = '';
         mj = await getMessage(erm);
         const reactionMessage = `User ${senderId} reacted with ${ere} (${err}) to message:\n\n${mj || "Attachment"}.`;
-        await sendMessage(admins, { text: reactionMessage }, pageAccessToken);
+        await sendMessage(admin, { text: reactionMessage }, pageAccessToken);
     }
 
 if (event.response_feedback) {
@@ -424,7 +426,7 @@ if (event.response_feedback) {
             ? `User ${id} gave positive feedback for message\n\n"${con || "attachment"}"`
             : `User ${id} gave negative feedback for message\n\n"${con || "attachment"}"`;
 
-        await sendMessage(admins, { text: messageTex }, pageAccessToken);
+        await sendMessage(admin, { text: messageTex }, pageAccessToken);
         await sendMessage(senderId, { text: "𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝖿𝖾𝖾𝖽𝖻𝖺𝖼𝗄! 😊" }, pageAccessToken);
     }
 
