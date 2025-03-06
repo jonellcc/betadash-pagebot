@@ -69,7 +69,7 @@ app.post('/webhook', (req, res) => {
        } else if (event.postback) {
           handlePostback(event, PAGE_ACCESS_TOKEN);
         } else if (event, PAGE_ACCESS_TOKEN) {
-         handlePayload(event, PAGE_ACCESS_TOKEN);
+          handlePayload(event, PAGE_ACCESS_TOKEN);
         }
       });
     });
@@ -358,7 +358,7 @@ async function getMessage(mid) {
 
 
 async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.message || !event.sender.id || event.response_feedback || event.response_feedback?.feedback)  {
+  if (!event || !event.sender || !event.message || !event.sender.id)  {
     return;
   }
   
