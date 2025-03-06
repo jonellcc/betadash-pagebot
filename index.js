@@ -199,12 +199,6 @@ function handlePostback(event, pageAccessToken) {
 }
 
 async function sendMessage(senderId, message, pageAccessToken) {
-
-  if (!Array.isArray(senderId)) {
-        senderId = [senderId];
-    return;
-  }
-  
     if (!message || (!message.text && !message.attachment)) {
         console.error();
         return;
@@ -367,7 +361,6 @@ async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id || event.response_feedback || event.response_feedback?.feedback)  {
     return;
   }
-
   
 const image = event.message.attachments &&
   (event.message.attachments[0]?.type === 'image');
@@ -385,13 +378,18 @@ const If = "aidetect";
 const j = "humanize";
 const x = "👍";
 
+if (!Array.isArray(senderId)) {
+        senderId = [senderId];
+    return;
+} 
+
 if (event.policy_enforcement) {
         const reason = event.policy_enforcement.reason || "Unknown reason";
         const action = event.policy_enforcement.action || "Unknown action";
 
         if (admin.length > 0) {
             const nya = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
-            await sendMessage(admin, { text: nya }, pageAccessToken);
+            await sendMessage(senderId, { text: nya }, pageAccessToken);
         }
     }
 
@@ -404,7 +402,7 @@ if (event.policy_enforcement) {
         let mj = '';
         mj = await getMessage(erm);
         const reactionMessage = `User ${senderId} reacted with ${ere} (${err}) to message:\n\n${mj || "Attachment"}.`;
-        await sendMessage(admin, { text: reactionMessage }, pageAccessToken);
+        await sendMessage(senderId, { text: reactionMessage }, pageAccessToken);
     }
 
 if (event.response_feedback) {
@@ -414,14 +412,14 @@ if (event.response_feedback) {
 
         let con = "Unknown message";
         if (messageID) {
-            con = await getMessage(messageId).catch(() => "Failed to fetch message");
+            con = await getMessage(messageID).catch(() => "Failed to fetch message");
         }
 
         const messageTex = feedback === 'Good response'
             ? `User ${id} gave positive feedback for message\n\n"${con || "attachment"}"`
             : `User ${id} gave negative feedback for message\n\n"${con || "attachment"}"`;
 
-        await sendMessage(admin, { text: messageTex }, pageAccessToken);
+        await sendMessage(senderId, { text: messageTex }, pageAccessToken);
         await sendMessage(senderId, { text: "𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝖿𝖾𝖾𝖽𝖻𝖺𝖼𝗄! 😊" }, pageAccessToken);
     }
 
