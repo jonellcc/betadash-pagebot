@@ -895,10 +895,10 @@ const s = [ "✦", "✧", "✦", "⟡"];
   if (text.length > maxMessageLength) {
     const messages = splitMessageIntoChunks(text, maxMessageLength);
     for (const message of messages) {
-      await sendMessage(senderId, { text: message }, pageAccessToken);
+      await sendMessage(senderId, { text: message }, pageAccessToken, messageId);
     }
   } else {
-    await sendMessage(senderId, { text }, pageAccessToken);
+    await sendMessage(senderId, { text }, pageAccessToken, messageId);
   }
 } catch (error) {
   }
