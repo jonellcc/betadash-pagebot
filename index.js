@@ -198,7 +198,7 @@ function handlePostback(event, pageAccessToken) {
   sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
 }
 
-async function sendMessage(senderId, message, pageAccessToken, mid) {
+async function sendMessage(senderId, message, pageAccessToken) {
 
   if (!Array.isArray(senderId)) {
         senderId = [senderId];
@@ -229,7 +229,6 @@ async function sendMessage(senderId, message, pageAccessToken, mid) {
             recipient: { id: senderId },
             messaging_type: "RESPONSE",
             message: {},
-            reply_to: mid
         };
 
         if (message.text) {
@@ -896,10 +895,10 @@ const s = [ "✦", "✧", "✦", "⟡"];
   if (text.length > maxMessageLength) {
     const messages = splitMessageIntoChunks(text, maxMessageLength);
     for (const message of messages) {
-      await sendMessage(senderId, { text: message }, pageAccessToken, messageId);
+      await sendMessage(senderId, { text: message }, pageAccessToken);
     }
   } else {
-    await sendMessage(senderId, { text }, pageAccessToken, messageId);
+    await sendMessage(senderId, { text }, pageAccessToken);
   }
 } catch (error) {
   }
