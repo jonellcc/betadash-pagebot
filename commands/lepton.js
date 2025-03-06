@@ -26,10 +26,14 @@ module.exports = {
       const data = response.data;
 
       const answer = data.ANSWERS;
-      const sources = data.SOURCES;
+      let sources = data.SOURCES.slice(0, Math.min(3, data.SOURCES.length)); 
       const relatedQuestions = data.RELATED.QUESTIONS;
 
       let message = `󰦌 | 𝙻𝙴𝙿𝚃𝙾𝙽 𝚂𝙴𝙰𝚁𝙲𝙷\n━━━━━━━━━━━━\n${answer}\n\n𝗦𝗢𝗨𝗥𝗖𝗘:\n`;
+
+
+if (sources.length < 2) {
+  }
 
       sources.forEach((source) => {
         message += `𝗧𝗶𝘁𝗹𝗲: ${source.title}\n𝗟𝗶𝗻𝗸: ${source.url}\n𝗦𝗻𝗶𝗽𝗽𝗲𝘁: ${source.snippet}\n\n`;
@@ -37,11 +41,6 @@ module.exports = {
 
       message += `━━━━━ ✕ ━━━━━`;
 
-    /**  const quickReplies = relatedQuestions.map(question => ({
-        content_type: "text",
-        title: question,
-        payload: `${module.exports.name.toUpperCase()} ${question.toUpperCase()}`
-      })); **/
 
       if (message.length > 2000) {
         const chunks = chunkArray(message, 2000);
