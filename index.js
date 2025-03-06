@@ -378,11 +378,6 @@ const If = "aidetect";
 const j = "humanize";
 const x = "👍";
 
-if (!Array.isArray(senderId)) {
-        senderId = [senderId];
-    return;
-} 
-
 if (event.policy_enforcement) {
         const reason = event.policy_enforcement.reason || "Unknown reason";
         const action = event.policy_enforcement.action || "Unknown action";
