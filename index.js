@@ -200,7 +200,7 @@ function handlePostback(event, pageAccessToken) {
   sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
 }
 
-async function sendMessage(senderId, message, pageAccessToken) {
+async function sendMessage(senderId, message, pageAccessToken, mid) {
     if (!message || (!message.text && !message.attachment)) {
         console.error();
         return;
@@ -224,7 +224,8 @@ async function sendMessage(senderId, message, pageAccessToken) {
         const messagePayload = {
             recipient: { id: senderId },
             messaging_type: "RESPONSE",
-            message: {},         
+            message: {},
+            reply_to_message_id: mid
         };
 
         if (message.text) {
