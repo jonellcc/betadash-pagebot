@@ -19,8 +19,6 @@ const headers = {
   'Content-Type': 'application/json'
 };
 
-let likeCounter = {};
-
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -201,14 +199,16 @@ function handlePostback(event, pageAccessToken) {
 }
 
 async function sendMessage(senderId, message, pageAccessToken, mid) {
+
+  if (!Array.isArray(senderId)) {
+        senderId = [senderId];
+    return;
+  }
+  
     if (!message || (!message.text && !message.attachment)) {
         console.error();
         return;
-    }
-
-    if (!Array.isArray(senderId)) {
-        senderId = [senderId];
-    }
+    }    
     
     try {
         await axios.post('https://graph.facebook.com/v22.0/me/messages', {
