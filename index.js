@@ -209,10 +209,7 @@ async function sendMessage(senderId, message, pageAccessToken, mid) {
     if (!Array.isArray(senderId)) {
         senderId = [senderId];
     }
-
-    senderId.forEach(senderf => {
-    });
-
+    
     try {
         await axios.post('https://graph.facebook.com/v22.0/me/messages', {
             recipient: { id: senderId },
