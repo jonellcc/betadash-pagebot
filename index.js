@@ -503,7 +503,7 @@ if (containsBannedKeyword) {
   return;
 }
 
-if (messageText && messageText.includes("imgur")) {
+if (messageText && messageText.startsWith("imgur")) {
     try {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Reply to an image to upload in imgur" }, pageAccessToken);
@@ -522,7 +522,7 @@ if (!imageUrl) {
       return;
 }
 
-if (messageText && messageText.includes("removebg")) {
+if (messageText && messageText.startsWith("removebg")) {
     try {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to Remove background image" }, pageAccessToken);
@@ -537,7 +537,7 @@ if (!imageUrl) {
 }
 
 
-if (messageText && messageText.includes("recognize")) {
+if (messageText && messageText.startsWith("recognize")) {
     try {
    if (!imageUrl) {
       sendMessage(senderId, { text: "Reply to a short audio or video" }, pageAccessToken);
@@ -564,7 +564,7 @@ if (messageText && messageText.includes("recognize")) {
 }
 
 
-if (messageText && messageText.includes("faceswap")) {
+if (messageText && messageText.startsWith("faceswap")) {
   try {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Reply with two image to combine face" }, pageAccessToken);
@@ -628,7 +628,7 @@ if (messageText && messageText.includes("Get started")) {
       return;
 }
 
-if (messageText && messageText.includes("remini")) {
+if (messageText && messageText.startsWith("remini")) {
     try {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to Enhancing image" }, pageAccessToken);
@@ -643,7 +643,7 @@ if (!imageUrl) {
 }
 
 
-if (messageText && messageText.includes("upscale")) {
+if (messageText && messageText.startsWith("upscale")) {
     try {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to Enhancing image" }, pageAccessToken);
@@ -660,7 +660,7 @@ const en = await axios.get(upsc);
 }
 
 
-if (messageText && messageText.includes("imgbb")) {
+if (messageText && messageText.startsWith("imgbb")) {
     try { 
        if (!imageUrl) {
       sendMessage(senderId, { text: "Please reply by image to get the imgbb url" }, pageAccessToken);
@@ -680,7 +680,7 @@ await sendMessage(senderId, { text: yawa}, pageAccessToken);
 }
 
 
-if (messageText && messageText.includes("tinyurl")) {
+if (messageText && messageText.startsWith("tinyurl")) {
     try { 
 if (!imageUrl) {
       sendMessage(senderId, { text: "Please reply by image to get the shorten url" }, pageAccessToken);
@@ -696,7 +696,7 @@ await sendMessage(senderId, { text: dh }, pageAccessToken);
       return;
 }
 
-if (messageText && messageText.includes("ocr")) {
+if (messageText && messageText.startsWith("ocr")) {
     try { 
 if (!imageUrl) {
       sendMessage(senderId, { text: "Please reply by image to get the text" }, pageAccessToken);
@@ -713,7 +713,7 @@ await sendMessage(senderId, { text: _0ch }, pageAccessToken);
 }
 
 
- if (messageText && messageText.includes("zombie")) {
+ if (messageText && messageText.startsWith("zombie")) {
     try {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to to generate canvas zombie face" }, pageAccessToken);
@@ -748,7 +748,7 @@ attachment: {
     return;
   } **/
 
-if (messageText && messageText.includes("aidetect")) {
+if (messageText && messageText.startsWith("aidetect")) {
     try {
         if (!content) {
             sendMessage(senderId, { text: "Please reply by message" }, pageAccessToken);
@@ -800,7 +800,7 @@ ${additional_feedback || ""}`;
 }
 
 
-if (messageText && messageText.includes("humanize")) {
+if (messageText && messageText.startsWith("humanize")) {
     try {
         if (!content) {
             sendMessage(senderId, { text: "Please reply by a message first" }, pageAccessToken);
@@ -833,7 +833,7 @@ if (messageText && messageText.includes("humanize")) {
         }
     } catch (error) {
       const kupall = {
-     text: "❌ There was an error processing that command\n\nType 'Help' to see more useful commands" || error.message || error.response?.data,
+     text: "❌ 𝖳𝗁𝖾𝗋𝖾 𝗐𝖺𝗌 𝖺𝗇 𝖾𝗋𝗋𝗈𝗋 𝗉𝗋𝗈𝖼𝖾𝗌𝗌𝗂𝗇𝗀 𝗍𝗁𝖺𝗍 𝖼𝗈𝗆𝗆𝖺𝗇𝖽\n\n𝖳𝗒𝗉𝖾 '𝖧𝖾𝗅𝗉' 𝗍𝗈 𝗌𝖾𝖾 𝗆𝗈𝗋𝖾 𝗎𝗌𝖾𝖿𝗎𝗅 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌" || error.message || error.response?.data,
     quick_replies: [
          {
           content_type: "text",
