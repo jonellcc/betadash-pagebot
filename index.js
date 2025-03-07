@@ -61,7 +61,7 @@ app.post('/webhook', (req, res) => {
 
   if (body.object === 'page' && Array.isArray(body.entry)) {
     body.entry.forEach(entry => {
-      if (!Array.isArray(entry.messaging)) return; // Ensure entry.messaging is an array
+      if (!Array.isArray(entry.messaging)) return;
 
       entry.messaging.forEach(event => {
         if (event.message) {
@@ -95,7 +95,7 @@ async function handlePayload(event, pageAccessToken) {
             {
               type: 'web_url',
               url: "https://www.facebook.com/61567757543707",
-              title: "Like/Follow"
+              title: "𝖫𝗂𝗄𝖾/𝖥𝗈𝗅𝗅𝗈𝗐"
             },
             {
               type: 'postback',
@@ -385,7 +385,7 @@ if (event.policy_enforcement) {
         const action = event.policy_enforcement.action || "Unknown action";
 
         if (admin.length > 0) {
-            const nya = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
+            const nya = `🚨 𝖯𝗈𝗅𝗂𝖼𝗒 𝖤𝗇𝖿𝗈𝗋𝖼𝖾𝗆𝖾𝗇𝗍 𝖠𝗅𝖾𝗋𝗍 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
             await sendMessage(senderId, { text: nya }, pageAccessToken);
         }
     }
@@ -484,7 +484,7 @@ const containsBannedKeyword = bannedKeywords.some(keyword => {
 if (containsBannedKeyword) {
   await sendMessage(
     senderId,
-    { text: '🚫 Your message detected Badwords it contains inappropriate content. Please try again with a different prompt',
+    { text: '🚫 𝖸𝗈𝗎𝗋 𝗆𝖾𝗌𝗌𝖺𝗀𝖾 𝖽𝖾𝗍𝖾𝖼𝗍𝖾𝖽 𝖡𝖺𝖽𝗐𝗈𝗋𝖽𝗌 𝗂𝗍 𝖼𝗈𝗇𝗍𝖺𝗂𝗇𝗌 𝗂𝗇𝖺𝗉𝗉𝗋𝗈𝗉𝗋𝗂𝖺𝗍𝖾 𝖼𝗈𝗇𝗍𝖾𝗇𝗍. 𝖯𝗅𝖾𝖺𝗌𝖾 𝗍𝗋𝗒 𝖺𝗀𝖺𝗂𝗇 𝗐𝗂𝗍𝗁 𝖺 𝖽𝗂𝖿𝖿𝖾𝗋𝖾𝗇𝗍 𝗉𝗋𝗈𝗆𝗉𝗍',
     quick_replies: [
     {
       content_type: "text",
@@ -593,12 +593,12 @@ if (messageText && messageText.includes("Get started")) {
     type: "template",
     payload: {
       template_type: "button",
-      text: "Hello, I'm BELUGA! Your friendly AI assistant, here to help with questions, tasks, and more. I'm constantly learning and improving, so please bear with me if ever I make any mistakes. I'm excited to work with you and make your day a little brighter.\n\nType 'help' below to see available commands",
+      text: "𝖧𝖾𝗅𝗅𝗈, 𝖨'𝗆 𝖡𝖤𝖫𝖴𝖦𝖠! 𝖸𝗈𝗎𝗋 𝖿𝗋𝗂𝖾𝗇𝖽𝗅𝗒 𝖠𝖨 𝖺𝗌𝗌𝗂𝗌𝗍𝖺𝗇𝗍, 𝗁𝖾𝗋𝖾 𝗍𝗈 𝗁𝖾𝗅𝗉 𝗐𝗂𝗍𝗁 𝗊𝗎𝖾𝗌𝗍𝗂𝗈𝗇𝗌, 𝗍𝖺𝗌𝗄𝗌, 𝖺𝗇𝖽 𝗆𝗈𝗋𝖾. 𝖨'𝗆 𝖼𝗈𝗇𝗌𝗍𝖺𝗇𝗍𝗅𝗒 𝗅𝖾𝖺𝗋𝗇𝗂𝗇𝗀 𝖺𝗇𝖽 𝗂𝗆𝗉𝗋𝗈𝗏𝗂𝗇𝗀, 𝗌𝗈 𝗉𝗅𝖾𝖺𝗌𝖾 𝖻𝖾𝖺𝗋 𝗐𝗂𝗍𝗁 𝗆𝖾 𝗂𝖿 𝖾𝗏𝖾𝗋 𝖨 𝗆𝖺𝗄𝖾 𝖺𝗇𝗒 𝗆𝗂𝗌𝗍𝖺𝗄𝖾𝗌. 𝖨'𝗆 𝖾𝗑𝖼𝗂𝗍𝖾𝖽 𝗍𝗈 𝗐𝗈𝗋𝗄 𝗐𝗂𝗍𝗁 𝗒𝗈𝗎 𝖺𝗇𝖽 𝗆𝖺𝗄𝖾 𝗒𝗈𝗎𝗋 𝖽𝖺𝗒 𝖺 𝗅𝗂𝗍𝗍𝗅𝖾 𝖻𝗋𝗂𝗀𝗁𝗍𝖾𝗋.\n\n𝖳𝗒𝗉𝖾 '𝗁𝖾𝗅𝗉' 𝖻𝖾𝗅𝗈𝗐 𝗍𝗈 𝗌𝖾𝖾 𝖺𝗏𝖺𝗂𝗅𝖺𝖻𝗅𝖾 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌",
       buttons: [
         {
           type: "web_url",
           url: "https://www.facebook.com/profile.php?id=61567757543707",
-          title: "LIKE/FOLLOW"
+          title: "𝖫𝖨𝖪𝖤/𝖥𝖮𝖫𝖫𝖮𝖶"
         }
       ]
     }
