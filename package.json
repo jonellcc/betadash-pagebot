@@ -18,6 +18,7 @@
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
     "os": "^0.1.2",
+    "pastebin-api": "^7.0.0",
     "crypto": "^1.0.1",
     "path": "^0.12.7",
     "pidusage": "^3.0.2",
