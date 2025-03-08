@@ -9,7 +9,7 @@ function splitMessageIntoChunks(message, chunkSize) {
 }
 
 module.exports = {
-  name: 'Le',
+  name: 'le',
   description: 'Le Chat assistant',
   usage: '{p}{n}',
   author: 'Cliff(rest api)',
