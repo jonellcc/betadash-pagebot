@@ -30,6 +30,7 @@ function formatBoldText(response) {
 module.exports = {
   name: 'Le',
   description: 'Le Chat assistant',
+  usage: '{p}{n}',
   author: 'Cliff (rest api)',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     const prompt = args.join(' ');
