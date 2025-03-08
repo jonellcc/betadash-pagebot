@@ -49,7 +49,7 @@ module.exports = {
         "accept-language": "en-PH,en-US;q=0.9,en;q=0.8,ru;q=0.7,tr;q=0.6,zh-CN;q=0.5,zh;q=0.4,fil;q=0.3"
       };
       const data = {
-        messages: [{ role: "user", content: prompt,  "id": senderId }],
+        messages: [{ role: "user", content: `${encodeURIComponent(prompt)}`,  "id": senderId }],
         previewToken: null,
         userId: senderId,
         codeModelMode: true,
