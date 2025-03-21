@@ -172,12 +172,11 @@ module.exports = {
           await sendMessage(senderId, { text: allCommandsMessage }, pageAccessToken);
         }
 
-      return;
-    } else {
-      await sendMessage(senderId, { text: `❌ 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝗇𝗈𝗍 𝖿𝗈𝗎𝗇𝖽: ${formatFont(commandName)}` }, pageAccessToken);
-      return;
+        return;
+      } else {
+        await sendMessage(senderId, { text: `❌ 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝗇𝗈𝗍 𝖿𝗈𝗎𝗇𝖽: ${formatFont(commandName)}` }, pageAccessToken);
+      }
     }
- }
 
     const pageNumber = args[0] && !isNaN(args[0]) ? parseInt(args[0]) : 1;
     const paginatedCommands = paginate(commandFiles, commandsPerPage, pageNumber);
@@ -269,3 +268,4 @@ module.exports = {
 
     await sendMessage(senderId, kupal, pageAccessToken);
   }
+};
