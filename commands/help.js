@@ -1,6 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
+function splitMessageIntoChunks(message, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < message.length; i += chunkSize) {
+    chunks.push(message.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
 const randomQuotes = [
   "Octopuses have three hearts: two pump blood to the gills, and one pumps it to the rest of the body.",
     "Honey never spoils; archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old.",
@@ -102,7 +110,17 @@ module.exports = {
 
         const allCommandsMessage = `🛠️ ${formatFont("Available Commands")}\n\n╭─❍「 ${formatFont("BELUGA")} 」\n${allCommandsList.join('\n')}\n╰───────────◊\n\n» ${formatFont("Total Commands")}:〔 ${totalCommands} 〕`;
 
-        return sendMessage(senderId, { text: allCommandsMessage }, pageAccessToken);
+        const maxMessageLength = 2000;
+        if (allCommandsMessage.length > maxMessageLength) {
+          const messages = splitMessageIntoChunks(allCommandsMessage, maxMessageLength);
+          for (const message of messages) {
+            await sendMessage(senderId, { text: message }, pageAccessToken);
+          }
+        } else {
+          await sendMessage(senderId, { text: allCommandsMessage }, pageAccessToken);
+        }
+
+        return;
       } else {
         return sendMessage(senderId, { text: `❌ 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝗇𝗈𝗍 𝖿𝗈𝗎𝗇𝖽: ${formatFont(commandName)}` }, pageAccessToken);
       }
@@ -197,4 +215,4 @@ const kupal = {
     sendMessage(senderId, kupal, pageAccessToken);
   }
 };
-   
+
