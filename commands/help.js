@@ -269,4 +269,3 @@ module.exports = {
 
     await sendMessage(senderId, kupal, pageAccessToken);
   }
-};
