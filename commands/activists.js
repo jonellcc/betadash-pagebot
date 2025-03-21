@@ -10,8 +10,8 @@ module.exports = {
       const input = args.join(" ");
       const [userid, text] = input.split(" | ");
 
-      if (!one || !two) {
-        return sendMessage(senderId, { text: "Invalid Usage: Use activists <text1> | <text2>" }, pageAccessToken);
+      if (!userid || !text) {
+        return sendMessage(senderId, { text: "Invalid Usage: Use activists <userid> | <text>" }, pageAccessToken);
       }
 
       const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/activists?userid=${userid}&text=${text}`;
