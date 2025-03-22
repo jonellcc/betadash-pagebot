@@ -140,8 +140,16 @@ app.get('/create', async (req, res) => {
     return res.status(400).json({ error: `Missing parameters is required 'pageAccessToken','adminid`, Usage: "/create?pageAccessToken=EAAUGH....&adminid=1080...." });
   }
 
-      const response = await axios.get(`https://graph.facebook.com/me?access_token=${pageAccessToken}`);
-      const { name, id } = response.data;
+      if (!pageAccessToken.startsWith("EAA")) {
+      return res.status(400).json({ error: 'Invalid page access token format' });
+    }
+
+    const response = await axios.get(`https://graph.facebook.com/me?access_token=${pageAccessToken}`);
+    const { name, id } = response.data;
+    const existingSession = sessions.find(session => session.pageid === id);
+    if (existingSession) {
+      return res.status(409).json({ error: 'Session already exists for this pageid' });
+    }
 
       const newSession = {
         name: name,
@@ -185,6 +193,20 @@ app.get('/delete', (req, res) => {
   const updatedConfig = { main: { PAGE_ACCESS_TOKEN, VERIFY_TOKEN, ADMINS }, sessions };
   fs.writeFileSync('./config.json', JSON.stringify(updatedConfig, null, 2));
   }
+
+app.get('/sessions', (req, res) => {
+  const maskedSessions = sessions.map(session => ({
+    name: session.name,
+    pageAccessToken: session.PAGE_ACCESS_TOKEN
+      ? session.PAGE_ACCESS_TOKEN.substring(0, 4) + "*****"
+      : "*****",
+    pageid: session.pageid,
+    admin: session.adminid
+  }));
+
+  res.status(200).json(maskedSessions);
+});
+
 
 async function handlePayload(event, pageAccessToken) {
   const payload = event.postback.payload;
