@@ -132,35 +132,42 @@ app.post('/webhook', (req, res) => {
   }
 });
 
-app.get('/create', (req, res) => {
-  const { pageAccessToken, pageid, adminid } = req.query;
+app.get('/create', async (req, res) => {
+  try {
+  const { pageAccessToken, adminid } = req.query;
 
-  if (!pageAccessToken || !pageid || !adminid) {
-    return res.status(400).json({ error: `Missing required parameters is required 'pageAccessToken',  pageid, 'adminid'\n\nUsage: /create?pageAccessToken=EAAUGH....&pageid=125242..&adminid=1080....` });
+  if (!pageAccessToken || !adminid) {
+    return res.status(400).json({ error: `Missing required parameters is required 'pageAccessToken',  pageid, 'adminid'\n\nUsage: /create?pageAccessToken=EAAUGH....&adminid=1080....` });
   }
 
-  const newSession = {
-    PAGE_ACCESS_TOKEN: pageAccessToken,
-    pageid: pageid,
-    adminid: adminid
-  };
+      const response = await axios.get(`https://graph.facebook.com/me?access_token=${pageAccessToken}`);
+      const { name, id } = response.data;
 
-  sessions.push(newSession);
-  saveConfig();
-  res.status(200).json({ message: 'Session added successfully', session: newSession });
-});
+      const newSession = {
+        name: name,
+        PAGE_ACCESS_TOKEN: pageAccessToken,
+        pageid: id,
+        adminid: adminid
+      };
 
-  app.get('/delete', (req, res) => {
-    const { username, password, pageid } = req.query;
+      sessions.push(newSession);
+      saveConfig();
+      res.status(200).json({ message: 'Session added successfully', session: newSession });
+    } catch (error) {
+      res.status(500).json({ error: 'Invalid page access token or unable to fetch page details' });
+   }
+  });
 
-    if (username !== 'yazky' || password !== 'autopagebotvz') {
-      return res.status(403).json({ error: 'Unauthorized access' });
-    }
+app.get('/delete', (req, res) => {
+  const { username, password, pageid } = req.query;
 
-    if (!pageid) {
-      return res.status(400).json({ error: 'Missing required parameter: pageid' });
-    }
+  if (username !== 'yazky' || password !== 'autopagebotvz') {
+    return res.status(403).json({ error: 'Unauthorized access' });
+  }
 
+  if (!pageid) {
+    return res.status(400).json({ error: 'Missing required parameter: pageid' });
+  }
 
   const initialLength = sessions.length;
   sessions = sessions.filter(session => session.pageid !== pageid);
@@ -173,12 +180,11 @@ app.get('/create', (req, res) => {
   res.status(200).json({ message: 'Session deleted successfully', pageid });
 });
 
-function saveConfig() {
+
+  function saveConfig() {
   const updatedConfig = { main: { PAGE_ACCESS_TOKEN, VERIFY_TOKEN, ADMINS }, sessions };
   fs.writeFileSync('./config.json', JSON.stringify(updatedConfig, null, 2));
-}
-
-
+  }
 
 async function handlePayload(event, pageAccessToken) {
   const payload = event.postback.payload;
