@@ -206,16 +206,29 @@ app.get('/delete', (req, res) => {
   }
 
 app.get('/sessions', (req, res) => {
+  const maskedMain = {
+    Name: config.main.Name,
+    PAGE_ACCESS_TOKEN: config.main.PAGE_ACCESS_TOKEN
+      ? config.main.PAGE_ACCESS_TOKEN.substring(0, 4) + "****************************************************************************************************************************************************************"
+      : "****************************************************************************************************************************************************************",
+    /** VERIFY_TOKEN: config.main.VERIFY_TOKEN, **/
+    Pageid: config.main.PAGEID,
+    ADMINS: config.main.ADMINS
+  };
+
   const maskedSessions = sessions.map(session => ({
-    name: session.name,
-    pageAccessToken: session.PAGE_ACCESS_TOKEN
+    Name: session.name,
+    PAGE_ACCESS_TOKEN: session.PAGE_ACCESS_TOKEN
       ? session.PAGE_ACCESS_TOKEN.substring(0, 4) + "****************************************************************************************************************************************************************"
       : "****************************************************************************************************************************************************************",
-    pageid: session.pageid,
-    admin: session.adminid
+    Pageid: session.pageid,
+    Adminid: session.adminid
   }));
 
-  res.status(200).json(maskedSessions);
+  res.status(200).json({
+    main: maskedMain,
+    session: maskedSessions
+  });
 });
 
 
