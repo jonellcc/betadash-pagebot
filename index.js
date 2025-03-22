@@ -137,7 +137,7 @@ app.get('/create', async (req, res) => {
   const { pageAccessToken, adminid } = req.query;
 
   if (!pageAccessToken || !adminid) {
-    return res.status(400).json({ error: `Missing parameters is required 'pageAccessToken','adminid'\n\nUsage: /create?pageAccessToken=EAAUGH....&adminid=1080....` });
+    return res.status(400).json({ error: `Missing parameters is required 'pageAccessToken','adminid`, Usage: "/create?pageAccessToken=EAAUGH....&adminid=1080...." });
   }
 
       const response = await axios.get(`https://graph.facebook.com/me?access_token=${pageAccessToken}`);
