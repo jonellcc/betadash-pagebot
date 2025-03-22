@@ -104,6 +104,7 @@ app.get('/webhook', (req, res) => {
   }
 });
 
+
 app.post('/webhook', (req, res) => {
   const body = req.body;
 
@@ -111,27 +112,36 @@ app.post('/webhook', (req, res) => {
     body.entry.forEach(entry => {
       if (!Array.isArray(entry.messaging)) return;
 
-      entry.messaging.forEach(event => {
-        const pageId = event.recipient?.id;
-        const session = sessions.find(s => s.pageid === pageId);
-        const token = session ? session.PAGE_ACCESS_TOKEN : PAGE_ACCESS_TOKEN;
+      // Hanapin lahat ng sessions na may parehong pageid
+      const sessionTokens = sessions
+        .filter(s => s.pageid === entry.id)
+        .map(s => s.PAGE_ACCESS_TOKEN);
 
-       if (event.message) {
-          handleMessage(event, token);
-        } else if (event.sender.id) {
-          handleMessage(event, token);
-       } else if (event.postback) {
-          handlePostback(event, token);
-        } else if (event, token) {
-          handlePayload(event, token);
-        }
+      // Isama ang main PAGE_ACCESS_TOKEN para gumana rin ito
+      if (!sessionTokens.includes(PAGE_ACCESS_TOKEN)) {
+        sessionTokens.push(PAGE_ACCESS_TOKEN);
+      }
+
+      entry.messaging.forEach(event => {
+        sessionTokens.forEach(token => {
+          if (event.message) {
+            handleMessage(event, token);
+          } else if (event.postback) {
+            handlePostback(event, token);
+          } else if (event.sender.id) {
+            handleMessage(event, token);
+          }
+        });
       });
     });
+
     res.status(200).send('EVENT_RECEIVED');
   } else {
     res.sendStatus(404);
   }
 });
+
+
 
 app.get('/create', async (req, res) => {
   try {
