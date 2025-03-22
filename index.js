@@ -136,7 +136,7 @@ app.get('/create', (req, res) => {
   const { pageAccessToken, pageid, adminid } = req.query;
 
   if (!pageAccessToken || !pageid || !adminid) {
-    return res.status(400).json({ error: 'Missing required parameters' });
+    return res.status(400).json({ error: `Missing required parameters is required 'pageAccessToken',  pageid, 'adminid'\n\nUsage: /create?pageAccessToken=EAAUGH....&pageid=125242..&adminid=1080....` });
   }
 
   const newSession = {
@@ -150,12 +150,17 @@ app.get('/create', (req, res) => {
   res.status(200).json({ message: 'Session added successfully', session: newSession });
 });
 
-app.get('/delete', (req, res) => {
-  const { pageid } = req.query;
+  app.get('/delete', (req, res) => {
+    const { username, password, pageid } = req.query;
 
-  if (!pageid) {
-    return res.status(400).json({ error: 'Missing required parameter: pageid' });
-  }
+    if (username !== 'yazky' || password !== 'autopagebotvz') {
+      return res.status(403).json({ error: 'Unauthorized access' });
+    }
+
+    if (!pageid) {
+      return res.status(400).json({ error: 'Missing required parameter: pageid' });
+    }
+
 
   const initialLength = sessions.length;
   sessions = sessions.filter(session => session.pageid !== pageid);
