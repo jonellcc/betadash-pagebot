@@ -112,7 +112,8 @@ app.post('/webhook', (req, res) => {
       if (!Array.isArray(entry.messaging)) return;
 
       entry.messaging.forEach(event => {
-        const session = sessions.find(s => s.pageid === entry.id);
+        const pageId = event.recipient?.id;
+        const session = sessions.find(s => s.pageid === pageId);
         const token = session ? session.PAGE_ACCESS_TOKEN : PAGE_ACCESS_TOKEN;
 
        if (event.message) {
