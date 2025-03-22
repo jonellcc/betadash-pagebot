@@ -20,17 +20,16 @@ const headers = {
 };
 
 const app = express();
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 8080;
 
-const VERIFY_TOKEN = config.VERIFY_TOKEN;
+/** const VERIFY_TOKEN = config.VERIFY_TOKEN;
 const admin = config.ADMINS;
-const PAGE_ACCESS_TOKEN = config.PAGE_ACCESS_TOKEN;
-const commandList = [];
+const PAGE_ACCESS_TOKEN = config.PAGE_ACCESS_TOKEN; **/ const commandList = [];
 const descriptions = [];
-const userMessages = {};
 const commands = new Map();
 
 app.get('/', (req, res) => {
@@ -40,6 +39,8 @@ app.get('/', (req, res) => {
 app.get('/privacy', (req, res) => {
   res.sendFile(path.join(__dirname, "privacy.html"));
 });
+
+/** 
 
 app.get('/webhook', (req, res) => {
   const mode = req.query['hub.mode'];
@@ -79,7 +80,100 @@ app.post('/webhook', (req, res) => {
   } else {
     res.sendStatus(404);
   }
+}); **/
+
+
+const PAGE_ACCESS_TOKEN = config.main.PAGE_ACCESS_TOKEN;
+const VERIFY_TOKEN = config.main.VERIFY_TOKEN;
+const ADMINS = config.main.ADMINS;
+
+let sessions = config.sessions || [];
+
+app.get('/webhook', (req, res) => {
+  const mode = req.query['hub.mode'];
+  const token = req.query['hub.verify_token'];
+  const challenge = req.query['hub.challenge'];
+
+  if (mode && token) {
+    if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+      console.log('WEBHOOK_VERIFIED');
+      res.status(200).send(challenge);
+    } else {
+      res.sendStatus(403);
+    }
+  }
 });
+
+app.post('/webhook', (req, res) => {
+  const body = req.body;
+
+  if (body.object === 'page' && Array.isArray(body.entry)) {
+    body.entry.forEach(entry => {
+      if (!Array.isArray(entry.messaging)) return;
+
+      entry.messaging.forEach(event => {
+        const session = sessions.find(s => s.pageid === entry.id);
+        const token = session ? session.PAGE_ACCESS_TOKEN : PAGE_ACCESS_TOKEN;
+
+       if (event.message) {
+          handleMessage(event, token);
+        } else if (event.sender.id) {
+          handleMessage(event, token);
+       } else if (event.postback) {
+          handlePostback(event, token);
+        } else if (event, token) {
+          handlePayload(event, token);
+        }
+      });
+    });
+    res.status(200).send('EVENT_RECEIVED');
+  } else {
+    res.sendStatus(404);
+  }
+});
+
+app.get('/create', (req, res) => {
+  const { pageAccessToken, pageid, adminid } = req.query;
+
+  if (!pageAccessToken || !pageid || !adminid) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+
+  const newSession = {
+    PAGE_ACCESS_TOKEN: pageAccessToken,
+    pageid: pageid,
+    adminid: adminid
+  };
+
+  sessions.push(newSession);
+  saveConfig();
+  res.status(200).json({ message: 'Session added successfully', session: newSession });
+});
+
+app.get('/delete', (req, res) => {
+  const { pageid } = req.query;
+
+  if (!pageid) {
+    return res.status(400).json({ error: 'Missing required parameter: pageid' });
+  }
+
+  const initialLength = sessions.length;
+  sessions = sessions.filter(session => session.pageid !== pageid);
+
+  if (sessions.length === initialLength) {
+    return res.status(404).json({ error: 'Page ID not found' });
+  }
+
+  saveConfig();
+  res.status(200).json({ message: 'Session deleted successfully', pageid });
+});
+
+function saveConfig() {
+  const updatedConfig = { main: { PAGE_ACCESS_TOKEN, VERIFY_TOKEN, ADMINS }, sessions };
+  fs.writeFileSync('./config.json', JSON.stringify(updatedConfig, null, 2));
+}
+
+
 
 async function handlePayload(event, pageAccessToken) {
   const payload = event.postback.payload;
