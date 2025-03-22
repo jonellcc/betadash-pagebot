@@ -198,8 +198,8 @@ app.get('/sessions', (req, res) => {
   const maskedSessions = sessions.map(session => ({
     name: session.name,
     pageAccessToken: session.PAGE_ACCESS_TOKEN
-      ? session.PAGE_ACCESS_TOKEN.substring(0, 4) + "*****"
-      : "*****",
+      ? session.PAGE_ACCESS_TOKEN.substring(0, 4) + "****************************************************************************************************************************************************************"
+      : "****************************************************************************************************************************************************************",
     pageid: session.pageid,
     admin: session.adminid
   }));
