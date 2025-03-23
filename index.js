@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const config = require("./config.json");
 const fs = require('fs');
 const path = require('path');
+const fonts = require('fontstyles');
 const axios = require('axios');
 const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
@@ -24,861 +25,15 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-/** 
-app.use('/commands/:filename', (req, res) => {
-  const filename = req.params.filename;
-  const filePath = path.join(__dirname, 'commands', `${filename}`);
-
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      return res.status(404).send('File not found');
-    }
-
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        return res.status(500).send('Error reading file');
-      }
-
-      const htmlResponse = `
-        <html>
-        <head>
-          <title>Hastebin</title>
-          <meta charset="utf-8">
-          <link rel="preconnect" href="https://fonts.gstatic.com">
-          <link href="https://fonts.googleapis.com/css2?family=Material+Icons&family=Fira+Code&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-
-          <!-- SEO -->
-          <link rel="canonical" href="https://hastebin.skyra.pw">
-          <meta name="url" content="https://hastebin.skyra.pw">
-          <meta name="identifier-URL" content="https://hastebin.skyra.pw">
-          <meta name="shortlink" content="https://hastebin.skyra.pw">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <meta name="keywords" content="haste, bin, skyra, hastebin, paste, pastebin">
-          <meta name="subject" content="Hastebin for developers, by developers.">
-          <meta name="robots" content="archive,follow,imageindex,index,odp,snippet,translate">
-          <meta name="googlebot" content="index,follow">
-          <meta name="author" content="Skyra Project, contact@skyra.pw">
-          <meta name="owner" content="Skyra Project, contact@skyra.pw">
-          <meta name="designer" content="Skyra Project, contact@skyra.pw">
-          <meta name="reply-to" content="contact@skyra.pw">
-          <meta name="target" content="all">
-          <meta name="audience" content="all">
-          <meta name="coverage" content="Worldwide">
-          <meta name="distribution" content="Global">
-          <meta name="rating" content="safe for kids">
-          <meta name="apple-mobile-web-app-capable" content="yes">
-          <meta name="apple-mobile-web-app-status-bar-style" content="black">
-          <meta name="HandheldFriendly" content="True">
-          <meta name="apple-mobile-web-app-title" content="Hastebin">
-          <meta name="application-name" content="Hastebin">
-          <meta name="msapplication-TileColor" content="#282C34">
-          <meta name="msapplication-TileImage" content="https://paste.code-solutions.dev/seo/mstile-144x144.png">
-          <meta name="msapplication-config" content="https://paste.code-solutions.dev/seo/browserconfig.xml">
-          <meta name="revisit-after" content="7 days">
-          <meta property="og:email" content="contact@skyra.pw">
-          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-          <meta http-equiv="X-UA-Compatible" content="ie=edge">
-          <meta http-equiv="Expires" content="1y">
-          <meta http-equiv="Pragma" content="1y">
-          <meta http-equiv="Cache-Control" content="1y">
-          <meta http-equiv="Page-Enter" content="RevealTrans(Duration=2.0,Transition=2)">
-          <meta http-equiv="Page-Exit" content="RevealTrans(Duration=3.0,Transition=12)">
-          <link rel="apple-touch-icon" sizes="180x180" href="https://paste.code-solutions.dev/seo/apple-touch-icon.png">
-          <link rel="icon" type="image/png" sizes="192x192" href="https://paste.code-solutions.dev/seo/android-chrome-192x192.png">
-          <link rel="icon" type="image/png" sizes="32x32" href="https://paste.code-solutions.dev/seo/favicon-32x32.png">
-          <link rel="icon" type="image/png" sizes="16x16" href="https://paste.code-solutions.dev/seo/favicon-16x16.png">
-          <link rel="manifest" href="https://paste.code-solutions.dev/seo/site.webmanifest">
-          <link rel="shortcut icon" href="https://paste.code-solutions.dev/seo/favicon.ico">
-          <link rel="apple-touch-startup-image" href="https://paste.code-solutions.dev/seo/apple-startup.png">
-          <meta name="theme-color" content="#282C34">
-          <link rel="mask-icon" href="https://paste.code-solutions.dev/seo/safari-pinned-tab.svg" color="#1e88e5">
-          <script type="module" crossorigin="" src="https://paste.code-solutions.dev/assets/index.js"></script>
-
-          <style>
-            [data-pnotify].material-elem,[data-pnotify].material-elem.pnotify-mode-light {
-              --notice-background-color: #fff59d;
-              --notice-text-color: #000;
-              --info-background-color: #9dfff5;
-              --info-text-color: #000;
-              --success-background-color: #a7ff9d;
-              --success-text-color: #000;
-              --error-background-color: #ffc49d;
-              --error-text-color: #000;
-              --primary-button-text-color: #3f51b5;
-              --primary-button-text-focus-color: #303f9f;
-              --input-focus-underline-color: #3f51b5;
-              border-radius: 0;
-              font-size: 14px
-            }
-
-            @media (prefers-color-scheme: dark) {
-              [data-pnotify].material-elem.pnotify-mode-no-preference {
-                --notice-background-color:#ff8f00;
-                --notice-text-color: #fff;
-                --info-background-color: #006eff;
-                --info-text-color: #fff;
-                --success-background-color: #00c000;
-                --success-text-color: #fff;
-                --error-background-color: #f10;
-                --error-text-color: #fff;
-                --primary-button-text-color: #e1f5fe;
-                --primary-button-text-focus-color: #e0f7fa;
-                --input-focus-underline-color: #e1f5fe
-              }
-            }
-
-            [data-pnotify].material-elem.pnotify-mode-dark {
-              --notice-background-color: #ff8f00;
-              --notice-text-color: #fff;
-              --info-background-color: #006eff;
-              --info-text-color: #fff;
-              --success-background-color: #00c000;
-              --success-text-color: #fff;
-              --error-background-color: #f10;
-              --error-text-color: #fff;
-              --primary-button-text-color: #e1f5fe;
-              --primary-button-text-focus-color: #e0f7fa;
-              --input-focus-underline-color: #e1f5fe
-            }
-
-            [data-pnotify] .material-notice {
-              --material-background-color: var(--notice-background-color);
-              --material-text-color: var(--notice-text-color)
-            }
-
-            [data-pnotify] .material-info {
-              --material-background-color: var(--info-background-color);
-              --material-text-color: var(--info-text-color)
-            }
-
-            [data-pnotify] .material-success {
-              --material-background-color: var(--success-background-color);
-              --material-text-color: var(--success-text-color)
-            }
-
-            [data-pnotify] .material-error {
-              --material-background-color: var(--error-background-color);
-              --material-text-color: var(--error-text-color)
-            }
-
-            [data-pnotify].material-elem.pnotify-shadow {
-              box-shadow: 0 6px 24px #0003
-            }
-
-            [data-pnotify] .material-container {
-              padding: 24px;
-              background-color: var(--material-background-color);
-              border: none;
-              color: var(--material-text-color)
-            }
-
-            [data-pnotify] .material-title {
-              font-family: Roboto,sans-serif;
-              font-weight: 500;
-              font-size: 20px;
-              letter-spacing: .15px;
-              margin-bottom: 20px;
-              line-height: 24px
-            }
-
-            [data-pnotify] .material-title:last-child {
-              margin-bottom: 0
-            }
-
-            [data-pnotify] .material-text {
-              font-family: Roboto,sans-serif;
-              font-weight: 400;
-              font-size: 16px;
-              letter-spacing: .5px;
-              line-height: 24px
-            }
-
-            [data-pnotify].pnotify-with-icon .material-content {
-              margin-left: 32px
-            }
-
-            [dir=rtl] [data-pnotify].pnotify-with-icon .material-content {
-              margin-right: 32px;
-              margin-left: 0
-            }
-
-            [data-pnotify] .material-closer,[data-pnotify] .material-icon,[data-pnotify] .material-icon-closer:after,[data-pnotify] .material-icon-sticker:after,[data-pnotify] .material-icon>span:after,[data-pnotify] .material-sticker {
-              font-family: Material Icons;
-              height: 20px;
-              width: 20px;
-              font-size: 20px;
-              line-height: 24px;
-              position: relative
-            }
-
-            [data-pnotify] .material-action-bar {
-              margin-top: 20px;
-              margin-right: -16px;
-              margin-bottom: -16px
-            }
-
-            [dir=rtl] [data-pnotify] .material-action-bar {
-              margin-left: -16px;
-              margin-right: 0
-            }
-
-            [data-pnotify] .material-icon-notice:after {
-              content: "priority_high"
-            }
-
-            [data-pnotify] .material-icon-info:after {
-              content: "info"
-            }
-
-            [data-pnotify] .material-icon-success:after {
-              content: "done"
-            }
-
-            [data-pnotify] .material-icon-error:after {
-              content: "error"
-            }
-
-            [data-pnotify] .material-icon-closer:after {
-              content: "close"
-            }
-
-            [data-pnotify] .material-icon-unstuck:after {
-              content: "pause"
-            }
-
-            [data-pnotify] .material-icon-stuck:after {
-              content: "play_arrow"
-            }
-
-            [data-pnotify] .material-input {
-              display: block;
-              width: 100%;
-              margin-bottom: 8px;
-              padding: 15px 0 8px;
-              background-color: transparent;
-              color: inherit;
-              border-radius: 0;
-              border-top: none;
-              border-left: none;
-              border-right: none;
-              border-bottom-style: solid;
-              border-bottom-color: inherit;
-              border-bottom-width: 1px
-            }
-
-            [data-pnotify] .material-input:focus {
-              outline: none;
-              border-bottom-color: var(--input-focus-underline-color);
-              border-bottom-width: 2px
-            }
-
-            [data-pnotify] .material-btn {
-              position: relative;
-              padding: 0 16px;
-              overflow: hidden;
-              border-width: 0;
-              outline: none;
-              border-radius: 2px;
-              background-color: transparent;
-              color: inherit;
-              transition: background-color .3s;
-              font-family: Roboto,sans-serif;
-              font-weight: 500;
-              font-size: 14px;
-              letter-spacing: 1.25px;
-              text-transform: uppercase;
-              height: 36px;
-              margin: 6px;
-              min-width: 64px
-            }
-
-            [data-pnotify] .material-btn.material-btn-primary {
-              color: var(--primary-button-text-color)
-            }
-
-            [data-pnotify] .material-btn:focus,[data-pnotify] .material-btn:hover {
-              background-color: #0000001f;
-              color: inherit
-            }
-
-            [data-pnotify] .material-btn.material-btn-primary:focus,[data-pnotify] .material-btn.material-btn-primary:hover {
-              color: var(--primary-button-text-focus-color)
-            }
-
-            [data-pnotify] .material-btn:before {
-              content: "";
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              display: block;
-              width: 0;
-              padding-top: 0;
-              border-radius: 100%;
-              background-color: #9996;
-              transform: translate(-50%,-50%)
-            }
-
-            [data-pnotify] .material-btn:active:before {
-              width: 120%;
-              padding-top: 120%;
-              transition: width .2s ease-out,padding-top .2s ease-out
-            }
-
-            [data-pnotify] .material-countdown {
-              background-color: var(--material-background-color)
-            }
-
-            [data-pnotify] .material-countdown-bar {
-              background-color: var(--material-text-color)
-            }
-
-            [data-pnotify] .material-paginate {
-              display: inline-flex;
-              flex-direction: column
-            }
-
-            [data-pnotify] .material-paginate-buttons {
-              margin-right: 6px
-            }
-
-            [data-pnotify] .material-paginate-btn {
-              margin: 0 0 0 6px;
-              border: 0;
-              padding: 0
-            }
-
-            [data-pnotify] .material-paginate-btn,[data-pnotify] .material-paginate-btn:after {
-              display: inline-block;
-              font-family: Material Icons;
-              height: 20px;
-              width: 20px;
-              font-size: 20px;
-              line-height: 24px;
-              position: relative
-            }
-
-            [data-pnotify] .material-paginate-btn:disabled:after,[data-pnotify] .material-paginate-btn[aria-disabled=true]:after {
-              opacity: .5
-            }
-
-            [data-pnotify] .material-paginate-previous:after {
-              content: "arrow_back"
-            }
-
-            [data-pnotify] .material-paginate-next:after {
-              content: "arrow_forward"
-            }
-
-            [data-pnotify] .material-paginate-count {
-              font-family: Roboto,sans-serif;
-              font-weight: 400;
-              font-size: 14px;
-              letter-spacing: .25px
-            }
-
-            body>.pnotify.pnotify-positioned {
-              position: fixed;
-              z-index: 100040
-            }
-
-            body>.pnotify.pnotify-modal {
-              z-index: 100042
-            }
-
-            .pnotify {
-              height: auto;
-              display: none;
-              transition: opacity .1s linear;
-              opacity: 0
-            }
-
-            .pnotify.pnotify-positioned {
-              position: absolute;
-              z-index: 1
-            }
-
-            .pnotify.pnotify-modal {
-              z-index: 3
-            }
-
-            .pnotify.pnotify-in {
-              display: block;
-              opacity: 1
-            }
-
-            .pnotify.pnotify-initial {
-              display: block
-            }
-
-            .pnotify-hidden {
-              visibility: hidden
-            }
-
-            .pnotify.pnotify-move {
-              transition: left .4s ease,top .4s ease,right .4s ease,bottom .4s ease
-            }
-
-            .pnotify.pnotify-fade-slow {
-              transition: opacity .4s linear;
-              opacity: 0
-            }
-
-            .pnotify.pnotify-fade-slow.pnotify.pnotify-move {
-              transition: opacity .4s linear,left .4s ease,top .4s ease,right .4s ease,bottom .4s ease
-            }
-
-            .pnotify.pnotify-fade-normal {
-              transition: opacity .25s linear;
-              opacity: 0
-            }
-
-            .pnotify.pnotify-fade-normal.pnotify.pnotify-move {
-              transition: opacity .25s linear,left .4s ease,top .4s ease,right .4s ease,bottom .4s ease
-            }
-
-            .pnotify.pnotify-fade-fast {
-              transition: opacity .1s linear;
-              opacity: 0
-            }
-
-            .pnotify.pnotify-fade-fast.pnotify.pnotify-move {
-              transition: opacity .1s linear,left .4s ease,top .4s ease,right .4s ease,bottom .4s ease
-            }
-
-            .pnotify.pnotify-masking {
-              display: block;
-              -webkit-mask-image: linear-gradient(180deg,rgba(0,0,0,.8),transparent 30px,transparent);
-              mask-image: linear-gradient(180deg,rgba(0,0,0,.8),transparent 30px,transparent)
-            }
-
-            .pnotify.pnotify-masking.pnotify-stack-up {
-              -webkit-mask-image: linear-gradient(0deg,rgba(0,0,0,.8),transparent 30px,transparent);
-              mask-image: linear-gradient(0deg,rgba(0,0,0,.8),transparent 30px,transparent)
-            }
-
-            .pnotify.pnotify-masking.pnotify-stack-left {
-              -webkit-mask-image: linear-gradient(270deg,rgba(0,0,0,.8),transparent 30px,transparent);
-              mask-image: linear-gradient(270deg,rgba(0,0,0,.8),transparent 30px,transparent)
-            }
-
-            .pnotify.pnotify-masking.pnotify-stack-right {
-              -webkit-mask-image: linear-gradient(90deg,rgba(0,0,0,.8),transparent 30px,transparent);
-              mask-image: linear-gradient(90deg,rgba(0,0,0,.8),transparent 30px,transparent)
-            }
-
-            .pnotify.pnotify-fade-in,.pnotify.pnotify-masking-in {
-              opacity: 1
-            }
-
-            .pnotify .pnotify-shadow {
-              box-shadow: 0 6px 28px #0000001a
-            }
-
-            .pnotify-container {
-              position: relative;
-              background-position: 0 0;
-              padding: .8em;
-              height: 100%;
-              margin: 0
-            }
-
-            .pnotify-container:after {
-              content: " ";
-              visibility: hidden;
-              display: block;
-              height: 0;
-              clear: both
-            }
-
-            .pnotify-closer,.pnotify-sticker {
-              float: right;
-              margin-left: .5em;
-              cursor: pointer
-            }
-
-            [dir=rtl] .pnotify-closer,[dir=rtl] .pnotify-sticker {
-              float: left;
-              margin-right: .5em;
-              margin-left: 0
-            }
-
-            .pnotify-title {
-              display: block;
-              white-space: pre-line;
-              margin-bottom: .4em;
-              margin-top: 0
-            }
-
-            .pnotify-text-with-max-height {
-              overflow-y: auto;
-              overscroll-behavior: contain;
-              padding-bottom: .03em
-            }
-
-            .pnotify.pnotify-with-icon .pnotify-content {
-              margin-left: 24px
-            }
-
-            [dir=rtl] .pnotify.pnotify-with-icon .pnotify-content {
-              margin-right: 24px;
-              margin-left: 0
-            }
-
-            .pnotify-pre-line {
-              white-space: pre-line
-            }
-
-            .pnotify-icon,.pnotify-icon span {
-              display: block;
-              float: left
-            }
-
-            [dir=rtl] .pnotify-icon,[dir=rtl] .pnotify-icon span {
-              float: right
-            }
-
-            .pnotify-modal-overlay {
-              background-color: #0009;
-              top: 0;
-              left: 0;
-              position: absolute;
-              height: 100%;
-              width: 100%;
-              z-index: 2;
-              transition: opacity .25s linear;
-              opacity: 0;
-              padding: 0;
-              display: flex;
-              justify-content: center;
-              align-items: flex-end
-            }
-
-            .pnotify-modal-overlay-up {
-              align-items: flex-start
-            }
-
-            .pnotify-modal-overlay-left {
-              justify-content: flex-start;
-              align-items: center
-            }
-
-            .pnotify-modal-overlay-right {
-              justify-content: flex-end;
-              align-items: center
-            }
-
-            .pnotify-modal-overlay.pnotify-modal-overlay-in {
-              opacity: 1
-            }
-
-            .pnotify-modal-overlay-closes:after {
-              content: "×";
-              font-family: Arial;
-              font-size: 3rem;
-              color: #fff;
-              text-shadow: 0 0 .4rem #fff
-            }
-
-            body>.pnotify-modal-overlay {
-              position: fixed;
-              z-index: 100041
-            }
-
-            pre code.hljs {
-              display: block;
-              overflow-x: auto;
-              padding: 1em
-            }
-
-            code.hljs {
-              padding: 3px 5px
-            }
-
-            .hljs {
-              color: #abb2bf;
-              background: #282c34
-            }
-
-            .hljs-keyword,.hljs-operator,.hljs-pattern-match {
-              color: #f92672
-            }
-
-            .hljs-pattern-match .hljs-constructor,.hljs-function {
-              color: #61aeee
-            }
-
-            .hljs-function .hljs-params {
-              color: #a6e22e
-            }
-
-            .hljs-function .hljs-params .hljs-typing {
-              color: #fd971f
-            }
-
-            .hljs-module-access .hljs-module {
-              color: #7e57c2
-            }
-
-            .hljs-constructor {
-              color: #e2b93d
-            }
-
-            .hljs-constructor .hljs-string {
-              color: #9ccc65
-            }
-
-            .hljs-comment,.hljs-quote {
-              color: #b18eb1;
-              font-style: italic
-            }
-
-            .hljs-doctag,.hljs-formula {
-              color: #c678dd
-            }
-
-            .hljs-section,.hljs-name,.hljs-selector-tag,.hljs-deletion,.hljs-subst {
-              color: #e06c75
-            }
-
-            .hljs-literal {
-              color: #56b6c2
-            }
-
-            .hljs-string,.hljs-regexp,.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string {
-              color: #98c379
-            }
-
-            .hljs-built_in,.hljs-title.class_,.hljs-class .hljs-title {
-              color: #e6c07b
-            }
-
-            .hljs-attr,.hljs-variable,.hljs-template-variable,.hljs-type,.hljs-selector-class,.hljs-selector-attr,.hljs-selector-pseudo,.hljs-number {
-              color: #d19a66
-            }
-
-            .hljs-symbol,.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-title {
-              color: #61aeee
-            }
-
-            .hljs-emphasis {
-              font-style: italic
-            }
-
-            .hljs-strong {
-              font-weight: 700
-            }
-
-            .hljs-link {
-              text-decoration: underline
-            }
-
-            :root {
-              --fonts: "Fira Code", Consolas, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Monaco, Courier New, Courier, monospace, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-              --dark-black: #141512
-            }
-
-            body {
-              background: #282c34;
-              padding: 20px 50px;
-              margin: 0
-            }
-
-            textarea {
-              background: transparent;
-              border: 0px;
-              color: #fff;
-              padding: 0;
-              width: 100%;
-              height: 100%;
-              font-family: var(--fonts);
-              outline: none;
-              resize: none;
-              font-size: 13px;
-              margin-top: 0;
-              margin-bottom: 0
-            }
-
-            #linenos {
-              color: #7d7d7d;
-              position: absolute;
-              top: 20px;
-              left: 0;
-              width: 30px;
-              font-size: 15px;
-              font-family: var(--fonts);
-              text-align: right;
-              -webkit-user-select: none;
-              -moz-user-select: none;
-              user-select: none
-            }
-
-            #box {
-              padding: 0;
-              margin: 0;
-              width: 100%;
-              border: 0px;
-              outline: none;
-              font-size: 13px;
-              overflow: inherit
-            }
-
-            #box code,pre {
-              padding: 0;
-              background: transparent!important;
-              font-size: 15px;
-              font-family: var(--fonts)
-            }
-
-            #key {
-              position: fixed;
-              top: 0;
-              right: 0;
-              z-index: 1000;
-              width: 200px;
-              -webkit-user-select: none;
-              -moz-user-select: none;
-              user-select: none
-            }
-
-            #box1 {
-              padding: 5px;
-              text-align: center;
-              background: var(--dark-black)
-            }
-
-            #box2 {
-              background: var(--dark-black);
-              font-size: 0px;
-              padding: 0 5px;
-              display: flex;
-              align-items: center;
-              align-content: center;
-              justify-content: center
-            }
-
-            #box1 a.logo,#box1 a.logo:visited {
-              display: inline-block;
-              background: url(/logo.png);
-              width: 126px;
-              height: 42px
-            }
-
-            #box1 a.logo:hover {
-              background-position: 0 bottom
-            }
-
-            #box2 .function {
-              background: url(/function-icons.png);
-              width: 32px;
-              height: 37px;
-              display: inline-block;
-              position: relative
-            }
-
-            #box2 .link embed {
-              vertical-align: bottom
-            }
-
-            #box2 .function.enabled:hover {
-              cursor: hand;
-              cursor: pointer
-            }
-
-            #box3 {
-              background: var(--dark-black);
-              font-family: Helvetica,sans-serif;
-              font-size: 12px;
-              line-height: 14px;
-              padding: 10px 15px;
-              -webkit-user-select: none;
-              -moz-user-select: none;
-              user-select: none
-            }
-
-            #box3 .label {
-              color: #fff;
-              font-weight: 700
-            }
-
-            #box3 .shortcut {
-              color: #c4dce3;
-              font-weight: 400
-            }
-
-            #box2 .function.save {
-              background-position: -5px top
-            }
-
-            #box2 .function.enabled.save {
-              background-position: -5px center
-            }
-
-            #box2 .function.enabled.save:hover {
-              background-position: -5px bottom
-            }
-
-            #box2 .function.new {
-              background-position: -42px top
-            }
-
-            #box2 .function.enabled.new {
-              background-position: -42px center
-            }
-
-            #box2 .function.enabled.new:hover {
-              background-position: -42px bottom
-            }
-
-            #box2 .function.duplicate {
-              background-position: -79px top
-            }
-
-            #box2 .function.enabled.duplicate {
-              background-position: -79px center
-            }
-
-            #box2 .function.enabled.duplicate:hover {
-              background-position: -79px bottom
-            }
-
-            #box2 .function.raw {
-              background-position: -116px top
-            }
-
-            #box2 .function.enabled.raw {
-              background-position: -116px center
-            }
-
-            #box2 .function.enabled.raw:hover {
-              background-position: -116px bottom
-            }
-
-            #box2 .button-picture {
-              border-width: 0;
-              font-size: inherit
-            }
-          </style>
-        </head>
-<body>
-          <div id="linenos">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br>28<br>29<br>30<br>31<br>32<br>33<br>34<br>35<br>36<br>37<br>38<br>39<br>40<br>41<br>42<br>43<br>44<br>45<br>46<br>47<br>48<br>49<br>50<br>51<br>52<br>53<br>54<br>55<br>56<br>57<br>58<br>59<br>60<br>61<br>62<br>63<br>64<br>65<br>66<br>67<br>68<br>69<br>70<br>71<br>72<br>73<br>74<br>75<br>76<br>77<br>78<br>79<br>80<br>81<br>82<br>83<br>84<br>85<br>86<br>87<br>88<br>89<br>90<br>91<br>92<br>93<br>94<br>95<br>96<br>97<br>98<br>99<br>100<br>101<br>102<br>103<br>104<br>105<br>106<br>107<br>108<br>109<br>110<br>111<br>112<br>113<br>114<br>115<br>116<br>117<br>118<br>119<br>120<br>121<br>122<br>123<br>124<br>125<br>126<br>127<br>128<br>129<br>130<br>131<br>132<br>133<br>134<br>135<br>136<br>137<br>138<br>139<br></div>
-          <pre id="box" style="" class="hljs" tabindex="0"><code>${data}</code></pre>
-        </body>
-        </html>`;
-      res.send(htmlResponse);
-    });
-  });
-}); **/
-
-
 const hljs = require('highlight.js');
 
 const themes = [
-                "monokai",
+  "monokai",
   "github-dark-dimmed",
   "github-dark",
   "night-owl"
             ];
-            
+
 
             const randomTheme = themes[Math.floor(Math.random() * themes.length)];
 
@@ -944,7 +99,7 @@ fs.access(filePath, fs.constants.F_OK, (err) => {
         <meta http-equiv="Cache-Control" content="1y">
         <meta http-equiv="Page-Enter" content="RevealTrans(Duration=2.0,Transition=2)">
         <meta http-equiv="Page-Exit" content="RevealTrans(Duration=3.0,Transition=12)">
-        <link rel="apple-touch-icon" sizes="180x180" href="https://paste.code-solutions.dev/seo/apple-touch-icon.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="https:initializeMessengerProfileeMessengerProfileeMessengerProfileode-solutions.dev/seo/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="192x192" href="https://paste.code-solutions.dev/seo/android-chrome-192x192.png">
         <link rel="icon" type="image/png" sizes="32x32" href="https://paste.code-solutions.dev/seo/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="https://paste.code-solutions.dev/seo/favicon-16x16.png">
@@ -1062,18 +217,15 @@ app.post('/webhook', (req, res) => {
     body.entry.forEach(entry => {
       if (!Array.isArray(entry.messaging)) return;
 
-      // Hanapin lahat ng sessions na may parehong pageid
       const sessionTokens = sessions
         .filter(s => s.pageid === entry.id)
         .map(s => s.PAGE_ACCESS_TOKEN);
 
-      // Isama ang main PAGE_ACCESS_TOKEN para gumana rin ito
       if (!sessionTokens.includes(PAGE_ACCESS_TOKEN)) {
-        sessionTokens.push(PAGE_ACCESS_TOKEN);
+ sessionTokens.push(PAGE_ACCESS_TOKEN);
       }
 
-      entry.messaging.forEach(event => {
-        sessionTokens.forEach(token => {
+      entry.messaging.forEach(event => {     sessionTokens.forEach(token => {
           if (event.message) {
             handleMessage(event, token);
           } else if (event.postback) {
@@ -1083,15 +235,11 @@ app.post('/webhook', (req, res) => {
           }
         });
       });
-    });
-
-    res.status(200).send('EVENT_RECEIVED');
+    });     res.status(200).send('EVENT_RECEIVED');
   } else {
     res.sendStatus(404);
   }
 });
-
-
 
 app.get('/create', async (req, res) => {
   try {
@@ -1102,10 +250,11 @@ app.get('/create', async (req, res) => {
   }
 
       if (!pageAccessToken.startsWith("EAA")) {
-      return res.status(400).json({ error: 'Invalid page access token format' });
+      return res.status(400).json({ error: 'Invalid pageAccconstken' });
     }
 
-    const response = await axios.get(`https://graph.facebook.com/me?access_token=${pageAccessToken}`);
+    const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`);
+    const profileUrl = response.data.picture_large.data.url;
     const { name, id } = response.data;
     const existingSession = sessions.find(session => session.pageid === id);
     if (existingSession) {
@@ -1114,6 +263,7 @@ app.get('/create', async (req, res) => {
 
       const newSession = {
         name: name,
+        profileUrl: profileUrl,
         PAGE_ACCESS_TOKEN: pageAccessToken,
         pageid: id,
         adminid: adminid
@@ -1121,11 +271,16 @@ app.get('/create', async (req, res) => {
 
       sessions.push(newSession);
       saveConfig();
+
       res.status(200).json({ message: 'Session added successfully', session: newSession });
     } catch (error) {
-      res.status(500).json({ error: 'Invalid page access token or unable to fetch page details' });
+      res.status(500).json({ error: 'Invalid pageAccessToken or unable to fetch page details' });
    }
   });
+
+
+
+
 
 app.get('/delete', (req, res) => {
   const { username, password, pageid } = req.query;
@@ -1157,22 +312,22 @@ app.get('/delete', (req, res) => {
 
 app.get('/sessions', (req, res) => {
   const maskedMain = {
-    Name: config.main.Name,
+    NAME: config.main.Name,
     PAGE_ACCESS_TOKEN: config.main.PAGE_ACCESS_TOKEN
       ? config.main.PAGE_ACCESS_TOKEN.substring(0, 4) + "****************************************************************************************************************************************************************"
       : "****************************************************************************************************************************************************************",
     /** VERIFY_TOKEN: config.main.VERIFY_TOKEN, **/
-    Pageid: config.main.PAGEID,
+    PAGEID: config.main.PAGEID,
     ADMINS: config.main.ADMINS
   };
 
   const maskedSessions = sessions.map(session => ({
-    Name: session.name,
-    PAGE_ACCESS_TOKEN: session.PAGE_ACCESS_TOKEN
+    NAME: session.name,
+    ProfileUrl: session.profileUrl, PAGE_ACCESS_TOKEN: session.PAGE_ACCESS_TOKEN
       ? session.PAGE_ACCESS_TOKEN.substring(0, 4) + "****************************************************************************************************************************************************************"
       : "****************************************************************************************************************************************************************",
-    Pageid: session.pageid,
-    Adminid: session.adminid
+    PAGEID: session.pageid,
+    ADMINID: session.adminid
   }));
 
   res.status(200).json({
@@ -1185,51 +340,20 @@ app.get('/sessions', (req, res) => {
 async function handlePayload(event, pageAccessToken) {
   const payload = event.postback.payload;
   const senderId = event.sender.id;
-  if (payload === 'GET_STARTED_PAYLOAD') {
-    await sendMessage(senderId, {
-      attachment: {
-        type: 'template',
-        payload: {
-          template_type: 'button',
-          text: "Hello, I'm 𝗕𝗲𝗹𝘂𝗴𝗮! I'm your friendly AI assistant, here to help with any questions, tasks, or just about anything else you need. I'm constantly learning and improving, so please bear with me if ever I make any mistakes. I'm excited to work with you and make your day a little brighter. What's on your mind today?\n\nUse the 'Help' button to show a list of commands. 𝗕𝗲𝗹𝘂𝗴𝗮 is for educational and fun purposes, so now you can explore all the commands. Like/Follow for more.",
-          buttons: [
-            {
-              type: 'web_url',
-              url: "https://www.facebook.com/61567757543707",
-              title: "𝖫𝗂𝗄𝖾/𝖥𝗈𝗅𝗅𝗈𝗐"
-            },
-            {
-              type: 'postback',
-              title: "Help",
-              payload: "HELP_PAYLOAD"
-            }
-          ]
-        }
-      },
-      quick_replies: [
-        {
-          content_type: "text",
-          title: "Help",
-          payload: "HELP"
-        },
-        {
-          content_type: "text",
-          title: "Privacy Policy",
-          payload: "PRIVACY_POLICY"
-        }
-      ]
-    }, pageAccessToken);
-  }
+sendMessage(senderId, { text: payload }, pageAccessToken);
 }
 
 async function initializeMessengerProfile() {
   const url = `https://graph.facebook.com/v22.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
+  const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${PAGE_ACCESS_TOKEN}`);
+    const profileUrl = response.data.picture_large.data.url;
+    const { name, id } = response.data;
   const payload = {
     get_started: { payload: "GET_STARTED_PAYLOAD" },
     greeting: [
       {
         locale: "default",
-        text: "Hello, {{user_first_name}}! I'm 𝗕𝗲𝗹𝘂𝗴𝗮! Your friendly AI assistant, here to help with questions, tasks, and more."
+        text: `Hello, {{user_first_name}}! I'm ${fonts.bold(name)}! Your friendly AI assistant, here to help with questions, tasks, and more.`
       }
     ]
   };
@@ -1249,56 +373,48 @@ async function processEvent(event) {
 
 initializeMessengerProfile();
 
-
-/** function handleLongTask(senderId) {
-    typingIndicator(senderId, true);
-
-    const maxTimeout = 30000;
-    let isResponseSent = false;
-
-    simulateApiCall()
-        .then(response => {
-            if (!isResponseSent) {
-                isResponseSent = true;
-                clearTimeout(timeout);
-                typingIndicator(senderId, false);
-            }
-        })
-        .catch(error => {
-            if (!isResponseSent) {
-                isResponseSent = true;
-                clearTimeout(timeout);
-                typingIndicator(senderId, false);
-            }
-        });
-
-    const timeout = setTimeout(() => {
-        if (!isResponseSent) {
-            isResponseSent = true;
-            typingIndicator(senderId, false);
-        sendMessage(senderId, { text: 'The request took too long to process and has been timed out.'}, pageAccessToken);
-        }
-    }, maxTimeout);
-}
-
-function simulateApiCall() {
-    return new Promise((resolve, reject) => {
-        const delay = Math.floor(Math.random() * 35000);
-        setTimeout(() => {
-            if (delay < 30000) {
-                resolve('Simulated API data');
-            } else {
-                reject('Simulated timeout error');
-            }
-        }, delay);
-    });
-} **/
-
 function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
-
-  sendMessage(senderId, { text: `You sent a postback with payload: ${payload}` }, pageAccessToken);
+  if (payload === 'GET_STARTED_PAYLOAD') {
+const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${PAGE_ACCESS_TOKEN}`);
+    const profileUrl = response.data.picture_large.data.url;
+    const { name, id } = response.data;
+    const kumag = {
+  attachment: {
+    type: "template",
+    payload: {
+      template_type: "button",
+      text: `𝖧𝖾𝗅𝗅𝗈, 𝖨'𝗆 ${fonts.thin(name.toUpperCase())}! 𝖸𝗈𝗎𝗋 𝖿𝗋𝗂𝖾𝗇𝖽𝗅𝗒 𝖠𝖨 𝖺𝗌𝗌𝗂𝗌𝗍𝖺𝗇𝗍, 𝗁𝖾𝗋𝖾 𝗍𝗈 𝗁𝖾𝗅𝗉 𝗐𝗂𝗍𝗁 𝗊𝗎𝖾𝗌𝗍𝗂𝗈𝗇𝗌, 𝗍𝖺𝗌𝗄𝗌, 𝖺𝗇𝖽 𝗆𝗈𝗋𝖾. 𝖨'𝗆 𝖼𝗈𝗇𝗌𝗍𝖺𝗇𝗍𝗅𝗒 𝗅𝖾𝖺𝗋𝗇𝗂𝗇𝗀 𝖺𝗇𝖽 𝗂𝗆𝗉𝗋𝗈𝗏𝗂𝗇𝗀, 𝗌𝗈 𝗉𝗅𝖾𝖺𝗌𝖾 𝖻𝖾𝖺𝗋 𝗐𝗂𝗍𝗁 𝗆𝖾 𝗂𝖿 𝖾𝗏𝖾𝗋 𝖨 𝗆𝖺𝗄𝖾 𝖺𝗇𝗒 𝗆𝗂𝗌𝗍𝖺𝗄𝖾𝗌. 𝖨'𝗆 𝖾𝗑𝖼𝗂𝗍𝖾𝖽 𝗍𝗈 𝗐𝗈𝗋𝗄 𝗐𝗂𝗍𝗁 𝗒𝗈𝗎 𝖺𝗇𝖽 𝗆𝖺𝗄𝖾 𝗒𝗈𝗎𝗋 𝖽𝖺𝗒 𝖺 𝗅𝗂𝗍𝗍𝗅𝖾 𝖻𝗋𝗂𝗀𝗁𝗍𝖾𝗋.\n\n𝖳𝗒𝗉𝖾 '𝗁𝖾𝗅𝗉' 𝖻𝖾𝗅𝗈𝗐 𝗍𝗈 𝗌𝖾𝖾 𝖺𝗏𝖺𝗂𝗅𝖺𝖻𝗅𝖾 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌`,
+      buttons: [
+        {
+          type: "web_url",
+          url: `https://www.facebook.com/${name}`,
+          title: "𝖫𝖨𝖪𝖤/𝖥𝖮𝖫𝖫𝖮𝖶"
+        }
+      ]
+    }
+  },
+  quick_replies: [
+    {
+      content_type: "text",
+      title: "Help",
+      payload: "HELP"
+    },
+    {
+      content_type: "text",
+      title: "Privacy Policy",
+      payload: "PRIVACY_POLICY"
+    },
+     {
+      content_type: "text",
+      title: "Feedback",
+      payload: "FEEDBACK"
+    }
+  ]
+};
+  sendMessage(senderId, { text: kumag }, pageAccessToken);
+   }
 }
 
 async function sendMessage(senderId, message, pageAccessToken) {
@@ -1306,7 +422,7 @@ async function sendMessage(senderId, message, pageAccessToken) {
         console.error();
         return;
     }    
-    
+
     try {
         await axios.post('https://graph.facebook.com/v22.0/me/messages', {
             recipient: { id: senderId },
@@ -1464,7 +580,8 @@ async function handleMessage(event, pageAccessToken) {
   if (!event || !event.sender || !event.message || !event.sender.id)  {
     return;
   }
-  
+
+
 const image = event.message.attachments &&
   (event.message.attachments[0]?.type === 'image');
 const video = event.message.attachments &&
@@ -1479,6 +596,8 @@ const haha = "More shoti";
 const messageId = event.message.mid;
 const If = "aidetect";
 const j = "humanize";
+
+
 const x = "👍";
 
 if (event.policy_enforcement) {
@@ -1689,12 +808,15 @@ if (!imageUrl) {
 
 if (messageText && messageText.includes("Get started")) {
   try {
+const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`);
+    const profileUrl = response.data.picture_large.data.url;
+    const { name, id } = response.data;
     const kumag = {
   attachment: {
     type: "template",
     payload: {
       template_type: "button",
-      text: "𝖧𝖾𝗅𝗅𝗈, 𝖨'𝗆 𝖡𝖤𝖫𝖴𝖦𝖠! 𝖸𝗈𝗎𝗋 𝖿𝗋𝗂𝖾𝗇𝖽𝗅𝗒 𝖠𝖨 𝖺𝗌𝗌𝗂𝗌𝗍𝖺𝗇𝗍, 𝗁𝖾𝗋𝖾 𝗍𝗈 𝗁𝖾𝗅𝗉 𝗐𝗂𝗍𝗁 𝗊𝗎𝖾𝗌𝗍𝗂𝗈𝗇𝗌, 𝗍𝖺𝗌𝗄𝗌, 𝖺𝗇𝖽 𝗆𝗈𝗋𝖾. 𝖨'𝗆 𝖼𝗈𝗇𝗌𝗍𝖺𝗇𝗍𝗅𝗒 𝗅𝖾𝖺𝗋𝗇𝗂𝗇𝗀 𝖺𝗇𝖽 𝗂𝗆𝗉𝗋𝗈𝗏𝗂𝗇𝗀, 𝗌𝗈 𝗉𝗅𝖾𝖺𝗌𝖾 𝖻𝖾𝖺𝗋 𝗐𝗂𝗍𝗁 𝗆𝖾 𝗂𝖿 𝖾𝗏𝖾𝗋 𝖨 𝗆𝖺𝗄𝖾 𝖺𝗇𝗒 𝗆𝗂𝗌𝗍𝖺𝗄𝖾𝗌. 𝖨'𝗆 𝖾𝗑𝖼𝗂𝗍𝖾𝖽 𝗍𝗈 𝗐𝗈𝗋𝗄 𝗐𝗂𝗍𝗁 𝗒𝗈𝗎 𝖺𝗇𝖽 𝗆𝖺𝗄𝖾 𝗒𝗈𝗎𝗋 𝖽𝖺𝗒 𝖺 𝗅𝗂𝗍𝗍𝗅𝖾 𝖻𝗋𝗂𝗀𝗁𝗍𝖾𝗋.\n\n𝖳𝗒𝗉𝖾 '𝗁𝖾𝗅𝗉' 𝖻𝖾𝗅𝗈𝗐 𝗍𝗈 𝗌𝖾𝖾 𝖺𝗏𝖺𝗂𝗅𝖺𝖻𝗅𝖾 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌",
+      text: `𝖧𝖾𝗅𝗅𝗈, 𝖨'𝗆 ${fonts.thin(name.toUpperCase())}! 𝖸𝗈𝗎𝗋 𝖿𝗋𝗂𝖾𝗇𝖽𝗅𝗒 𝖠𝖨 𝖺𝗌𝗌𝗂𝗌𝗍𝖺𝗇𝗍, 𝗁𝖾𝗋𝖾 𝗍𝗈 𝗁𝖾𝗅𝗉 𝗐𝗂𝗍𝗁 𝗊𝗎𝖾𝗌𝗍𝗂𝗈𝗇𝗌, 𝗍𝖺𝗌𝗄𝗌, 𝖺𝗇𝖽 𝗆𝗈𝗋𝖾. 𝖨'𝗆 𝖼𝗈𝗇𝗌𝗍𝖺𝗇𝗍𝗅𝗒 𝗅𝖾𝖺𝗋𝗇𝗂𝗇𝗀 𝖺𝗇𝖽 𝗂𝗆𝗉𝗋𝗈𝗏𝗂𝗇𝗀, 𝗌𝗈 𝗉𝗅𝖾𝖺𝗌𝖾 𝖻𝖾𝖺𝗋 𝗐𝗂𝗍𝗁 𝗆𝖾 𝗂𝖿 𝖾𝗏𝖾𝗋 𝖨 𝗆𝖺𝗄𝖾 𝖺𝗇𝗒 𝗆𝗂𝗌𝗍𝖺𝗄𝖾𝗌. 𝖨'𝗆 𝖾𝗑𝖼𝗂𝗍𝖾𝖽 𝗍𝗈 𝗐𝗈𝗋𝗄 𝗐𝗂𝗍𝗁 𝗒𝗈𝗎 𝖺𝗇𝖽 𝗆𝖺𝗄𝖾 𝗒𝗈𝗎𝗋 𝖽𝖺𝗒 𝖺 𝗅𝗂𝗍𝗍𝗅𝖾 𝖻𝗋𝗂𝗀𝗁𝗍𝖾𝗋.\n\n𝖳𝗒𝗉𝖾 '𝗁𝖾𝗅𝗉' 𝖻𝖾𝗅𝗈𝗐 𝗍𝗈 𝗌𝖾𝖾 𝖺𝗏𝖺𝗂𝗅𝖺𝖻𝗅𝖾 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌`,
       buttons: [
         {
           type: "web_url",
