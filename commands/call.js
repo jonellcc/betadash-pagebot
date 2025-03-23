@@ -15,11 +15,11 @@ module.exports = {
         elements: [
           {
             title: "Need further assistance?",
-            image_url: "https://i.ibb.co/KxVZyQ0j/757b0b2f-49e2-4db1-a070-e0e89031d75d.jpg",
+            image_url: "https://i.imgur.com/m8nDj6e.jpeg",
             subtitle: "Talk to owner",
             default_action: {
               type: "web_url",
-              url: "https://i.ibb.co/KxVZyQ0j/757b0b2f-49e2-4db1-a070-e0e89031d75d.jpg",
+              url: "https://i.imgur.com/m8nDj6e.jpeg",
               webview_height_ratio: "compact"
             },
             buttons: [
