@@ -1,17 +1,21 @@
+const axios = require("axios");
+
 module.exports = {
   name: 'feedback',
   description: 'Collects user feedback on Pagebotcommand usefullness',
   usage: 'feedback',
   author: 'cliff',
   async execute(senderId, args, pageAccessToken, sendMessage) {
-
+const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`);
+    const profileUrl = response.data.picture_large.data.url;
+    const { name, id } = response.data;
 sendMessage(senderId, {
   attachment: {
     type: "template",
     payload: {
       template_type: "customer_feedback",
-      title: "Rate your experience with Beluga cat",
-      subtitle: "Let us know how belugabot is performing by answering two questions", 
+      title: `Rate your experience with ${name}`,
+      subtitle: `Let us know how ${name}bot is performing by answering to all questions`, 
       button_title: "Rate Experience", 
       feedback_screens: [
         {
