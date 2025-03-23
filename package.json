@@ -17,6 +17,7 @@
     "cheerio": "^1.0.0",
     "crypto": "^1.0.1",
     "express": "^4.19.2",
+    "fontstyles": "^1.1.2",
     "fs": "^0.0.1-security",
     "highlight.js": "^11.11.1",
     "os": "^0.1.2",
