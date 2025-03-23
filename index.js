@@ -373,7 +373,7 @@ async function processEvent(event) {
 
 initializeMessengerProfile();
 
-function handlePostback(event, pageAccessToken) {
+async function handlePostback(event, pageAccessToken) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
   if (payload === 'GET_STARTED_PAYLOAD') {
