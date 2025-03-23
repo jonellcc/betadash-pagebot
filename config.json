@@ -1,14 +1,20 @@
 {
   "main": {
-    "Name": "Cliffbot",
     "PAGE_ACCESS_TOKEN": "EAAOGSnFGWtcBO57XkmHyYTcP4rD7AiXRoTu2SBJIJ3EBmqB7sOeRStVEZA1Jq80fjSVjAHLwECujvFJTd1FHOQl8LXn2x7a9nyZBEt6H3yZBq603ezASj9MZCsYyPxCNtHtV3yJnrFzeK7zm3zr7U4t9cU6OJQMA5Nt2hkJsU00N2R9ZCyG11AFICZB7XsCbYqfgZDZD",
     "VERIFY_TOKEN": "shipazu",
-    "PAGEID": "493920247130641",
     "ADMINS": [
       "7913024942132935",
       "8269473539829237",
       "8505900689447357"
     ]
   },
-  "sessions": []
+  "sessions": [
+    {
+      "name": "Tropp",
+      "profileUrl": "https://scontent-bom2-3.xx.fbcdn.net/v/t39.30808-1/286675350_351088517130652_5233749238382978692_n.jpg?stp=c0.0.700.700a_dst-jpg_s700x699_tt6&_nc_cat=110&ccb=1-7&_nc_sid=79bf43&_nc_eui2=AeEhaylotZrXi9-O_FEC4s4j9n5I04E9y-n2fkjTgT3L6YaeOvWXqFZd4hI2lM7fV7jqYeTLYhrbnUI1jo2YWDzR&_nc_ohc=8rUwEiWql5EQ7kNvgHNUA__&_nc_oc=AdkXzogo1e3O-GtkSlnC0epJl2II17vPXqqf4k5A1kVlt9Rt7f9XTBMxQIjHfgQHuyo&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&edm=AJdBtusEAAAA&_nc_gid=4srb95_caLPlZCM6IQVwHw&oh=00_AYEn00XGUMBH0gonZjBP7hSGZMy1dPvOvNRMVhTQl8ZYcA&oe=67E5E689",
+      "PAGE_ACCESS_TOKEN": "EAAGhpVPwmuMBO3aLu5V93R6aMokPpW9GOsRZCexCeR5WxlDPjD3RR2tcHwAYURdkQrSXfTd3vsnCuLkgiIHmVygz7iOoUzKiruCBCapaKdpEtDVkK2p30ZBL18DQxi8cDAVTRJMzFZABz3ELZCXHLiKNbKZAUDjJUXL5PPEQ1yPagZCzXeW1F1vOJcQ26BChNQ",
+      "pageid": "100849055472459",
+      "adminid": "8616968718388016"
+    }
+  ]
 }
