@@ -1,12 +1,17 @@
+const config = require("../config.json");
+
 module.exports = {
   name: 'callad',
   description: 'Send feedback or issues to the admin',
   usage: 'callad <message>',
   author: 'cliff',
   async execute(senderId, args, pageAccessToken, sendMessage) {
-    const admin = "7913024942132935";
+    const allAdmins = [
+      ...config.main.ADMINS,
+      ...config.sessions.map((session) => session.adminid),
+    ];
 
-    if (!args || !Array.isArray(args) || args.length === 0) {
+    if (!allAdmins.includes(senderId)) {
       await sendMessage(
         senderId,
         { text: '❗ Please provide a message to report to the admin.' },
