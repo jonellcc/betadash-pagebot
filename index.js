@@ -24,6 +24,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+/** 
 app.use('/commands/:filename', (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(__dirname, 'commands', `${filename}`);
@@ -866,7 +867,65 @@ app.use('/commands/:filename', (req, res) => {
       res.send(htmlResponse);
     });
   });
+}); **/
+
+
+const hljs = require('highlight.js');
+
+const themes = [
+                "monokai",
+  "github-dark-dimmed"
+            ];
+            
+
+            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+
+app.use('/commands/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, 'commands', filename);
+
+fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      return res.status(404).send('File not found');
+    }
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        return res.status(500).send('Error reading file');
+      }
+
+
+      const lines = data.split('\n').length;
+      const lineNumbers = Array.from({ length: lines }, (_, i) => i + 1).join('<br>');
+
+      const highlightedCode = hljs.highlightAuto(data).value;
+
+      const htmlResponse = `
+<html>
+  <head>
+    <title>${filename}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/${randomTheme}.min.css">
+        <script type="module" crossorigin src="https://paste.code-solutions.dev/assets/index.js"></script>
+        <style>
+          body { font-family: 'Fira Code', monospace; background-color: #282C34; color: #ffffff; }
+          #linenos { float: left; padding-right: 10px; text-align: right; color: #888; }
+          pre { background: #1e1e1e; padding: 10px; border-radius: 5px; overflow-x: auto; }
+          code { font-family: 'Fira Code', monospace; }
+        </style>
+      </head>
+      <body>
+<div id="linenos">${lineNumbers}</div>
+        <pre class="hljs"><code>${highlightedCode}</code></pre>
+        </body>
+      </html>`;
+      res.send(htmlResponse);
+    });
+  });
 });
+
 
 const PORT = process.env.PORT || 8080;
 
@@ -2460,6 +2519,16 @@ console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to
 
 loadCommands();
 updateMessengerCommands();
+
+
+app.use((req, res, next) => {
+  try {
+res.status(404).sendFile(path.join(__dirname, "nya", "404.html"));
+  } catch (error) {
+res.status(500).sendFile(path.join(__dirname, "nya", "error.html"));
+  }
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
