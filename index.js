@@ -278,10 +278,6 @@ app.get('/create', async (req, res) => {
    }
   });
 
-
-
-
-
 app.get('/delete', (req, res) => {
   const { username, password, pageid } = req.query;
 
@@ -316,7 +312,8 @@ app.get('/sessions', (req, res) => {
     PAGE_ACCESS_TOKEN: config.main.PAGE_ACCESS_TOKEN
       ? config.main.PAGE_ACCESS_TOKEN.substring(0, 4) + "****************************************************************************************************************************************************************"
       : "****************************************************************************************************************************************************************",
-    /** VERIFY_TOKEN: config.main.VERIFY_TOKEN, **/
+    WEBHOOK: config.main.webhook,
+    VERIFY_TOKEN: config.main.VERIFY_TOKEN,
     PAGEID: config.main.PAGEID,
     ADMINS: config.main.ADMINS
   };
