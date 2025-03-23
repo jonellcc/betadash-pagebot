@@ -1,10 +1,11 @@
 const os = require('os');
 const fs = require('fs').promises;
 const pidusage = require('pidusage');
+const axios = require("axios");
 
 let fontEnabled = true;
 
-function formatFont(text) { 
+function formatFont(text) {
   const fontMapping = {
     a: "𝖺", b: "𝖻", c: "𝖼", d: "𝖽", e: "𝖾", f: "𝖿", g: "𝗀", h: "𝗁", i: "𝗂", j: "𝗃", k: "𝗄", l: "𝗅", m: "𝗆",
     n: "𝗇", o: "𝗈", p: "𝗉", q: "𝗊", r: "𝗋", s: "𝗌", t: "𝗍", u: "𝗎", v: "𝗏", w: "𝗐", x: "𝗑", y: "𝗒", z: "𝗓",
@@ -28,7 +29,12 @@ module.exports = {
   description: "Get bot uptime and system information",
   author: "Cliff",
   async execute(senderId, args, pageAccessToken, sendMessage) {
-    const startTime = await module.exports.getStartTimestamp();
+    const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`);
+    const profileUrl = response.data.picture_large.data.url;
+    const name = response.data.name;
+    const currentUserid = response.data.id;
+
+    const startTime = await module.exports.getStartTimestamp(currentUserid);
     const uptimeSeconds = Math.floor((Date.now() - startTime) / 1000);
     const usage = await pidusage(process.pid);
 
@@ -45,7 +51,7 @@ module.exports = {
     const timeStart = Date.now();
     const returnResult = formatFont(`Server Running for ${uptimeMessage}\n\n❖ CPU Usage: ${usage.cpu.toFixed(1)}%\n❖ RAM Usage: ${module.exports.byte2mb(usage.memory)}\n❖ Cores: ${os.cpus().length}\n❖ Ping: ${Date.now() - timeStart}ms\n❖ OS Platform: ${osInfo.platform}\n❖ CPU Architecture: ${osInfo.architecture}`);
 
-    await module.exports.saveStartTimestamp(startTime); 
+    await module.exports.saveStartTimestamp(currentUserid, startTime);
     sendMessage(senderId, { text: returnResult }, pageAccessToken);
   },
 
@@ -56,18 +62,18 @@ module.exports = {
     return `${n.toFixed(n < 10 && l > 0 ? 1 : 0)} ${units[l]}`;
   },
 
-  async getStartTimestamp() {
+  async getStartTimestamp(currentUserid) {
     try {
-      const startTimeStr = await fs.readFile('time.txt', 'utf8');
+      const startTimeStr = await fs.readFile(`${__dirname}/../uptime/${currentUserid}.txt`, 'utf8');
       return parseInt(startTimeStr);
     } catch (error) {
       return Date.now();
     }
   },
 
-  async saveStartTimestamp(timestamp) {
+  async saveStartTimestamp(currentUserid, timestamp) {
     try {
-      await fs.writeFile('time.txt', timestamp.toString());
+      await fs.writeFile(`${__dirname}/../uptime/${currentUserid}.txt`, timestamp.toString());
     } catch (error) {
       console.error('Error saving start timestamp:', error);
     }
