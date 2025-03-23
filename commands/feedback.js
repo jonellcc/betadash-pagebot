@@ -23,7 +23,7 @@ sendMessage(senderId, {
             {
               id: "rate_experience", 
               type: "csat",
-              title: "How would you rate your experience with Belugabot command responses?", 
+              title: `How would you rate your experience with ${name}bot command responses?", 
               score_label: "neg_pos", 
               score_option: "five_stars", 
               follow_up: {
