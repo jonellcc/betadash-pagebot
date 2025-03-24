@@ -1,4 +1,4 @@
-const config = require("../config.json");
+const  config = require("../config.json");
 
 module.exports = {
   name: 'callad',
@@ -6,12 +6,12 @@ module.exports = {
   usage: 'callad <message>',
   author: 'cliff',
   async execute(senderId, args, pageAccessToken, sendMessage) {
-    const allAdmins = [
+const allAdmins = [
       ...config.main.ADMINS,
       ...config.sessions.map((session) => session.adminid),
     ];
 
-    if (!allAdmins.includes(senderId)) {
+    if (!args || !Array.isArray(args) || args.length === 0) {
       await sendMessage(
         senderId,
         { text: '❗ Please provide a message to report to the admin.' },
@@ -22,13 +22,15 @@ module.exports = {
 
     const message = args.join(" ");
 
+      allAdmins.forEach(async (adminId) => {
       await sendMessage(
-        admin,
+        adminId,
         {
           text: `📥 𝗡𝗲𝘄 𝗙𝗲𝗲𝗱𝗯𝗮𝗰𝗸 𝗥𝗲𝗰𝗲𝗶𝘃𝗲𝗱:\n\n👤 𝗙𝗿𝗼𝗺 𝗦𝗲𝗻𝗱𝗲𝗿 𝗜𝗗: ${senderId}\n\n📑 𝗠𝗲𝘀𝘀𝗮𝗴𝗲: ${message}`
         },
         pageAccessToken
       );
+    });
 
     await sendMessage(
       senderId,
