@@ -8,8 +8,9 @@ module.exports = {
     const apiUrl = `https://betadash-search-download.vercel.app/tiktrend`;
 
     try {
+      sendMessage(senderId, { text: `[ 🔍 ] 𝗙𝗶𝗻𝗱𝗶𝗻𝗴 𝘁𝗶𝗸𝘁𝗼𝗸 𝘁𝗿𝗲𝗻𝗱 𝗣𝗵𝗶𝗹𝗶𝗽𝗽𝗶𝗻𝗲𝘀\n\n𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍 𝖺 𝗌𝖾𝖼...` }, pageAccessToken);
       const response = await axios.get(apiUrl);
-      const videos = response.data.data.slice(0, 5);
+      const videos = response.data.data.slice(0, 3);
 
       for (const video of videos) {
         const videoUrl = `https://www.tikwm.com/video/media/hdplay/${video.video_id}.mp4`;
