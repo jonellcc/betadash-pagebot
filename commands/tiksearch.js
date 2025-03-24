@@ -26,7 +26,7 @@ module.exports = {
             type: 'video',
             payload: {
               url: videoUrl,
-              is_reusable: false
+              is_reusable: true
             }
           }
         }, pageAccessToken);
