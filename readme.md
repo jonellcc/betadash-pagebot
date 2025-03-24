@@ -21,3 +21,5 @@
      [Manage Sessions](https://betadash-pagebot-production.up.railway.app/sessions)
 
 ---
+
+![kupal](https://i.imgur.com/tXJmwrN.gif)
