@@ -74,7 +74,7 @@ module.exports = {
       const rData = JSON.stringify({
         query: prompt,
         convertational_id: senderId,
-        stream: true,
+        stream: false,
         linkify: true,
         linkify_version: 3,
         sia: true,
@@ -88,7 +88,7 @@ module.exports = {
         url: 'https://composer.opera-api.com/api/v1/a-chat',
         headers: {
           'User-Agent': agent(),
-          'Accept': 'text/event-stream',
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
           authorization: `Bearer ${token}`,
           'x-opera-ui-language': 'en, tl',
@@ -103,34 +103,18 @@ module.exports = {
           priority: 'u=1, i',
         },
         data: rData,
-        responseType: 'stream',
       });
 
-      let m = '';
-      r.data.on('data', (chunk) => {
-        const s = chunk.toString();
-        const match = s.match(/"message":"(.*?)"/);
-        if (match) {
-          const rawStr = JSON.parse(`"${match[1]}"`);
-          m += `${rawStr}`;
+      const m = r.data.message;
+      if (m.trim()) {
+        const maxMessageLength = 2000;
+        const messages = splitMessageIntoChunks(convertToBold(m.trim()), maxMessageLength);
+        for (const message of messages) {
+          await sendMessage(senderId, { text: message }, pageAccessToken);
         }
-      });
-
-      r.data.on('end', async () => {
-        if (m.trim()) {
-          const maxMessageLength = 2000;
-          const messages = splitMessageIntoChunks(convertToBold(m.trim()), maxMessageLength);
-          for (const message of messages) {
-            await sendMessage(senderId, { text: message }, pageAccessToken);
-          }
-        } else {
-          await sendMessage(senderId, { text: 'You have reached your daily request limit. Please come back tomorrow.' }, pageAccessToken);
-        }
-      });
-
-      r.data.on('error', async (err) => {
-        await sendMessage(senderId, { text: err.message }, pageAccessToken);
-      });
+      } else {
+        await sendMessage(senderId, { text: 'You have reached your daily request limit. Please come back tomorrow.' }, pageAccessToken);
+      }
 
     } catch (err) {
       await sendMessage(senderId, { text: err.message }, pageAccessToken);
