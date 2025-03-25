@@ -5,6 +5,11 @@ module.exports = {
   description: 'multi downloader GenfromDL',
   author: 'yazky',
   async execute(senderId, args, pageAccessToken, sendMessage) {
+    if (!args.length) {
+      sendMessage(senderId, { text: "Please provide a URL." }, pageAccessToken);
+      return;
+    }
+
     const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/genfrom-dl?url=${encodeURIComponent(args.join(" "))}`;
 
     try {
@@ -16,9 +21,8 @@ module.exports = {
       const thumbnail = data.thumbnail;
       const videoUrl = data.links.find(link => link[1] === '240p' || link[1] === 'Link')[3];
 
-const ya = await axios.get(`https://betadash-api-swordslush.vercel.app/shorten?link=${videoUrl}`;
-
-const sht = ya.data.url;
+      const ya = await axios.get(`https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(videoUrl)}`);
+      const sht = ya.data.url;
 
       sendMessage(senderId, {
         attachment: {
