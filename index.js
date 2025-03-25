@@ -32,10 +32,9 @@ const themes = [
   "github-dark-dimmed",
   "github-dark",
   "night-owl"
-            ];
+];
 
-
-            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+const randomTheme = themes[Math.floor(Math.random() * themes.length)];
 
 app.use('/commands/:filename', (req, res) => {
   const filename = req.params.filename;
@@ -1119,8 +1118,8 @@ const s = [ "✦", "✧", "✦", "⟡"];
   }
 } else if (instagramLinkRegex.test(messageText)) {
     try {
-      sendMessage(senderId, { text: 'Downloading Instagram, please wait...' }, pageAccessToken);
-      const apiUrl = `https://yt-video-production.up.railway.app/insta?url=${encodeURIComponent(messageText)}`;
+      sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖨𝗇𝗌𝗍𝖺𝗀𝗋𝖺𝗆, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
+      const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/insta?url=${encodeURIComponent(messageText)}`;
       const response = await axios.get(apiUrl, { headers });
       const videoUrl = response.data.result[0].url;
 
@@ -1159,7 +1158,7 @@ const headResponse = await axios.head(videoUrl, { headers });
     }
   } else if (facebookLinkRegex.test(messageText)) {
     try {
-      sendMessage(senderId, { text: 'Downloading Facebook, please wait...' }, pageAccessToken);
+      sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖥𝖺𝖼𝖾𝖻𝗈𝗈𝗄, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
       const apiUrl = `https://betadash-search-download.vercel.app/fbdl?url=${encodeURIComponent(messageText)}`;
 
 const headResponse = await axios.head(apiUrl, { headers });
@@ -1197,10 +1196,10 @@ const headResponse = await axios.head(apiUrl, { headers });
     }
   } else if (regEx_tiktok.test(messageText)) {
     try {
-      sendMessage(senderId, { text: 'Downloading Tiktok, please wait...' },  pageAccessToken);
+      sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖳𝗂𝗄𝗍𝗈𝗄, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' },  pageAccessToken);
       const response = await axios.post(`https://www.tikwm.com/api/`, { url: messageText }, { headers });
       const data = response.data.data;
-      const shotiUrl = data.play;
+      const shotiUrl = `https://www.tikwm.com/video/media/hdplay/${data.id}.mp4`;
       const avatar = data.author.avatar;
       const username = data.author.nickname;
       const unique_id = data.author.unique_id;
@@ -1240,7 +1239,7 @@ const headResponse = await axios.head(shotiUrl, { headers });
     }
   } else if (youtubeLinkRegex.test(messageText)) {
     try {
-      sendMessage(senderId, { text: 'Downloading Youtube, please wait...' }, pageAccessToken);
+      sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖸𝗈𝗎𝗍𝗎𝖻𝖾, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
       const yts = `https://yt-video-production.up.railway.app/ytdl?url=${encodeURIComponent(messageText)}`;
      const yu = await axios.get(yts, { headers });
       const vid = yu.data.video;
