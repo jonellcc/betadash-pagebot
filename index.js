@@ -681,7 +681,7 @@ if (event.message && event.message.reply_to && event.message.reply_to.mid) {
   const args = messageText ? messageText.split(' ') : [];
 
 const bannedKeywords = [
-  'pussy', 'dick', 'nude', 'xnxx', 'pornhub', 'hot', 'clothes', 'sugar', 'fucked', 'step',
+  'pussy', 'dick', 'nude',  'hot', 'clothes', 'sugar', 'fucked', 'step',
   'shit', 'bitch', 'hentai', 'sex', 'boobs', 'cute girl undressed', 'undressed', 
   'naked', 'underwear', 'sexy', 'panty', 'fuckers', 'fck', 'fucking', 'vagina', 'intercourse', 
   'penis', 'gae', 'panties', 'fellatio', 'blow job', 'blow', 'skin', 'segs', 'porn', 'loli', 'kantutan','lulu', 'kayat', 'bilat',
