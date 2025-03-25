@@ -8,37 +8,50 @@ module.exports = {
     const apiUrl = `https://betadash-search-download.vercel.app/tiktrend`;
 
     try {
-      sendMessage(senderId, { text: `[ 🔍 ] 𝗙𝗶𝗻𝗱𝗶𝗻𝗴 𝘁𝗶𝗸𝘁𝗼𝗸 𝘁𝗿𝗲𝗻𝗱 𝗣𝗵𝗶𝗹𝗶𝗽𝗽𝗶𝗻𝗲𝘀\n\n𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍 𝖺 𝗌𝖾𝖼...` }, pageAccessToken);
-      const response = await axios.get(apiUrl);
-      const videos = response.data.data.slice(0, 3);
+      sendMessage(senderId, { text: `[ 🔍 ] 𝗙𝗶𝗻𝗱𝗶𝗻𝗴 𝘁𝗶𝗸𝘁𝗼𝗸 𝘁𝗿𝗲𝗻𝗱 𝗣𝗵𝗶𝗹𝗶𝗽𝗽𝗶𝗻𝗲𝘀\n\nP𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍 𝖺 𝗌𝖾𝖼...` }, pageAccessToken);
 
-      for (const video of videos) {
-        const videoUrl = `https://www.tikwm.com/video/media/hdplay/${video.video_id}.mp4`;
-        const message = {
-          attachment: {
-            type: 'video',
-            payload: {
-              url: videoUrl,
-              is_reusable: true
-            }
-          },
-          quick_replies: [
-            {
-              content_type: "text",
-              title: "Help",
-              payload: "HELP"
-            },
-            {
-              content_type: "text",
-              title: "Feedback",
-              payload: "FEEDBACK"
-            }
-          ]
-        };
-        sendMessage(senderId, message, pageAccessToken);
-      }
+      const response = await axios.get(apiUrl);
+      const videos = response.data.data; 
+
+      const elements = videos.map(video => ({
+        title: video.title,
+        subtitle: `Views: ${video.play_count} | Likes: ${video.digg_count}`,
+        image_url: video.cover,
+        buttons: [
+          {
+            type: 'web_url',
+            url: `https://www.tikwm.com/video/media/hdplay/${video.id}.mp4`,
+            title: 'Watch Video'
+          }
+        ]
+      }));
+
+      const message = {
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'generic',
+            elements: elements
+          }
+        }
+      };
+
+      await sendMessage(senderId, message, pageAccessToken);
     } catch (error) {
-      sendMessage(senderId, { text: 'Sorry, there was an error processing your request.' }, pageAccessToken);
+await sendMessage(senderId, {
+  attachment: {
+    type: "template",
+    payload: {
+      template_type: "media",
+      elements: [
+        {
+          media_type: "video",
+          url: "https://www.facebook.com/beluga.xyz/videos/2070790143388193/?app=fbl"
+        }
+      ]
     }
   }
+  }, pageAccessToken);
+   }
+ }
 };
