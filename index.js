@@ -1119,7 +1119,7 @@ const s = [ "✦", "✧", "✦", "⟡"];
 } else if (instagramLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖨𝗇𝗌𝗍𝖺𝗀𝗋𝖺𝗆, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
-      const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/insta?url=${encodeURIComponent(messageText)}`;
+      const apiUrl = `https://yt-video-production.up.railway.app/insta?url=${encodeURIComponent(messageText)}`;
       const response = await axios.get(apiUrl, { headers });
       const videoUrl = response.data.result[0].url;
 
