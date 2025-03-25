@@ -5,9 +5,11 @@ module.exports = {
   description: 'multi downloader GenfromDL',
   author: 'yazky',
   async execute(senderId, args, pageAccessToken, sendMessage) {
+    if (!args.length) {
+      sendMessage(senderId, { text: "Please provide a URL." }, pageAccessToken);
+      return;
+    }
     const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/genfrom-dl?url=${encodeURIComponent(args.join(" "))}`;
-
-if (apiUrl please provide a url
 
     try {
       sendMessage(senderId, { text: `Downloading please wait...` }, pageAccessToken);
