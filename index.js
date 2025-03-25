@@ -572,68 +572,71 @@ async function getMessage(mid) {
 }
 
 
+
+
 async function handleMessage(event, pageAccessToken) {
-  if (!event || !event.sender || !event.message || !event.sender.id)  {
-    return;
-  }
+    if (!event || !event.sender || !event.message || !event.sender.id) {
+        return;
+    }
 
-
-const image = event.message.attachments &&
-  (event.message.attachments[0]?.type === 'image');
-const video = event.message.attachments &&
-           (event.message.attachments[0]?.type === 'video');
-const gif = event.message.attachments &&
-           (event.message.attachments[0]?.type === 'gif');
-
-const events = event;
-   const senderId = event.sender.id;
-  const messageText = event.message.text;
+const senderId = event.sender.id;
+const messageText = event.message.text;
 const haha = "More shoti";
 const messageId = event.message.mid;
 const If = "aidetect";
 const j = "humanize";
+    
+    const allAdmins = [
+        ...config.main.ADMINS,
+        ...config.sessions.map((session) => session.adminid),
+    ];
 
-
-const x = "👍";
-
-if (!event.policy_enforcement) {
+    if (event.policy_enforcement) {
         const reason = event.policy_enforcement.reason || "Unknown reason";
         const action = event.policy_enforcement.action || "Unknown action";
 
-        if (admin.length > 0) {
-            const nya = `🚨 𝖯𝗈𝗅𝗂𝖼𝗒 𝖤𝗇𝖿𝗈𝗋𝖼𝖾𝗆𝖾𝗇𝗍 𝖠𝗅𝖾𝗋𝗍 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
-            await sendMessage(senderId, { text: nya }, pageAccessToken);
+        const alertMessage = `🚨 𝖯𝗈𝗅𝗂𝖼𝗒 𝖤𝗇𝖿𝗈𝗋𝖼𝖾𝗆𝖾𝗇𝗍 𝖠𝗅𝖾𝗋𝗍 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
+
+        for (const adminId of allAdmins) {
+            await sendMessage(adminId, { text: alertMessage }, pageAccessToken);
         }
     }
 
- if (!event.reaction) {
-        let pageId = event.recipient.id;
-        let err = event.reaction.reaction;
-        let ere = event.reaction.emoji;
-        let arc = event.reaction.action;
-        let erm = event.reaction.mid;
-        let mj = '';
-        mj = await getMessage(erm);
-        const reactionMessage = `User ${senderId} reacted with ${ere} (${err}) to message:\n\n${mj || "Attachment"}.`;
+    if (event.reaction) {
+        const pageId = event.recipient.id;
+        const reactionType = event.reaction.reaction;
+        const emoji = event.reaction.emoji;
+        const action = event.reaction.action;
+        const reactedMessageId = event.reaction.mid;
+        
+        let messageContent = await getMessage(reactedMessageId).catch(() => "Attachment");
+
+        const reactionMessage = `User ${senderId} reacted with ${emoji} (${reactionType}) to message:\n\n${messageContent}.`;
         await sendMessage(senderId, { text: reactionMessage }, pageAccessToken);
     }
 
-if (!event.response_feedback) {
+    if (event.response_feedback) {
         const feedback = event.response_feedback.feedback;
-        const messageID = event.response_feedback.mid;
-        const id = event.sender.id;
+        const feedbackMessageId = event.response_feedback.mid;
 
-        let con = "Unknown message";
-        if (messageID) {
-            con = await getMessage(messageID).catch(() => "Failed to fetch message");
+        let messageContent = "Unknown message";
+        if (feedbackMessageId) {
+            messageContent = await getMessage(feedbackMessageId).catch(() => "Failed to fetch message");
         }
 
-        const messageTex = feedback === 'Good response'
-            ? `User ${id} gave positive feedback for message\n\n"${con || "attachment"}"`
-            : `User ${id} gave negative feedback for message\n\n"${con || "attachment"}"`;
+        const feedbackText = feedback === "Good response"
+            ? `User ${senderId} gave positive feedback for message:\n\n"${messageContent}"`
+            : `User ${senderId} gave negative feedback for message:\n\n"${messageContent}"`;
 
-        await sendMessage(senderId, { text: messageTex }, pageAccessToken);
-        await sendMessage(senderId, { text: "𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝖿𝖾𝖾𝖽𝖻𝖺𝖼𝗄! 😊" }, pageAccessToken);
+        for (const adminId of allAdmins) {
+            await sendMessage(adminId, { text: feedbackText }, pageAccessToken);
+        }
+
+        const userResponse = feedback === "Good response"
+            ? "𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝖿𝖾𝖾𝖽𝖻𝖺𝖼𝗄! 😊"
+            : "𝖲𝗈𝗋𝗋𝗒 𝖺𝖻𝗈𝗎𝗍 𝗍𝗁𝖺𝗍! 𝖶𝖾'𝗅𝗅 𝗍𝗋𝗒 𝗍𝗈 𝗂𝗆𝗉𝗋𝗈𝗏𝖾.";
+
+        await sendMessage(senderId, { text: userResponse }, pageAccessToken);
     }
 
 let content = "";
