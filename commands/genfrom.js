@@ -22,7 +22,7 @@ module.exports = {
      const { views, duration, date } = data;
 
 
-const nya = await axios.get(`https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(videoUrl)}`;
+const nya = await axios.get(`https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(videoUrl)}`);
 const shit = nya.data.url;
 
       await sendMessage(senderId, {
