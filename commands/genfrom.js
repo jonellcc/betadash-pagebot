@@ -37,8 +37,8 @@ const shit = nya.data.url;
                 "subtitle": `Views: ${views}\nDuration: ${duration}\nDate: ${date}`,
                 "default_action": {
                   "type": "web_url",
-                  "url": args.join(" "),
-                  "webview_height_ratio": "compact"
+                  "url": shit,
+                  "webview_height_ratio": "tall"
                 },
                 "buttons": [
                   {
