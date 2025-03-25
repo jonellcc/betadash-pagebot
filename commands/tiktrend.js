@@ -17,6 +17,11 @@ module.exports = {
         title: video.title,
         subtitle: `Views: ${video.play_count} | Likes: ${video.digg_count}`,
         image_url: video.cover,
+        default_action: {
+          type: "web_url",
+          url: `https://www.tikwm.com/video/media/hdplay/${video.video_id}.mp4`,
+          webview_height_ratio: "compact"
+        },
         buttons: [
           {
             type: 'web_url',
