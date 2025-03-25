@@ -1197,7 +1197,7 @@ const headResponse = await axios.head(apiUrl, { headers });
   } else if (regEx_tiktok.test(messageText)) {
     try {
       sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖳𝗂𝗄𝗍𝗈𝗄, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' },  pageAccessToken);
-      const response = await axios.post(`https://www.tikwm.com/api/`, { url: messageText }, { headers });
+      const response = await axios.get(`https://www.tikwm.com/api/?url=${messageText}`, { headers });
       const data = response.data.data;
       const shotiUrl = `https://www.tikwm.com/video/media/hdplay/${data.id}.mp4`;
       const avatar = data.author.avatar;
