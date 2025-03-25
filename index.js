@@ -596,7 +596,7 @@ const j = "humanize";
 
 const x = "👍";
 
-if (event.policy_enforcement) {
+if (!event.policy_enforcement) {
         const reason = event.policy_enforcement.reason || "Unknown reason";
         const action = event.policy_enforcement.action || "Unknown action";
 
@@ -606,7 +606,7 @@ if (event.policy_enforcement) {
         }
     }
 
- if (event.reaction) {
+ if (!event.reaction) {
         let pageId = event.recipient.id;
         let err = event.reaction.reaction;
         let ere = event.reaction.emoji;
@@ -618,7 +618,7 @@ if (event.policy_enforcement) {
         await sendMessage(senderId, { text: reactionMessage }, pageAccessToken);
     }
 
-if (event.response_feedback) {
+if (!event.response_feedback) {
         const feedback = event.response_feedback.feedback;
         const messageID = event.response_feedback.mid;
         const id = event.sender.id;
