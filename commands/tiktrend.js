@@ -20,7 +20,7 @@ module.exports = {
         buttons: [
           {
             type: 'web_url',
-            url: `https://www.tikwm.com/video/media/hdplay/${video.id}.mp4`,
+            url: `https://www.tikwm.com/video/media/hdplay/${video.video_id}.mp4`,
             title: 'Watch Video'
           }
         ]
