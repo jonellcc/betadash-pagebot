@@ -168,7 +168,7 @@ Failure to comply may result in access restrictions.`;
 </body>
 </html>`;
 
-const filePath = path.join(__dirname, 'privacy', `${pageid}.html`);
+const filePath = path.join(`${__dirname}/../privacy/${pageid}.html`);
       await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
       await fs.promises.writeFile(filePath, html);
     } catch (error) {
