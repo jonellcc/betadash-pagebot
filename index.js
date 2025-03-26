@@ -142,7 +142,7 @@ app.get('/', (req, res) => {
 
 app.get('/privacy/:pageid', async (req, res) => {
   const pageid = req.params.pageid;
-  const response = await axios.get(`https://graph.facebook.com/${pageid}?fields=name&access_token=${process.env.PAGE_ACCESS_TOKEN}`);
+  const response = await axios.get(`https://graph.facebook.com/${pageid}?fields=name&access_token=${pageAccessToken}`);
   const name = response.data.name;
 
   const html = `
