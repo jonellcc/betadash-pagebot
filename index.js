@@ -140,139 +140,82 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "page.html"));
 });
 
-app.get('/privacy/:pageid', async (req, res) => {
-  const pageid = req.params.pageid;
-  const response = await axios.get(`https://graph.facebook.com/${pageid}?fields=name&access_token=${pageAccessToken}`);
-  const name = response.data.name;
+/**
 
-  const html = `
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="description" content="Privacy Policy for ${name}Bot effective October 26, 2024. Learn about how ${name}Bot handles your data, including data processing, third-party services, and user rights.">
-      <meta name="keywords" content="${name}Bot, privacy policy, data privacy, user rights, third-party services, data protection">
-      <meta name="author" content="Chatbot Community Team">
-      <meta name="robots" content="index, follow">
-      <title>Privacy Policy - ${name}Bot</title>
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-      <style>
-          * {
-              margin: 0;
-              padding: 0;
-              box-sizing: border-box;
-          }
-          body {
-              font-family: 'Poppins', sans-serif;
-              background: linear-gradient(135deg, #4c83ff, #1a1a40);
-              color: #333;
-              line-height: 1.8;
-          }
-          .container {
-              max-width: 900px;
-              margin: 40px auto;
-              background: #fff;
-              padding: 30px;
-              border-radius: 10px;
-              box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-          }
-          h1 {
-              text-align: center;
-              color: #007bff;
-              font-weight: 600;
-              margin-bottom: 15px;
-          }
-          .effective-date {
-              text-align: center;
-              font-weight: 600;
-              color: #555;
-              margin-bottom: 20px;
-          }
-          h2 {
-              color: #222;
-              font-size: 22px;
-              margin-top: 20px;
-          }
-          p, ul {
-              margin-bottom: 15px;
-          }
-          ul {
-              padding-left: 20px;
-          }
-          a {
-              color: #007bff;
-              text-decoration: none;
-              font-weight: 600;
-          }
-          a:hover {
-              text-decoration: underline;
-          }
-          @media (max-width: 768px) {
-              .container {
-                  padding: 20px;
-                  margin: 20px;
-              }
-              h1 {
-                  font-size: 24px;
-              }
-              h2 {
-                  font-size: 20px;
-              }
-          }
-      </style>
-  </head>
-  <body>
+app.use('/privacy/:pageid', async (req, res) => {
+    try {
+        const pageid = req.params.pageid;
+        const pageAccessToken = 'YOUR_PAGE_ACCESS_TOKEN'; // Replace with actual token
 
-  <div class="container">
-      <h1>${name}Bot Privacy Policy</h1>
-      <p class="effective-date">Effective Date: October 26, 2024</p>
-      <p><strong>Please review this privacy policy thoroughly.</strong> Your privacy is important to us, and we are committed to protecting the data you share while using ${name}Bot.</p>
+        const response = await axios.get(`https://graph.facebook.com/me?fields=id,name&access_token=${pageAccessToken}`);
+        const name = response.data.name;
 
-      <h2>1. Introduction</h2>
-      <p>At ${name}Bot, we respect your privacy and manage your personal data responsibly. This Privacy Policy explains how we collect, use, and protect your data.</p>
+        const html = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="description" content="Privacy Policy for ${name}Bot effective October 26, 2024. Learn about how ${name}Bot handles your data, including data processing, third-party services, and user rights.">
+            <meta name="keywords" content="${name}Bot, privacy policy, data privacy, user rights, third-party services, data protection">
+            <meta name="author" content="Chatbot Community Team">
+            <meta name="robots" content="index, follow">
+            <title>Privacy Policy - ${name}Bot</title>
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #4c83ff, #1a1a40); color: #333; line-height: 1.8; }
+                .container { max-width: 900px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
+                h1 { text-align: center; color: #007bff; font-weight: 600; margin-bottom: 15px; }
+                .effective-date { text-align: center; font-weight: 600; color: #555; margin-bottom: 20px; }
+                h2 { color: #222; font-size: 22px; margin-top: 20px; }
+                p, ul { margin-bottom: 15px; }
+                ul { padding-left: 20px; }
+                a { color: #007bff; text-decoration: none; font-weight: 600; }
+                a:hover { text-decoration: underline; }
+                @media (max-width: 768px) { .container { padding: 20px; margin: 20px; } h1 { font-size: 24px; } h2 { font-size: 20px; } }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>${name}Bot Privacy Policy</h1>
+                <p class="effective-date">Effective Date: October 26, 2024</p>
+                <p><strong>Please review this privacy policy thoroughly.</strong> Your privacy is important to us, and we are committed to protecting the data you share while using ${name}Bot.</p>
+                <h2>1. Introduction</h2>
+                <p>At ${name}Bot, we respect your privacy and manage your personal data responsibly. This Privacy Policy explains how we collect, use, and protect your data.</p>
+                <h2>2. No Data Logging or Storage</h2>
+                <p>We do not collect, log, or store any messages or personal data. All interactions are processed in real-time and discarded immediately.</p>
+                <h2>3. Third-Party Services</h2>
+                <p>${name}Bot utilizes trusted third-party services such as:</p>
+                <ul><li><strong>OpenAI</strong> for text processing and image generation (<a href="https://openai.com/policies/privacy-policy" target="_blank">Privacy Policy</a>).</li></ul>
+                <h2>4. Data Usage</h2>
+                <p>Your data is only used to process your requests and is not retained or used for marketing, analytics, or any other purposes.</p>
+                <h2>5. Security Measures</h2>
+                <p>Although ${name}Bot does not retain data, third-party services used implement encryption and security measures to protect data during transmission.</p>
+                <h2>6. User Rights</h2>
+                <p>Since we do not store personal data, traditional data rights such as access or deletion requests do not apply. If you have concerns, contact us.</p>
+                <h2>7. Children's Privacy</h2>
+                <p>${name}Bot is not intended for children under 13. If you believe your child has shared information, please contact us.</p>
+                <h2>8. Data Retention</h2>
+                <p>${name}Bot does not store any data. All interactions are processed and discarded immediately.</p>
+                <h2>9. Cookies and Tracking</h2>
+                <p>${name}Bot does not use cookies or tracking mechanisms, but third-party services may have their own policies.</p>
+                <h2>10. Changes to This Privacy Policy</h2>
+                <p>This policy may be updated periodically. The "Effective Date" will be revised accordingly.</p>
+                <h2>11. Contact Information</h2>
+                <p>If you have questions, contact us at:</p>
+                <p><strong>Email:</strong> cliffvincenttorrevillas@gmail.com</p>
+            </div> 
+        </body>
+        </html>`;
 
-      <h2>2. No Data Logging or Storage</h2>
-      <p>We do not collect, log, or store any messages or personal data. All interactions are processed in real-time and discarded immediately.</p>
+        res.send(html);
+    } catch (error) {
+        res.status(500).send('Error retrieving privacy policy');
+    }
+}); **/
 
-      <h2>3. Third-Party Services</h2>
-      <p>${name}Bot utilizes trusted third-party services such as:</p>
-      <ul>
-          <li><strong>OpenAI</strong> for text processing and image generation (<a href="https://openai.com/policies/privacy-policy" target="_blank">Privacy Policy</a>).</li>
-      </ul>
 
-      <h2>4. Data Usage</h2>
-      <p>Your data is only used to process your requests and is not retained or used for marketing, analytics, or any other purposes.</p>
-
-      <h2>5. Security Measures</h2>
-      <p>Although BelugaBot does not retain data, third-party services used implement encryption and security measures to protect data during transmission.</p>
-
-      <h2>6. User Rights</h2>
-      <p>Since we do not store personal data, traditional data rights such as access or deletion requests do not apply. If you have concerns, contact us.</p>
-
-      <h2>7. Children's Privacy</h2>
-      <p>${name}Bot is not intended for children under 13. If you believe your child has shared information, please contact us.</p>
-
-      <h2>8. Data Retention</h2>
-      <p>${name}Bot does not store any data. All interactions are processed and discarded immediately.</p>
-
-      <h2>9. Cookies and Tracking</h2>
-      <p>${name}Bot does not use cookies or tracking mechanisms, but third-party services may have their own policies.</p>
-
-      <h2>10. Changes to This Privacy Policy</h2>
-      <p>This policy may be updated periodically. The "Effective Date" will be revised accordingly.</p>
-
-      <h2>11. Contact Information</h2>
-      <p>If you have questions, contact us at:</p>
-      <p><strong>Email:</strong> cliffvincenttorrevillas@gmail.com</p>
-  </div>
-  </body>
-  </html>`;
-
-  res.send(html);
-});
 
 /** 
 
@@ -369,6 +312,82 @@ app.post('/webhook', (req, res) => {
     res.sendStatus(404);
   }
 });
+
+
+
+app.use('/privacy/:pageid', async (req, res) => {
+    try {
+        const pageid = req.params.pageid;
+        const response = await axios.get(`https://graph.facebook.com/me?fields=id,name&access_token=${pageAccessToken}`);
+        const name = response.data.name;
+
+        const html = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="description" content="Privacy Policy for ${name}Bot effective October 26, 2024. Learn about how ${name}Bot handles your data, including data processing, third-party services, and user rights.">
+            <meta name="keywords" content="${name}Bot, privacy policy, data privacy, user rights, third-party services, data protection">
+            <meta name="author" content="Chatbot Community Team">
+            <meta name="robots" content="index, follow">
+            <title>Privacy Policy - ${name}Bot</title>
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #4c83ff, #1a1a40); color: #333; line-height: 1.8; }
+                .container { max-width: 900px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); }
+                h1 { text-align: center; color: #007bff; font-weight: 600; margin-bottom: 15px; }
+                .effective-date { text-align: center; font-weight: 600; color: #555; margin-bottom: 20px; }
+                h2 { color: #222; font-size: 22px; margin-top: 20px; }
+                p, ul { margin-bottom: 15px; }
+                ul { padding-left: 20px; }
+                a { color: #007bff; text-decoration: none; font-weight: 600; }
+                a:hover { text-decoration: underline; }
+                @media (max-width: 768px) { .container { padding: 20px; margin: 20px; } h1 { font-size: 24px; } h2 { font-size: 20px; } }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>${name}Bot Privacy Policy</h1>
+                <p class="effective-date">Effective Date: October 26, 2024</p>
+                <p><strong>Please review this privacy policy thoroughly.</strong> Your privacy is important to us, and we are committed to protecting the data you share while using ${name}Bot.</p>
+                <h2>1. Introduction</h2>
+                <p>At ${name}Bot, we respect your privacy and manage your personal data responsibly. This Privacy Policy explains how we collect, use, and protect your data.</p>
+                <h2>2. No Data Logging or Storage</h2>
+                <p>We do not collect, log, or store any messages or personal data. All interactions are processed in real-time and discarded immediately.</p>
+                <h2>3. Third-Party Services</h2>
+                <p>${name}Bot utilizes trusted third-party services such as:</p>
+                <ul><li><strong>OpenAI</strong> for text processing and image generation (<a href="https://openai.com/policies/privacy-policy" target="_blank">Privacy Policy</a>).</li></ul>
+                <h2>4. Data Usage</h2>
+                <p>Your data is only used to process your requests and is not retained or used for marketing, analytics, or any other purposes.</p>
+                <h2>5. Security Measures</h2>
+                <p>Although ${name}Bot does not retain data, third-party services used implement encryption and security measures to protect data during transmission.</p>
+                <h2>6. User Rights</h2>
+                <p>Since we do not store personal data, traditional data rights such as access or deletion requests do not apply. If you have concerns, contact us.</p>
+                <h2>7. Children's Privacy</h2>
+                <p>${name}Bot is not intended for children under 13. If you believe your child has shared information, please contact us.</p>
+                <h2>8. Data Retention</h2>
+                <p>${name}Bot does not store any data. All interactions are processed and discarded immediately.</p>
+                <h2>9. Cookies and Tracking</h2>
+                <p>${name}Bot does not use cookies or tracking mechanisms, but third-party services may have their own policies.</p>
+                <h2>10. Changes to This Privacy Policy</h2>
+                <p>This policy may be updated periodically. The "Effective Date" will be revised accordingly.</p>
+                <h2>11. Contact Information</h2>
+                <p>If you have questions, contact us at:</p>
+                <p><strong>Email:</strong> cliffvincenttorrevillas@gmail.com</p>
+            </div> 
+        </body>
+        </html>`;
+
+        res.send(html);
+    } catch (error) {
+        res.status(500).send('Error retrieving privacy policy');
+    }
+});
+
+
+
 
 app.get('/create', async (req, res) => {
   try {
