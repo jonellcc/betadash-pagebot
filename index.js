@@ -140,9 +140,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "page.html"));
 });
 
-app.use(express.static('privacy'));
 app.use('/privacy', express.static(path.join(__dirname,  'privacy')));
-
 
 /** 
 
