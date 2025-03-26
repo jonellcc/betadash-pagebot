@@ -248,7 +248,7 @@ async function getdata(pageAccessToken) {
 app.get('/privacy/:pageid.html', async (req, res) => {
   const pageid = req.params.pageid;
   try {
-const { pageid, name } = await getdata(pageAccessToken);
+const { name } = await getdata(pageAccessToken);
     const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -351,7 +351,7 @@ const { pageid, name } = await getdata(pageAccessToken);
     <p>Your data is only used to process your requests and is not retained or used for marketing, analytics, or any other purposes.</p>
 
     <h2>5. Security Measures</h2>
-    <p>Although BelugaBot does not retain data, third-party services used implement encryption and security measures to protect data during transmission.</p>
+    <p>Although ${name}Bot does not retain data, third-party services used implement encryption and security measures to protect data during transmission.</p>
 
     <h2>6. User Rights</h2>
     <p>Since we do not store personal data, traditional data rights such as access or deletion requests do not apply. If you have concerns, contact us.</p>
@@ -377,7 +377,7 @@ const { pageid, name } = await getdata(pageAccessToken);
 
     res.send(html);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json({error});
   }
 });
 
