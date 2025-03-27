@@ -1057,9 +1057,9 @@ if (messageText && messageText.startsWith("humanize")) {
     const command = commands.get(commandName);
     try {
       if (typeof args === 'object') {
-            await command.execute(senderId, args, pageAccessToken, sendMessage, font);
+            await command.execute(senderId, args, pageAccessToken, sendMessage, fonts, events);
         } else {
-            await command.execute({ senderId, args, pageAccessToken, sendMessage, admin, events, splitMessageIntoChunks, font });
+            await command.execute({ senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks, fonts, events });
         }
     } catch (error) {
       const kupall = {
