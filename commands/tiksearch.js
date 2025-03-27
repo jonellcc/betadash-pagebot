@@ -5,32 +5,31 @@ module.exports = {
   description: 'Tiktok search',
   author: 'yazky',
   async execute(senderId, args, pageAccessToken, sendMessage) {
-    const searchQuery = args.join(' ').replace(/ /g, '+');
-    const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/tiksearchv2?search=${searchQuery}&count=10`;
+    const searchQuery = args.join(' ');
+
+if (!searchQuery) {
+      await sendMessage(senderId, { text: 'Please provide a search query.' }, pageAccessToken);
+      return;
+    }
+
+    const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/tiksearchv2?search=${encodeURIComponent(searchQuery)}&count=10`;
 
     try {
       const response = await axios.get(apiUrl);
-      const videos = response.data.data;
-
-      const elements = videos.map((video, index) => ({
-        title: video.title,
-        subtitle: `Video ${index + 1}`,
-        image_url: video.cover,
+      const elements = response.data.data.map(item => ({
+        title: item.title,
+        subtitle: '',
+        image_url: item.cover,
         default_action: {
-          type: "web_url",
-          url: video.video,
-          webview_height_ratio: "compact"
+          type: 'web_url',
+          url: item.video,
+          webview_height_ratio: 'compact'
         },
         buttons: [
           {
             type: 'web_url',
-            url: video.video,
-            title: 'Download'
-          },
-          {
-            type: 'postback',
-            title: `Watch ${index + 1}`,
-            payload: `WATCH_VIDEO_${index}`
+            url: item.video,
+            title: 'Watch Video'
           }
         ]
       }));
@@ -49,13 +48,13 @@ module.exports = {
     } catch (error) {
       await sendMessage(senderId, {
         attachment: {
-          type: "template",
+          type: 'template',
           payload: {
-            template_type: "media",
+            template_type: 'media',
             elements: [
               {
-                media_type: "video",
-                url: "https://www.facebook.com/beluga.xyz/videos/2070790143388193/?app=fbl"
+                media_type: 'video',
+                url: 'https://www.facebook.com/beluga.xyz/videos/2070790143388193/?app=fbl'
               }
             ]
           }
