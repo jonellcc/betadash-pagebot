@@ -4,20 +4,29 @@ module.exports = {
   name: 'tiksearch',
   description: 'Tiktok search',
   author: 'yazky',
+  
   async execute(senderId, args, pageAccessToken, sendMessage) {
     const searchQuery = args.join(" ");
     const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/tiksearchv2?search=${encodeURIComponent(searchQuery)}&count=10`;
 
     try {
       const response = await axios.get(apiUrl);
+      
+      // Ensure the API response has the expected structure
+      if (!response.data || !Array.isArray(response.data.data)) {
+        throw new Error("Invalid API response structure");
+      }
+
       const videos = response.data.data;
 
+      // Prepare quick replies
       const quickReplies = videos.map((video, index) => ({
         content_type: "text",
         title: `Watch ${index + 1}`,
         payload: `WATCH_VIDEO_${index}`,
       }));
 
+      // Prepare elements for the generic template
       const elements = videos.map((video) => ({
         title: video.title,
         image_url: video.cover,
@@ -45,7 +54,9 @@ module.exports = {
         },
         quick_replies: quickReplies
       }, pageAccessToken);
+      
     } catch (error) {
+      console.error("Error fetching TikTok videos:", error.message);
       await sendMessage(senderId, { text: "Failed to fetch TikTok videos." }, pageAccessToken);
     }
   },
@@ -57,6 +68,12 @@ module.exports = {
 
       try {
         const response = await axios.get(apiUrl);
+        
+        // Ensure the API response has the expected structure
+        if (!response.data || !Array.isArray(response.data.data)) {
+          throw new Error("Invalid API response structure");
+        }
+
         const videos = response.data.data;
 
         if (videoIndex >= 0 && videoIndex < videos.length) {
@@ -71,8 +88,11 @@ module.exports = {
               }
             }
           }, pageAccessToken);
+        } else {
+          await sendMessage(senderId, { text: "Invalid video selection." }, pageAccessToken);
         }
       } catch (error) {
+        console.error("Error retrieving the video:", error.message);
         await sendMessage(senderId, { text: "Failed to retrieve the video." }, pageAccessToken);
       }
     }
