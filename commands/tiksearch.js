@@ -12,7 +12,13 @@ module.exports = {
       const response = await axios.get(apiUrl);
       const videos = response.data.data;
 
-      const elements = videos.map((video, index) => ({
+      const quickReplies = videos.map((video, index) => ({
+        content_type: "text",
+        title: `Watch ${index + 1}`,
+        payload: `WATCH_VIDEO_${index}`,
+      }));
+
+      const elements = videos.map((video) => ({
         title: video.title,
         image_url: video.cover,
         default_action: {
@@ -24,42 +30,51 @@ module.exports = {
           {
             type: 'web_url',
             url: video.video,
-            title: 'Watch Video'
+            title: 'Download'
           }
-      /**    {
-            type: 'postback',
-            title: `Watch ${index + 1}`,
-            payload: `WATCH_VIDEO_${index}`
-          } **/
         ]
       }));
 
-      const message = {
+      await sendMessage(senderId, {
         attachment: {
           type: 'template',
           payload: {
             template_type: 'generic',
             elements: elements
           }
-        }
-      };
-
-      await sendMessage(senderId, message, pageAccessToken);
-    } catch (error) {
-      await sendMessage(senderId, {
-        attachment: {
-          type: "template",
-          payload: {
-            template_type: "media",
-            elements: [
-              {
-                media_type: "video",
-                url: "https://www.facebook.com/beluga.xyz/videos/2070790143388193/?app=fbl"
-              }
-            ]
-          }
-        }
+        },
+        quick_replies: quickReplies
       }, pageAccessToken);
+    } catch (error) {
+      await sendMessage(senderId, { text: "Failed to fetch TikTok videos." }, pageAccessToken);
+    }
+  },
+
+  async handleQuickReply(senderId, payload, pageAccessToken, sendMessage, searchQuery) {
+    if (payload.startsWith("WATCH_VIDEO_")) {
+      const videoIndex = parseInt(payload.replace("WATCH_VIDEO_", ""), 10);
+      const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/tiksearchv2?search=${encodeURIComponent(searchQuery)}&count=10`;
+
+      try {
+        const response = await axios.get(apiUrl);
+        const videos = response.data.data;
+
+        if (videoIndex >= 0 && videoIndex < videos.length) {
+          const videoUrl = videos[videoIndex].video;
+
+          await sendMessage(senderId, {
+            attachment: {
+              type: 'video',
+              payload: {
+                url: videoUrl,
+                is_reusable: true
+              }
+            }
+          }, pageAccessToken);
+        }
+      } catch (error) {
+        await sendMessage(senderId, { text: "Failed to retrieve the video." }, pageAccessToken);
+      }
     }
   }
 };
