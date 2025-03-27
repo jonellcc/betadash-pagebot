@@ -4,31 +4,17 @@ module.exports = {
   name: 'tiksearch',
   description: 'Tiktok search',
   author: 'yazky',
-  
   async execute(senderId, args, pageAccessToken, sendMessage) {
-    const searchQuery = args.join(" ");
-    const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/tiksearchv2?search=${encodeURIComponent(searchQuery)}&count=10`;
+    const searchQuery = args.join(' ').replace(/ /g, '+');
+    const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/tiksearchv2?search=${searchQuery}&count=10`;
 
     try {
       const response = await axios.get(apiUrl);
-      
-      // Ensure the API response has the expected structure
-      if (!response.data || !Array.isArray(response.data.data)) {
-        throw new Error("Invalid API response structure");
-      }
-
       const videos = response.data.data;
 
-      // Prepare quick replies
-      const quickReplies = videos.map((video, index) => ({
-        content_type: "text",
-        title: `Watch ${index + 1}`,
-        payload: `WATCH_VIDEO_${index}`,
-      }));
-
-      // Prepare elements for the generic template
-      const elements = videos.map((video) => ({
+      const elements = videos.map((video, index) => ({
         title: video.title,
+        subtitle: `Video ${index + 1}`,
         image_url: video.cover,
         default_action: {
           type: "web_url",
@@ -40,61 +26,41 @@ module.exports = {
             type: 'web_url',
             url: video.video,
             title: 'Download'
+          },
+          {
+            type: 'postback',
+            title: `Watch ${index + 1}`,
+            payload: `WATCH_VIDEO_${index}`
           }
         ]
       }));
 
-      await sendMessage(senderId, {
+      const message = {
         attachment: {
           type: 'template',
           payload: {
             template_type: 'generic',
             elements: elements
           }
-        },
-        quick_replies: quickReplies
-      }, pageAccessToken);
-      
+        }
+      };
+
+      await sendMessage(senderId, message, pageAccessToken);
     } catch (error) {
-      console.error("Error fetching TikTok videos:", error.message);
-      await sendMessage(senderId, { text: "Failed to fetch TikTok videos." }, pageAccessToken);
-    }
-  },
-
-  async handleQuickReply(senderId, payload, pageAccessToken, sendMessage, searchQuery) {
-    if (payload.startsWith("WATCH_VIDEO_")) {
-      const videoIndex = parseInt(payload.replace("WATCH_VIDEO_", ""), 10);
-      const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/tiksearchv2?search=${encodeURIComponent(searchQuery)}&count=10`;
-
-      try {
-        const response = await axios.get(apiUrl);
-        
-        // Ensure the API response has the expected structure
-        if (!response.data || !Array.isArray(response.data.data)) {
-          throw new Error("Invalid API response structure");
-        }
-
-        const videos = response.data.data;
-
-        if (videoIndex >= 0 && videoIndex < videos.length) {
-          const videoUrl = videos[videoIndex].video;
-
-          await sendMessage(senderId, {
-            attachment: {
-              type: 'video',
-              payload: {
-                url: videoUrl,
-                is_reusable: true
+      await sendMessage(senderId, {
+        attachment: {
+          type: "template",
+          payload: {
+            template_type: "media",
+            elements: [
+              {
+                media_type: "video",
+                url: "https://www.facebook.com/beluga.xyz/videos/2070790143388193/?app=fbl"
               }
-            }
-          }, pageAccessToken);
-        } else {
-          await sendMessage(senderId, { text: "Invalid video selection." }, pageAccessToken);
+            ]
+          }
         }
-      } catch (error) {
-        console.error("Error retrieving the video:", error.message);
-        await sendMessage(senderId, { text: "Failed to retrieve the video." }, pageAccessToken);
-      }
+      }, pageAccessToken);
     }
   }
 };
