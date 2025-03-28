@@ -25,7 +25,7 @@ module.exports = {
 
       const elements = results.map(track => ({
         title: track.title,
-        subtitle: `${track.artist}\n• ${track.plays} plays\n • ${track.duration}\n • Uploaded ${track.uploaded} ago`,
+        subtitle: `• ${track.plays} plays\n• ${track.duration}\n• Uploaded ${track.uploaded} ago`,
         image_url: track.thumbnail,
         default_action: {
           type: "web_url",
