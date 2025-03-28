@@ -14,7 +14,7 @@ module.exports = {
     const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/SoundCloud?search=${query}`;
 
     try {
-      sendMessage(senderId, { text: "[ 🔍 ] Searching SoundCloud...\n\nPlease wait a moment..." }, pageAccessToken);
+    /**  sendMessage(senderId, { text: "[ 🔍 ] Searching SoundCloud...\n\nPlease wait a moment..." }, pageAccessToken); **/
 
       const response = await axios.get(apiUrl);
       const { results } = response.data;
@@ -25,12 +25,12 @@ module.exports = {
 
       const elements = results.map(track => ({
         title: track.title,
-        subtitle: `${track.artist} • ${track.plays} plays • ${track.duration} • Uploaded ${track.uploaded} ago`,
+        subtitle: `${track.artist}\n• ${track.plays} plays\n • ${track.duration}\n • Uploaded ${track.uploaded} ago`,
         image_url: track.thumbnail,
         default_action: {
           type: "web_url",
           url: track.url,
-          webview_height_ratio: "compact"
+          webview_height_ratio: "tall"
         },
         buttons: [
           {
@@ -46,7 +46,7 @@ module.exports = {
           type: 'template',
           payload: {
             template_type: 'generic',
-            elements: elements.slice(0, 10)
+            elements: elements
           }
         }
       };
@@ -70,3 +70,4 @@ module.exports = {
     }
   }
 };
+
