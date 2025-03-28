@@ -36,11 +36,11 @@ const m = sendMessage;
       if (t.length > l) {
         const c = si(t, l);
         for (const x of c) {
-          const f = `󰥰 ${fonts.bold("VONDY")}\n━━━━━━━━━━━\n${x}\n━━━━━ ✕ ━━━━━`;
+          const f = `[ 🤙🏻 ] ${fonts.bold("VONDY")}\n━━━━━━━━━━━\n${x}\n━━━━━ ✕ ━━━━━`;
          await m(s, { text: f }, p);
         }
       } else {
-        const f = `󰥰 ${fonts.bold("VONDY")}\n━━━━━━━━━━━━\n${t}\n━━━━━ ✕ ━━━━━`;
+        const f = `[ 🤙🏻 ] ${fonts.bold("VONDY")}\n━━━━━━━━━━━━\n${t}\n━━━━━ ✕ ━━━━━`;
        await m(s, { text: f }, p);
       }
     } catch (e) {
