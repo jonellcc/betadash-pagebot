@@ -657,8 +657,9 @@ let content = "";
 if (event.message && event.message.reply_to) {
 content = await getMessage(event.message.reply_to.mid);
 }
-const combinedContent = content ? `${messageText} ${content}` : messageText;
-
+const cleanContent = content.replace(/[✦✧⟡] \| 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭\.𝟱|━━━━━━━━━━━━━/g, "").trim();
+const combinedContent = cleanContent ? `${messageText} ${cleanContent}` : messageText;
+  
 let imageUrl = '';
 
 if (event.message && event.message.attachments) {
@@ -1094,13 +1095,13 @@ const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURI
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
         const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&&imageUrl=${imgurLink}`;
-const s = [ "✦", "✧", "✦", "⟡"];
+const s = ["✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
         const response = await axios.get(apiUrl, { headers });
        const cg = convertToBold(response.data.response);
         text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━━\n${cg}\n━━━━━━━━━━━━━━`;
       } else {
-     const s = ["✦", "✧", "✦", "⟡"];
+     const s = ["✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
         const api = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}`;
      const response = await axios.get(api);
