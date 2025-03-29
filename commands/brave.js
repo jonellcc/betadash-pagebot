@@ -13,7 +13,7 @@ module.exports = {
   description: 'brave search web',
   author: 'Cliff(rest api)',
   async execute(senderId, args, pageAccessToken, sendMessage) {
-    const prompt = args.join(' ');
+    const prompt = args.join('+');
     if (!prompt) {
       await sendMessage(senderId, { text: '𝙿𝚕𝚎𝚊𝚜𝚎 𝚙𝚛𝚘𝚟𝚒𝚍𝚎 𝚊 𝚚𝚞𝚎𝚜𝚝𝚒𝚘𝚗 𝚏𝚒𝚛𝚜𝚝' }, pageAccessToken);
       return;
@@ -22,7 +22,7 @@ module.exports = {
     try {
 await sendMessage(senderId, { text: '🦁 | 𝙱𝚛𝚊𝚟𝚎 𝙰𝙸 𝚒𝚜 𝚝𝚑𝚒𝚗𝚔𝚒𝚗𝚐 𝚙𝚕𝚎𝚊𝚜𝚎 𝚠𝚊𝚒𝚝...' }, pageAccessToken);
 
-      const apiUrl = `https://yt-video-production.up.railway.app/brave?search=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/brave?search=${prompt}`;
       const response = await axios.get(apiUrl);
       const text = response.data.response;
 
