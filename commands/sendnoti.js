@@ -65,7 +65,7 @@ module.exports = {
     ];
 
     if (!allAdmins.includes(senderId)) {
-      sendMessage(senderId, { text: "This command is only for pagebot owner." }, pageAccessToken);
+      sendMessage(senderId, { text: "This command is only for pagebot admin." }, pageAccessToken);
       return;
     }
 
