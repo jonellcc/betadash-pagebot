@@ -1,9 +1,6 @@
 {
   "main": {
-    "Name": "Cliffbot",
     "PAGE_ACCESS_TOKEN": "EAAOGSnFGWtcBO57XkmHyYTcP4rD7AiXRoTu2SBJIJ3EBmqB7sOeRStVEZA1Jq80fjSVjAHLwECujvFJTd1FHOQl8LXn2x7a9nyZBEt6H3yZBq603ezASj9MZCsYyPxCNtHtV3yJnrFzeK7zm3zr7U4t9cU6OJQMA5Nt2hkJsU00N2R9ZCyG11AFICZB7XsCbYqfgZDZD",
-    "PAGEID": "493920247130641",
-    "webhook": "https://betadash-pagebot-production.up.railway.app/webhook",
     "VERIFY_TOKEN": "shipazu",
     "ADMINS": [
       "7913024942132935",
@@ -18,6 +15,20 @@
       "PAGE_ACCESS_TOKEN": "EAAGhpVPwmuMBO3aLu5V93R6aMokPpW9GOsRZCexCeR5WxlDPjD3RR2tcHwAYURdkQrSXfTd3vsnCuLkgiIHmVygz7iOoUzKiruCBCapaKdpEtDVkK2p30ZBL18DQxi8cDAVTRJMzFZABz3ELZCXHLiKNbKZAUDjJUXL5PPEQ1yPagZCzXeW1F1vOJcQ26BChNQ",
       "pageid": "100849055472459",
       "adminid": "8616968718388016"
+    },
+    {
+      "name": "Yhanna Bot",
+      "profileUrl": "https://scontent-dfw5-2.xx.fbcdn.net/v/t39.30808-1/486736470_122122285520688604_527629069531380536_n.jpg?stp=c78.0.200.200a_dst-jpg_s200x200_tt6&_nc_cat=100&ccb=1-7&_nc_sid=79bf43&_nc_ohc=dpnuk8zYe7gQ7kNvgFkFDuD&_nc_zt=24&_nc_ht=scontent-dfw5-2.xx&edm=AJdBtusEAAAA&_nc_gid=oIZGod_cVqWpnlTfzyPm0w&oh=00_AYFJ9hD2UoqCAp6OIp-Raq4u45H7M-uvv5g8Ijkj7sNIjA&oe=67EF53F4",
+      "PAGE_ACCESS_TOKEN": "EAAIwneLhvkcBO4mVXBnMPjYwlTh5e7F8RXKAGieyCwZCZCbJBwQ5upJT1ZCQKrggvbuvNYoS0HnjJzCVLFaNHZAUB3jCeZCUwapthPlFQqVpIhA8hqjitx2tFoWbB6o1Le13fz71XZB0tqBDHKgcqTANkLYJTJ9X7G55r4Tj8Pp2rr4Pc7btpv8MjYIM5cXXLVMgZDZD",
+      "pageid": "526614983865257",
+      "adminid": "8792919104096495"
+    },
+    {
+      "name": "Rousseau",
+      "profileUrl": "https://scontent-dfw5-1.xx.fbcdn.net/v/t39.30808-1/487509271_122093151110834640_2247789991107692439_n.jpg?stp=c157.0.405.405a_dst-jpg_s405x405_tt6&_nc_cat=109&ccb=1-7&_nc_sid=79bf43&_nc_eui2=AeGwPXy6lIVQI2ikcUKu4UByCoVQPrkc62oKhVA-uRzrarqIVLBD8UJie9uugVDsDmLBYOqRmK1BfNxrRyz6MtC9&_nc_ohc=cVAo8e9Xu30Q7kNvgG1LvXU&_nc_zt=24&_nc_ht=scontent-dfw5-1.xx&edm=AJdBtusEAAAA&_nc_gid=_R_-xdDieE0DQ7xNXR6eQg&oh=00_AYEhOUWS4eFaXZ4eUWkBjee3b1DWEzuEktauVwzglLqw8w&oe=67EF55F2",
+      "PAGE_ACCESS_TOKEN": "EAAQynysI8W8BO4yXH6Tfj9fPOdo5XesIYZA6uyrgZBfFSCvQREhVHi13fkMMNeZBqrL75metzVMkZAWuRZA5eyb4MspfXqdZCZAW5GxDMJC9ElPGgPEX62MkniNvRm9QDTe5av2EM8YRSJ9ZCRZBlkxyxONbTh18Se8YwQNtr8QiBsnAhgdYZB1ZA33ETBUM84AgHXssgZDZD",
+      "pageid": "640665349120971",
+      "adminid": "7881326281968200"
     }
   ]
 }
