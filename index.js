@@ -594,9 +594,9 @@ const messageId = event.message.mid;
 const If = "aidetect";
 const j = "humanize";
 const x = "\uD83D\uDC4D";
-const k = "U+1F44D";
+/** const k = "U+1F44D";
 
-const thb = await getAttachments(k);
+const thb = await getAttachments(k); **/
     
     
     const allAdmins = [
@@ -1087,7 +1087,7 @@ if (messageText && messageText.startsWith("humanize")) {
     }
   } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText)
 && !redditVideoRegex.test(messageText)
-&& !snapchatRegex.test(messageText) && haha !== messageText && If !== messageText && j !== messageText && x !== messageText && thb !== messageText) {
+&& !snapchatRegex.test(messageText) && haha !== messageText && If !== messageText && j !== messageText && x !== messageText) {
    try {
   let text;
     if (imageUrl) {
