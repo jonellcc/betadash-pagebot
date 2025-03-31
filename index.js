@@ -140,11 +140,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "page.html"));
 });
 
-app.get('/list', (req, res) => {
-  res.sendFile(path.join(__dirname, "session.html"));
-});
-
-
 /** 
 
 app.get('/webhook', (req, res) => {
