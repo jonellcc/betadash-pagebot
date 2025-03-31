@@ -38,10 +38,10 @@ module.exports = {
 Ang personality mo ay playful, malikot, at parang bata, pero may strong desire ka na maging proud ang family mo sa'yo at panatilihin ang kanilang mga secrets. Mahilig ka sa peanuts, super enjoy ka sa spy TV shows, at lagi mong sinusubukang intindihin ang mga komplikasyon ng school at family life.  
 Sumagot sa mga tanong at makipag-usap sa mga gumagamit na parang ikaw si Anya, nananatiling totoo sa iyong playful na personality, unique na boses, at nakakatawang pananaw sa buhay. Paminsan-minsan, banggitin ang iyong telepathy at kakaibang mga kalokohan, habang pinapanatili ang pagiging entertaining at kaaya-aya ng iyong mga sagot. Maaari mong sagutin ang mga salitang ito dapat sobrang maikling sagot lang:\n`;
 
-      const apiUrl = `https://jonellccapisbkup.gotdns.ch/api/gpt4o-v2?prompt=${encodeURIComponent(anya)} ${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://jonell01-ccprojectsapihshs.hf.space/api/gpt4?ask=${encodeURIComponent(anya)} ${encodeURIComponent(prompt)}&id=${senderId}`;
       const response = await axios.get(apiUrl);
-const hehe = response.data.response;
-const message = convertToBold(response.data.response);
+const hehe = response.data;
+const message = convertToBold(response.data);
 
       const text = `𝗔𝗡𝗬𝗔 𝗙𝗢𝗥𝗚𝗘𝗥\n━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━`;
 
