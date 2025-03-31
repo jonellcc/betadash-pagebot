@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 90%;
+            max-width: 600px;
+        }
+        .header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .session-list {
+            padding: 20px;
+        }
+        .session-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+        .session-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .session-item .details {
+            flex: 1;
+        }
+        .session-item .details h2 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        .session-item .details p {
+            margin: 5px 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Session Dashboard</h1>
+        </div>
+        <div class="session-list" id="session-list">
+            <!-- Session items will be injected here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            await fetch('/webhook')
+                .then(response => response.json())
+                .then(data => {
+                    const sessionList = document.getElementById('session-list');
+                    data.session.forEach(session => {
+                        const sessionItem = document.createElement('div');
+                        sessionItem.classList.add('session-item');
+                        sessionItem.innerHTML = `
+                            <img src="${session.ProfileUrl}" alt="${session.NAME}">
+                            <div class="details">
+                                <h2>${session.NAME}</h2>
+                                <p>PAGEID: ${session.PAGEID}</p>
+                                <p>ADMINID: ${session.ADMINID}</p>
+                            </div>
+                        `;
+                        sessionList.appendChild(sessionItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
+</body>
+</html>
