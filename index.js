@@ -318,7 +318,7 @@ app.get('/delete', (req, res) => {
 app.get('/sessions', (req, res) => {
   const maskedMain = {
     NAME: config.main.Name,
-    profileUrl: config.main.profileUrl;
+    profileUrl: config.main.profileUrl,
     PAGE_ACCESS_TOKEN: config.main.PAGE_ACCESS_TOKEN
       ? config.main.PAGE_ACCESS_TOKEN.substring(0, 4) + "****************************************************************************************************************************************************************"
       : "****************************************************************************************************************************************************************",
