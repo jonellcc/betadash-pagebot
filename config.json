@@ -2,7 +2,7 @@
   "main": {
     "Name": "Cliffbot",
     "profileUrl": "https://i.ibb.co/JwBVyM3h/1743383821399.jpg",
-    "PAGE_ACCESS_TOKEN": "EAAOGSnFGWtcBO57XkmHyYTcP4rD7AiXRoTu2SBJIJ3EBmqB7sOeRStVEZA1Jq80fjSVjAHLwECujvFJTd1FHOQl8LXn2x7a9nyZBEt6H3yZBq603ezASj9MZCsYyPxCNtHtV3yJnrFzeK7zm3zr7U4t9cU6OJQMA5Nt2hkJsU00N2R9ZCyG11AFICZB7XsCbYqfgZDZD",
+    "PAGE_ACCESS_TOKEN": "EAAOGSnFGWtcBO05rnnqkGncHUgA1WdlyV6LPOCQW4tCF35ib5qHUPy7xpc1mZBOIkCpDiZBJSKuvDUKhksGrm0DwcZCsciLeHp617JVfZASDXG8AYV0KD2RtvvWkafel34fZCVqmZAa0hawc7ZCVW9AUy1apOybzbBDo4fGgZChbKE4h72hZB5ZAjJN0F3yWBY2DzqZAgZDZD",
     "webhook": "https://betadash-pagebot-production.up.railway.app/webhook",
     "VERIFY_TOKEN": "shipazu",
     "PAGEID": "493920247130641",
@@ -30,7 +30,7 @@
     {
       "name": "Rousseau",
       "profileUrl": "https://i.ibb.co/chqNnQwZ/image.jpg",
-      "PAGE_ACCESS_TOKEN": "EAAQynysI8W8BO4yXH6Tfj9fPOdo5XesIYZA6uyrgZBfFSCvQREhVHi13fkMMNeZBqrL75metzVMkZAWuRZA5eyb4MspfXqdZCZAW5GxDMJC9ElPGgPEX62MkniNvRm9QDTe5av2EM8YRSJ9ZCRZBlkxyxONbTh18Se8YwQNtr8QiBsnAhgdYZB1ZA33ETBUM84AgHXssgZDZD",
+      "PAGE_ACCESS_TOKEN": "EAAQynysI8W8BO3WUg1vQ6i8EQCaKa8osvxagLBlkFZBWoZCYwtA7wkZAgOqyTb7vQXbwaJEX4klGa3e83rgoKAbWGPB8ZBnVTLtWKqEr3fpoKiwE1uR0bHE00wXZBDYA0ieHgOeHBrKDvcqUmINmsAzJnKF3bn97yhuBFeqcBVFZBtz2aJzchXMyuHvfoZCZBgkyLAZDZD",
       "pageid": "640665349120971",
       "adminid": "23898703249730905"
     }
