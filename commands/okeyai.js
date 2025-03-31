@@ -1,34 +1,49 @@
-const axios = require('axios');
+const as = require('axios');
+
+function si(m, c) {
+  const r = [];
+  for (let i = 0; i < m.length; i += c) {
+    r.push(m.slice(i, i + c));
+  }
+  return r;
+}
 
 module.exports = {
   name: 'okeyai',
-  description: 'Ask a question to okey Ai',
-  author: 'kiff (rest api)',
-  async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
-    const prompt = args.join(' ');
-if (!prompt) {
-          sendMessage(senderId, { text: 'please provide a question first' }, pageAccessToken);
-        return;
+  description: 'A cutting-edge AI that sees, hears, understands, and adapts in real time ',
+  author: 'ozosOkechukwu playground',
+    async execute(senderId, args, pageAccessToken, sendMessage) {
+
+const s = senderId;
+const a = args;
+const p = pageAccessToken;
+const m = sendMessage;
+
+    const q = a.join('+');
+
+    if (!q) {
+      await m(s, { text: 'Please provide a question first.' }, p);
+      return;
     }
 
     try {
-      const apiUrl = `https://www.vertearth.cloud/api/okeyai?prompt=${encodeURIComponent(prompt)}`;
-      const response = await axios.get(apiUrl);
-      const text = response.data.response;
+      const u = `https://api.okeymeta.com.ng/api/ssailm/model/okeyai3.0-vanguard/okeyai?input=${q}`;
+      const r = await as.get(u);
+      const t = r.data.response;
 
-      const maxMessageLength = 2000;
-      if (text.length > maxMessageLength) {
-        const messages = splitMessageIntoChunks(text, maxMessageLength);
-        for (const message of messages) {
-const kupal = `֎ | 𝗢𝗞𝗘𝗬𝗔𝗜\n━━━━━━━━━━━━━━━━\n${message}\n━━━━━━━━━━━━━━━━`;
-          sendMessage(senderId, { text: kupal }, pageAccessToken);
+      const l = 2000;
+      if (t.length > l) {
+        const c = si(t, l);
+        for (const x of c) {
+          const f = `∞ | 𝗢𝗸𝗲𝘆𝗠𝗲𝘁𝗮\n━━━━━━━━━━━\n${x}\n━━━━━ ✕ ━━━━━`;
+         await m(s, { text: f }, p);
         }
       } else {
-const kupal2 = `֎ | 𝗢𝗞𝗘𝗬𝗔𝗜\n━━━━━━━━━━━━━━━━\n${text}\n━━━━━━━━━━━━━━━━`;
-        sendMessage(senderId, { text: kupal2 }, pageAccessToken);
+        const f = `∞ | 𝗢𝗸𝗲𝘆𝗠𝗲𝘁𝗮\n━━━━━━━━━━━━\n${t}\n━━━━━ ✕ ━━━━━`;
+       await m(s, { text: f }, p);
       }
-    } catch (error) {
-      sendMessage(senderId, { text: 'An error while fetching api status: kupal' }, pageAccessToken);
+    } catch (e) {
+      await m(s, { text: e.message }, p);
     }
   }
 };
