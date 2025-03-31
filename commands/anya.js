@@ -67,7 +67,7 @@ const message = convertToBold(response.data);
     } catch (error) {
       sendMessage(
         senderId,
-        { text: 'Naku! May nangyaring mali habang nakikipag-usap kay Anya. Pakisubukang muli mamaya.' },
+        { text: 'Lowbat na si Anya. Pakisubukang muli mamaya.' },
         pageAccessToken
       );
     }
