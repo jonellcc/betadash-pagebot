@@ -263,6 +263,8 @@ app.get('/create', async (req, res) => {
     const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`);
     const profileUrl = response.data.picture_large.data.url;
     const { name, id } = response.data;
+    const jhgf = await axios.get(`https://betadash-api-swordslush.vercel.app/imgbb?url=${encodeURIComponent(profileUrl)}`);
+    const prof = jhgf.data.imageUrl;
     const existingSession = sessions.find(session => session.pageid === id);
     if (existingSession) {
       return res.status(409).json({ error: 'Session already exists for this pageid' });
@@ -270,7 +272,7 @@ app.get('/create', async (req, res) => {
 
       const newSession = {
         name: name,
-        profileUrl: profileUrl,
+        profileUrl: prof,
         PAGE_ACCESS_TOKEN: pageAccessToken,
         pageid: id,
         adminid: adminid
@@ -316,6 +318,7 @@ app.get('/delete', (req, res) => {
 app.get('/sessions', (req, res) => {
   const maskedMain = {
     NAME: config.main.Name,
+    profileUrl: config.main.profileUrl;
     PAGE_ACCESS_TOKEN: config.main.PAGE_ACCESS_TOKEN
       ? config.main.PAGE_ACCESS_TOKEN.substring(0, 4) + "****************************************************************************************************************************************************************"
       : "****************************************************************************************************************************************************************",
