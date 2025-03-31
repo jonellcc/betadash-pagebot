@@ -54,11 +54,11 @@ const m = sendMessage;
       if (t.length > l) {
         const c = si(t, l);
         for (const x of c) {
-          const f = `∞ | 𝗢𝗸𝗲𝘆𝗠𝗲𝘁𝗮\n━━━━━━━━━━━\n${convertToBold(x)}\n━━━━━ ✕ ━━━━━`;
+          const f = `∞ | 𝗢𝗸𝗲𝘆𝗠𝗲𝘁𝗮\n━━━━━━━━━━\n${convertToBold(x)}\n━━━━━ ✕ ━━━━━`;
          await m(s, { text: f }, p);
         }
       } else {
-        const f = `∞ | 𝗢𝗸𝗲𝘆𝗠𝗲𝘁𝗮\n━━━━━━━━━━━━\n${convertToBold(t)}\n━━━━━ ✕ ━━━━━`;
+        const f = `∞ | 𝗢𝗸𝗲𝘆𝗠𝗲𝘁𝗮\n━━━━━━━━━━━\n${convertToBold(t)}\n━━━━━ ✕ ━━━━━`;
        await m(s, { text: f }, p);
       }
     } catch (e) {
