@@ -1095,7 +1095,7 @@ if (messageText && messageText.startsWith("humanize")) {
     }
   } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText)
 && !redditVideoRegex.test(messageText)
-&& !snapchatRegex.test(messageText) && haha !== messageText && If !== messageText && j !== messageText && x !== messageText) {
+&& !snapchatRegex.test(messageText) && haha !== messageText && If !== messageText && j !== messageText && x !== messageText && !event.message.is_echo) {
    try {
   let text;
     if (imageUrl) {
