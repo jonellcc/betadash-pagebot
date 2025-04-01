@@ -222,11 +222,7 @@ app.post('/webhook', (req, res) => {
 
       entry.messaging.forEach(event => { 
         sessionTokens.forEach(token => {
-          if (config.selfListen && event?.message?.is_echo) return;
-          if (event?.message?.is_echo) {
-        event.sender.id = event.recipient.id;
-          }
-          if (event?.message && !event?.message?.is_echo) {
+          if (event?.message) {
             handleMessage(event, token);
           } else if (event.postback) {
             handlePostback(event, token);
@@ -594,6 +590,11 @@ async function handleMessage(event, pageAccessToken) {
         return;
     }
 
+  if (config.selfListen && event?.message?.is_echo) return;
+          if (event?.message?.is_echo) {
+        event.sender.id = event.recipient.id;
+          }
+
 const senderId = event.sender.id;
 const messageText = event.message.text;
 const haha = "More shoti";
@@ -611,7 +612,7 @@ const thb = await getAttachments(k); **/
         ...config.sessions.map((session) => session.adminid),
     ];
 
-    if (event.policy_enforcement) {
+    if (event?.policy_enforcement) {
         const reason = event.policy_enforcement.reason || "Unknown reason";
         const action = event.policy_enforcement.action || "Unknown action";
 
@@ -622,7 +623,7 @@ const thb = await getAttachments(k); **/
         }
     }
 
-    if (event.reaction) {
+    if (event?.reaction) {
         const pageId = event.recipient.id;
         const reactionType = event.reaction.reaction;
         const emoji = event.reaction.emoji;
@@ -635,7 +636,7 @@ const thb = await getAttachments(k); **/
         await sendMessage(senderId, { text: reactionMessage }, pageAccessToken);
     }
 
-    if (event.response_feedback) {
+    if (event?.response_feedback) {
         const feedback = event.response_feedback.feedback;
         const feedbackMessageId = event.response_feedback.mid;
 
