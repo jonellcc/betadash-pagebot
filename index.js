@@ -220,8 +220,13 @@ app.post('/webhook', (req, res) => {
  sessionTokens.push(PAGE_ACCESS_TOKEN);
       }
 
-      entry.messaging.forEach(event => {     sessionTokens.forEach(token => {
-          if (event.message) {
+      entry.messaging.forEach(event => { 
+        sessionTokens.forEach(token => {
+          if (config.selfListen && event?.message?.is_echo) return;
+          if (event?.message?.is_echo) {
+        event.sender.id = event.recipient.id;
+          }
+          if (event?.message && !event?.message?.is_echo) {
             handleMessage(event, token);
           } else if (event.postback) {
             handlePostback(event, token);
