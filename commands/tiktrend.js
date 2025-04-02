@@ -15,7 +15,7 @@ module.exports = {
 
       const elements = videos.map(video => ({
         title: video.title,
-        subtitle: `Views: ${video.play_count} | Likes: ${video.digg_count}`,
+        subtitle: `Views: ${video.play_count}\nLikes: ${video.digg_count}`,
         image_url: video.cover,
         default_action: {
           type: "web_url",
