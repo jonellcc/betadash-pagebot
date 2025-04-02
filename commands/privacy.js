@@ -163,7 +163,7 @@ Failure to comply may result in access restrictions.`;
 
     <h2>11. Contact Information</h2>
     <p>If you have questions, contact us at:</p>
-    <p><strong>Email:</strong> cliffvincenttorrevillas@gmail.com</p>
+    <p><strong>Email:</strong> ${name}@gmail.com</p>
 </div>
 </body>
 </html>`;
