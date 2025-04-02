@@ -222,10 +222,6 @@ app.post('/webhook', (req, res) => {
 
       entry.messaging.forEach(event => { 
         sessionTokens.forEach(token => {
-         if (config.selfListen && event?.message?.is_echo) return;
-         if (event?.message?.is_echo) {
-      event.sender.id = event.recipient.id;
-         }
           if (event?.message) {
             handleMessage(event, token);
           } else if (event.postback) {
@@ -592,7 +588,12 @@ async function getMessage(mid) {
 async function handleMessage(event, pageAccessToken) {
     if (!event || !event.sender || !event.message || !event.sender.id) {
         return;
-    }  
+    } 
+
+     if (config.selfListen && event?.message?.is_echo) return;
+     if (event?.message?.is_echo) {
+      event.sender.id = event.recipient.id;
+    }
 
 const senderId = event.sender.id;
 const messageText = event.message.text;
