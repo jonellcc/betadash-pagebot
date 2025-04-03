@@ -658,7 +658,6 @@ const allAdmins = [
 
         await sendMessage(senderId, { text: userResponse }, pageAccessToken);
     }
-}
 
 let content = "";
 
