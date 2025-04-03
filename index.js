@@ -356,10 +356,6 @@ async function handlePayload(event, pageAccessToken) {
 sendMessage(senderId, { text: payload }, pageAccessToken);
 }
 
-
-
-
-
 async function profileM() {
   const url = `https://graph.facebook.com/v22.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
   const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${PAGE_ACCESS_TOKEN}`);
@@ -382,15 +378,7 @@ async function profileM() {
   });
 }
 
-async function processEvent(event) {
-    if (event.postback && event.postback.payload === "GET_STARTED_PAYLOAD") {
-        await sendWelcomeMessage(event.sender.id);
-    }
-}
-
 profileM();
-
-
 
 async function sendMessage(senderId, message, pageAccessToken) {
     if (!message || (!message.text && !message.attachment)) {
