@@ -596,7 +596,7 @@ async function handleFeedback(event, feedback, pageAccessToken) {
 }
 
 async function handleReaction(event, reaction, pageAccessToken) {
-    let responseText = { text: `𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝗋𝖾𝖺𝖼𝗍𝗂𝗈𝗇: ${reaction.emoji} (${reaction.action})` };
+    let responseText = { text: `𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝗋𝖾𝖺𝖼𝗍𝗂𝗈𝗇: ${reaction.emoji} (${reaction.reaction})` };
     
     await sendMessage(event.sender.id, responseText, pageAccessToken);
 }
