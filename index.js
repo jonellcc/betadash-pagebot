@@ -224,6 +224,8 @@ app.post('/webhook', (req, res) => {
         sessionTokens.forEach(token => {
           if (event?.message) {
             handleMessage(event, token);
+          } else if (event.postback && event.postback.payload === "GET_STARTED_PAYLOAD") {
+            WelcomeMessage(event, token);
           } else if (event.postback) {
             handlePostback(event, token);
           } else if (event.response_feedback) {
@@ -354,7 +356,11 @@ async function handlePayload(event, pageAccessToken) {
 sendMessage(senderId, { text: payload }, pageAccessToken);
 }
 
-async function initializeMessengerProfile() {
+
+
+
+
+async function profileM() {
   const url = `https://graph.facebook.com/v22.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
   const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${PAGE_ACCESS_TOKEN}`);
     const profileUrl = response.data.picture_large.data.url;
@@ -377,12 +383,12 @@ async function initializeMessengerProfile() {
 }
 
 async function processEvent(event) {
-  if (event.postback && event.postback.payload) {
-    await handlePayload(event.postback.payload);
-  }
+    if (event.postback && event.postback.payload === "GET_STARTED_PAYLOAD") {
+        await sendWelcomeMessage(event.sender.id);
+    }
 }
 
-initializeMessengerProfile();
+profileM();
 
 
 
@@ -441,49 +447,49 @@ async function sendMessage(senderId, message, pageAccessToken) {
 }
 
 
-async function handlePostback(event, pageAccessToken) {
-  const senderId = event.sender.id;
-  const payload = event.postback.payload;
-  if (payload === 'GET_STARTED_PAYLOAD') {
-const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${PAGE_ACCESS_TOKEN}`);
+async function WelcomeMessage(event, pageAccessToken) {
+if (event.postback && event.postback.payload === "GET_STARTED_PAYLOAD") {
+    const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`
+    );
     const profileUrl = response.data.picture_large.data.url;
     const { name, id } = response.data;
+
     const kumag = {
-  attachment: {
-    type: "template",
-    payload: {
-      template_type: "button",
-      text: `𝖧𝖾𝗅𝗅𝗈, 𝖨'𝗆 ${fonts.thin(name.toUpperCase())}! 𝖸𝗈𝗎𝗋 𝖿𝗋𝗂𝖾𝗇𝖽𝗅𝗒 𝖠𝖨 𝖺𝗌𝗌𝗂𝗌𝗍𝖺𝗇𝗍, 𝗁𝖾𝗋𝖾 𝗍𝗈 𝗁𝖾𝗅𝗉 𝗐𝗂𝗍𝗁 𝗊𝗎𝖾𝗌𝗍𝗂𝗈𝗇𝗌, 𝗍𝖺𝗌𝗄𝗌, 𝖺𝗇𝖽 𝗆𝗈𝗋𝖾. 𝖨'𝗆 𝖼𝗈𝗇𝗌𝗍𝖺𝗇𝗍𝗅𝗒 𝗅𝖾𝖺𝗋𝗇𝗂𝗇𝗀 𝖺𝗇𝖽 𝗂𝗆𝗉𝗋𝗈𝗏𝗂𝗇𝗀, 𝗌𝗈 𝗉𝗅𝖾𝖺𝗌𝖾 𝖻𝖾𝖺𝗋 𝗐𝗂𝗍𝗁 𝗆𝖾 𝗂𝖿 𝖾𝗏𝖾𝗋 𝖨 𝗆𝖺𝗄𝖾 𝖺𝗇𝗒 𝗆𝗂𝗌𝗍𝖺𝗄𝖾𝗌. 𝖨'𝗆 𝖾𝗑𝖼𝗂𝗍𝖾𝖽 𝗍𝗈 𝗐𝗈𝗋𝗄 𝗐𝗂𝗍𝗁 𝗒𝗈𝗎 𝖺𝗇𝖽 𝗆𝖺𝗄𝖾 𝗒𝗈𝗎𝗋 𝖽𝖺𝗒 𝖺 𝗅𝗂𝗍𝗍𝗅𝖾 𝖻𝗋𝗂𝗀𝗁𝗍𝖾𝗋.\n\n𝖳𝗒𝗉𝖾 '𝗁𝖾𝗅𝗉' 𝖻𝖾𝗅𝗈𝗐 𝗍𝗈 𝗌𝖾𝖾 𝖺𝗏𝖺𝗂𝗅𝖺𝖻𝗅𝖾 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌`,
-      buttons: [
-        {
-          type: "web_url",
-          url: `https://www.facebook.com/${id}`,
-          title: "𝖫𝖨𝖪𝖤/𝖥𝖮𝖫𝖫𝖮𝖶"
-        }
-      ]
-    }
-  },
-  quick_replies: [
-    {
-      content_type: "text",
-      title: "Help",
-      payload: "HELP"
-    },
-    {
-      content_type: "text",
-      title: "Privacy Policy",
-      payload: "PRIVACY_POLICY"
-    },
-     {
-      content_type: "text",
-      title: "Feedback",
-      payload: "FEEDBACK"
-    }
-  ]
-};
-    
-  await sendMessage(senderId, { text: kumag }, pageAccessToken);
-   }
+        attachment: {
+            type: "template",
+            payload: {
+                template_type: "button",
+                text: `𝖧𝖾𝗅𝗅𝗈, 𝖨'𝗆 ${fonts.thin(name.toUpperCase())}! 𝖸𝗈𝗎𝗋 𝖿𝗋𝗂𝖾𝗇𝖽𝗅𝗒 𝖠𝖨 𝖺𝗌𝗌𝗂𝗌𝗍𝖺𝗇𝗍, 𝗁𝖾𝗋𝖾 𝗍𝗈 𝗁𝖾𝗅𝗉 𝗐𝗂𝗍𝗁 𝗊𝗎𝖾𝗌𝗍𝗂𝗈𝗇𝗌, 𝗍𝖺𝗌𝗄𝗌, 𝖺𝗇𝖽 𝗆𝗈𝗋𝖾. 𝖨'𝗆 𝖼𝗈𝗇𝗌𝗍𝖺𝗇𝗍𝗅𝗒 𝗅𝖾𝖺𝗋𝗇𝗂𝗇𝗀 𝖺𝗇𝖽 𝗂𝗆𝗉𝗋𝗈𝗏𝗂𝗇𝗀, 𝗌𝗈 𝗉𝗅𝖾𝖺𝗌𝖾 𝖻𝖾𝖺𝗋 𝗐𝗂𝗍𝗁 𝗆𝖾 𝗂𝖿 𝖾𝗏𝖾𝗋 𝖨 𝗆𝖺𝗄𝖾 𝖺𝗇𝗒 𝗆𝗂𝗌𝗍𝖺𝗄𝖾𝗌. 𝖨'𝗆 𝖾𝗑𝖼𝗂𝗍𝖾𝖽 𝗍𝗈 𝗐𝗈𝗋𝗄 𝗐𝗂𝗍𝗁 𝗒𝗈𝗎 𝖺𝗇𝖽 𝗆𝖺𝗄𝖾 𝗒𝗈𝗎𝗋 𝖽𝖺𝗒 𝖺 𝗅𝗂𝗍𝗍𝗅𝖾 𝖻𝗋𝗂𝗀𝗁𝗍𝖾𝗋.\n\n𝖳𝗒𝗉𝖾 '𝗁𝖾𝗅𝗉' 𝖻𝖾𝗅𝗈𝗐 𝗍𝗈 𝗌𝖾𝖾 𝖺𝗏𝖺𝗂𝗅𝖺𝖻𝗅𝖾 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌`,
+                buttons: [
+                    {
+                        type: "web_url",
+                        url: `https://www.facebook.com/${id}`,
+                        title: "𝖫𝖨𝖪𝖤/𝖥𝖮𝖫𝖫𝖮𝖶"
+                    }
+                ]
+            }
+        },
+        quick_replies: [
+            {
+                content_type: "text",
+                title: "Help",
+                payload: "HELP"
+            },
+            {
+                content_type: "text",
+                title: "Privacy Policy",
+                payload: "PRIVACY_POLICY"
+            },
+            {
+                content_type: "text",
+                title: "Feedback",
+                payload: "FEEDBACK"
+            }
+        ]
+    };
+
+    await sendMessage(event.sender.id, kumag, pageAccessToken);
+  }
 }
 
 
