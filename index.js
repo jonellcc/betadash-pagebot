@@ -226,6 +226,10 @@ app.post('/webhook', (req, res) => {
             handleMessage(event, token);
           } else if (event.postback) {
             handlePostback(event, token);
+          } else if (event.response_feedback) {
+            handleFeedback(event.sender.id, event.response_feedback);
+          } else if (event.reaction) {
+            handleReaction(event.sender.id, event.reaction);
           } else if (event.sender.id) {
             handleMessage(event, token);
           }
@@ -583,6 +587,17 @@ async function getMessage(mid) {
 }
 
 
+ function handleFeedback(senderId, feedback) {                                                       function handleFeedback(senderId, feedback) {
+    let responseText = feedback.feedback === "Good response"
+        ? "Thank you for your feedback!"
+        : "Sorry about that! We'll improve our responses.";
+      sendMessage(senderId, { text: responseText }, pageAccessToken);
+    }
+
+ function handleReaction(senderId, reaction) {
+    let responsee = { text: `Thanks for your reaction: ${reaction.reaction}` };
+    sendMessage(senderId, responsee, pageAccessToken);
+ }                                             
 
 
 async function handleMessage(event, pageAccessToken) {
@@ -606,58 +621,6 @@ const fac = "faceswap";
 /** const k = "U+1F44D";
 
 const thb = await getAttachments(k); **/
-    
-    
-const allAdmins = [
-        ...config.main.ADMINS,
-        ...config.sessions.map(session => session.adminid),
-    ];
-
-    if (event?.policy_enforcement) {
-        const reason = event.policy_enforcement.reason || "Unknown reason";
-        const action = event.policy_enforcement.action || "Unknown action";
-
-        const alertMessage = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
-
-        for (const adminId of allAdmins) {
-            await sendMessage(adminId, { text: alertMessage }, pageAccessToken);
-        }
-    }
-
-    if (event?.reaction) {
-        const reactionType = event.reaction.reaction;
-        const emoji = event.reaction.emoji;
-        const reactedMessageId = event.reaction.mid;
-
-        let messageContent = await getMessage(reactedMessageId).catch(() => "Attachment");
-
-        const reactionMessage = `User ${senderId} reacted with ${emoji} (${reactionType}) to message:\n\n${messageContent}.`;
-        await sendMessage(senderId, { text: reactionMessage }, pageAccessToken);
-    }
-
-    if (event?.response_feedback) {
-        const feedback = event.response_feedback.feedback;
-        const feedbackMessageId = event.response_feedback.mid;
-
-        let messageContent = "Unknown message";
-        if (feedbackMessageId) {
-            messageContent = await getMessage(feedbackMessageId).catch(() => "Failed to fetch message");
-        }
-
-        const feedbackText = feedback === "Good response"
-            ? `User ${senderId} gave positive feedback for message:\n\n"${messageContent}"`
-            : `User ${senderId} gave negative feedback for message:\n\n"${messageContent}"`;
-
-        for (const adminId of allAdmins) {
-            await sendMessage(adminId, { text: feedbackText }, pageAccessToken);
-        }
-
-      const userResponse = feedback === "Good response"
-            ? "Thanks for your feedback! 😊"
-            : "Sorry about that! We'll try to improve.";
-
-        await sendMessage(senderId, { text: userResponse }, pageAccessToken);
-    }
 
 let content = "";
 
