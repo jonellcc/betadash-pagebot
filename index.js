@@ -587,18 +587,18 @@ async function getMessage(mid) {
 }
 
 
- function handleFeedback(event, feedback, pageAccessToken) {                                                       function handleFeedback(senderId, feedback) {
-    let responseText = feedback.feedback === "Good response"
+ async function handleFeedback(event, feedback, pageAccessToken) {                                                       function handleFeedback(senderId, feedback) {
+    let responseTex = feedback.feedback === "Good response"
         ? "Thank you for your feedback!"
         : "Sorry about that! We'll improve our responses.";
-       await sendMessage(event.sender.id, { text: responseText }, pageAccessToken);
+       await sendMessage(event.sender.id, { text: responseTex }, pageAccessToken);
     }
-                                             }
+                                                           }
 
- function handleReaction(event, reaction, pageAccessToken) {
+ async function handleReaction(event, reaction, pageAccessToken) {
     let responsee = { text: `Thanks for your reaction: ${reaction.emoji} (${reaction.reactionType})` };
     await sendMessage(event.sender.id, responsee, pageAccessToken);
- } 
+ }
 
 
 async function handleMessage(event, pageAccessToken) {
