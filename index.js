@@ -599,7 +599,6 @@ async function getMessage(mid) {
     let responsee = { text: `Thanks for your reaction: ${reaction.reaction}` };
     sendMessage(senderId, responsee, pageAccessToken);
  } 
-}
 
 
 async function handleMessage(event, pageAccessToken) {
