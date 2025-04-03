@@ -596,7 +596,7 @@ async function getMessage(mid) {
 }
 
 async function handleReaction(event, reaction, pageAccessToken) {
-    let responseText = { text: `Thanks for your reaction: ${reaction.emoji} (${reaction.reactionType})` };
+    let responseText = { text: `Thanks for your reaction: ${reaction.emoji} (${reaction.emoji})` };
     
     await sendMessage(event.sender.id, responseText, pageAccessToken);
 }
