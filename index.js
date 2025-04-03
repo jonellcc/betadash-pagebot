@@ -227,9 +227,9 @@ app.post('/webhook', (req, res) => {
           } else if (event.postback) {
             handlePostback(event, token);
           } else if (event.response_feedback) {
-            handleFeedback(event.sender.id, event.response_feedback);
+            handleFeedback(event.sender.id, event.response_feedback, token);
           } else if (event.reaction) {
-            handleReaction(event.sender.id, event.reaction);
+            handleReaction(event.sender.id, event.reaction, token);
           } else if (event.sender.id) {
             handleMessage(event, token);
           }
@@ -587,7 +587,7 @@ async function getMessage(mid) {
 }
 
 
- function handleFeedback(senderId, feedback) {                                                       function handleFeedback(senderId, feedback) {
+ function handleFeedback(senderId, feedback, pageAccessToken) {                                                       function handleFeedback(senderId, feedback) {
     let responseText = feedback.feedback === "Good response"
         ? "Thank you for your feedback!"
         : "Sorry about that! We'll improve our responses.";
@@ -595,7 +595,7 @@ async function getMessage(mid) {
     }
                                              }
 
- function handleReaction(senderId, reaction) {
+ function handleReaction(senderId, reaction, pageAccessToken) {
     let responsee = { text: `Thanks for your reaction: ${reaction.reaction}` };
     sendMessage(senderId, responsee, pageAccessToken);
  } 
