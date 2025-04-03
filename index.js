@@ -608,16 +608,16 @@ const fac = "faceswap";
 const thb = await getAttachments(k); **/
     
     
-    const allAdmins = [
+const allAdmins = [
         ...config.main.ADMINS,
-        ...config.sessions.map((session) => session.adminid),
+        ...config.sessions.map(session => session.adminid),
     ];
 
     if (event?.policy_enforcement) {
         const reason = event.policy_enforcement.reason || "Unknown reason";
         const action = event.policy_enforcement.action || "Unknown action";
 
-        const alertMessage = `🚨 𝖯𝗈𝗅𝗂𝖼𝗒 𝖤𝗇𝖿𝗈𝗋𝖼𝖾𝗆𝖾𝗇𝗍 𝖠𝗅𝖾𝗋𝗍 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
+        const alertMessage = `🚨 Policy Enforcement Alert 🚨\n\nAction: ${action}\nReason: ${reason}\n\nPlease check the bot settings!`;
 
         for (const adminId of allAdmins) {
             await sendMessage(adminId, { text: alertMessage }, pageAccessToken);
@@ -625,12 +625,10 @@ const thb = await getAttachments(k); **/
     }
 
     if (event?.reaction) {
-        const pageId = event.recipient.id;
         const reactionType = event.reaction.reaction;
         const emoji = event.reaction.emoji;
-        const action = event.reaction.action;
         const reactedMessageId = event.reaction.mid;
-        
+
         let messageContent = await getMessage(reactedMessageId).catch(() => "Attachment");
 
         const reactionMessage = `User ${senderId} reacted with ${emoji} (${reactionType}) to message:\n\n${messageContent}.`;
@@ -654,12 +652,13 @@ const thb = await getAttachments(k); **/
             await sendMessage(adminId, { text: feedbackText }, pageAccessToken);
         }
 
-        const userResponse = feedback === "Good response"
-            ? "𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝖿𝖾𝖾𝖽𝖻𝖺𝖼𝗄! 😊"
-            : "𝖲𝗈𝗋𝗋𝗒 𝖺𝖻𝗈𝗎𝗍 𝗍𝗁𝖺𝗍! 𝖶𝖾'𝗅𝗅 𝗍𝗋𝗒 𝗍𝗈 𝗂𝗆𝗉𝗋𝗈𝗏𝖾.";
+      const userResponse = feedback === "Good response"
+            ? "Thanks for your feedback! 😊"
+            : "Sorry about that! We'll try to improve.";
 
         await sendMessage(senderId, { text: userResponse }, pageAccessToken);
     }
+}
 
 let content = "";
 
