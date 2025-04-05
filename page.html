@@ -269,7 +269,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712140.png" />
 </head>
-<body class="bg-[#0a0a0f] text-white font-sans">
+<body class="bg-[#0a0a0f] text-white font-sans relative">
+
   <div class="container mx-auto py-10 px-4 max-w-4xl">
     <h1 class="text-4xl font-bold text-center mb-10 text-[#ffcc99]">Auto-Pagebot</h1>
 
@@ -278,17 +279,17 @@
       <form id="createBotForm" class="grid gap-4">
         <input type="text" id="accessToken" placeholder="Page Access Token" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
         <input type="text" id="adminId" placeholder="Admin ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
-        <button type="submit" class="bg-[#ffcc99] text-black font-bold py-2 rounded-lg hover:bg-[#e6b87d] transition">Create pageBot</button>
+        <button type="submit" class="bg-[#ffcc99] text-black font-bold py-2 rounded-lg hover:bg-[#e6b87d] transition">Submit</button>
       </form>
     </div>
 
     <div class="bg-[#1e1e2f] p-6 rounded-xl shadow-lg mb-10">
-      <h2 class="text-xl font-semibold mb-4">Delete pageBot</h2>
+      <h2 class="text-xl font-semibold mb-4">Delete pagebot</h2>
       <form id="deleteBotForm" class="grid gap-4">
         <input type="text" id="pageid" placeholder="Page ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
         <input type="text" id="username" placeholder="Username" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
         <input type="password" id="password" placeholder="Password" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
-        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition">Delete pageBot</button>
+        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition">Delete</button>
       </form>
     </div>
 
@@ -299,14 +300,18 @@
   </div>
 
   <script>
-    const _0x1f = {
-      _0xa: "/sessions",
-      _0xb: "/create",
-      _0xc: "/delete",
-      _0xd: document.getElementById("sessions"),
-      _0xe: async () => {
+    const _0x = {
+      _surl: "/sessions",
+      _capi: "/create",
+      _dapi: "/delete",
+      _sessBox: document.getElementById("sessions"),
+      _copy: (text) => {
+        navigator.clipboard.writeText(text);
+        alert("Copied to clipboard!");
+      },
+      _render: async () => {
         try {
-          const r = await fetch(_0x1f._0xa);
+          const r = await fetch(_0x._surl);
           const j = await r.json();
           const m = j.main;
           const s = j.session;
@@ -326,8 +331,7 @@
               </div>
             </div>
           `;
-
-         s.forEach(i => {
+          s.forEach(i => {
             html += `
               <div class="bg-[#2c2c3d] p-4 rounded-lg shadow flex items-center gap-4">
                 <img src="${i.ProfileUrl}" alt="${i.NAME}" class="w-16 h-16 rounded-full object-cover">
@@ -341,54 +345,55 @@
           });
           _0x._sessBox.innerHTML = html;
         } catch {
-          alert("Failed to load sessions", "#ef4444");
+          alert("Failed to load sessions");
         }
       }
     };
-    document.getElementById("createBotForm").addEventListener("submit", async (_0x13) => {
-      _0x13.preventDefault();
-      const _0x14 = document.getElementById("accessToken").value.trim();
-      const _0x15 = document.getElementById("adminId").value.trim();
-      if (!_0x14 || !_0x15) return alert("Please Provide a pageAccessToken and pageid first");
+
+    document.getElementById("createBotForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const token = document.getElementById("accessToken").value.trim();
+      const admin = document.getElementById("adminId").value.trim();
+      if (!token || !admin) return alert("Please fill out all fields");
       try {
-        const _0x16 = await fetch(`${_0x1f._0xb}?pageAccessToken=${_0x14}&adminid=${_0x15}`);
-        const _0x17 = await _0x16.json();
-        if (_0x17.error && _0x17.error.includes("already exists")) {
-          alert("Session already exists for this Page ID.");
-        } else if (_0x17.message) {
+        const res = await fetch(`${_0x._capi}?pageAccessToken=${token}&adminid=${admin}`);
+        const data = await res.json();
+        if (data.error?.includes("already exists")) {
+          alert("Session already exists for this Page ID");
+        } else if (data.message) {
           alert("Bot created successfully!");
-          _0x1f._0xe();
+          _0x._render();
         } else {
           alert("Invalid pageAccessToken");
         }
-      } catch (_0x18) {
+   } catch (_0x18) {
         alert(_0x18.message);
       }
     });
 
-    document.getElementById("deleteBotForm").addEventListener("submit", async (_0x19) => {
-      _0x19.preventDefault();
-      const _0x1a = document.getElementById("pageid").value.trim();
-      const _0x1b = document.getElementById("username").value.trim();
-      const _0x1c = document.getElementById("password").value.trim();
-      if (!_0x1a || !_0x1b || !_0x1c) return alert("All fields are required.");
+    document.getElementById("deleteBotForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const pid = document.getElementById("pageid").value.trim();
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      if (!pid || !user || !pass) return alert("All fields are required");
       try {
-        const _0x1d = await fetch(`${_0x1f._0xc}?pageid=${_0x1a}&username=${_0x1b}&password=${_0x1c}`);
-        const _0x1e = await _0x1d.json();
-        if (_0x1e.error === "Unauthorized access") {
-          alert("Incorrect username or password.");
-        } else if (_0x1e.message) {
+        const res = await fetch(`${_0x._dapi}?pageid=${pid}&username=${user}&password=${pass}`);
+        const data = await res.json();
+        if (data.error === "Unauthorized access") {
+          alert("Incorrect username or password");
+        } else if (data.message) {
           alert("Bot deleted successfully!");
-          _0x1f._0xe();
+          _0x._render();
         } else {
           alert("No user in sessions");
         }
-      } catch (_0x1f1) {
-        alert(_0x1f1.message);
+      } catch (error) {
+        alert(error.message);
       }
     });
 
-    _0x1f._0xe();
+    _0x._render();
   </script>
 </body>
 </html>
