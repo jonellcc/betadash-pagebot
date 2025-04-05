@@ -438,14 +438,14 @@
         <div class="flex-1">
           <p class="text-sm text-gray-300 mb-2">Webhook URL</p>
           <div class="flex items-center gap-2">
-            <input type="text" readonly id="webhookUrl" value="https://yourdomain.com/webhook" class="bg-[#2c2c3d] p-3 rounded-lg w-full outline-none text-sm" />
+            <input type="text" readonly id="webhookUrl" value="https://betadash-pagebot-production.up.railway.app/webhook" class="bg-[#2c2c3d] p-3 rounded-lg w-full outline-none text-sm" />
             <button id="copyWebhook" class="w-10 h-10 flex items-center justify-center bg-[#3b3b50] rounded hover:bg-[#505069] transition"></button>
           </div>
         </div>
         <div class="flex-1">
           <p class="text-sm text-gray-300 mb-2">Verify Token</p>
           <div class="flex items-center gap-2">
-            <input type="text" readonly id="verifyToken" value="YourSecretToken123" class="bg-[#2c2c3d] p-3 rounded-lg w-full outline-none text-sm" />
+            <input type="text" readonly id="verifyToken" value="shipazu" class="bg-[#2c2c3d] p-3 rounded-lg w-full outline-none text-sm" />
             <button id="copyToken" class="w-10 h-10 flex items-center justify-center bg-[#3b3b50] rounded hover:bg-[#505069] transition"></button>
           </div>
         </div>
@@ -479,10 +479,6 @@
                   <p class="text-sm text-gray-300">Page ID: ${m.PAGEID}</p>
                   <p class="text-sm text-gray-300">Admins: ${m.ADMINS.join(', ')}</p>
                 </div>
-              </div>
-              <div class="grid gap-2">
-                <button onclick="copyWithFeedback(this, '${m.WEBHOOK}')" class="bg-[#3b3b50] px-3 py-1 rounded text-sm hover:bg-[#505069] transition">Copy Webhook</button>
-                <button onclick="copyWithFeedback(this, '${m.VERIFY_TOKEN}')" class="bg-[#3b3b50] px-3 py-1 rounded text-sm hover:bg-[#505069] transition">Copy Verify Token</button>
               </div>
             </div>
           `;
@@ -584,5 +580,3 @@
   </script>
 </body>
 </html>
-
-
