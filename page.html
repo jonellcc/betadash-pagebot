@@ -264,104 +264,110 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AutoPagebot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutopageBot</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712140.png">
-  <style>
-    body {
-      background-color: #0a0a0f;
-    }
-  </style>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712140.png" />
 </head>
-<body class="text-white font-sans">
+<body class="bg-[#0a0a0f] text-white font-sans">
+  <div class="container mx-auto py-10 px-4 max-w-4xl">
+    <h1 class="text-4xl font-bold text-center mb-10 text-[#ffcc99]">AutopageBot</h1>
 
-  <div class="max-w-4xl mx-auto p-6">
-    <h1 class="text-4xl font-bold text-center mb-10 text-[#ffcc99]">AutopageBot Dashboard</h1>
-
-    <!-- Add Bot -->
-    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow mb-10">
+    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow-lg mb-10">
       <h2 class="text-xl font-semibold mb-4">Add New Bot</h2>
       <form id="createBotForm" class="grid gap-4">
-        <input type="text" id="accessToken" placeholder="Page Access Token" class="bg-[#2c2c3d] p-3 rounded-lg outline-none">
-        <input type="text" id="adminId" placeholder="Admin ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none">
-        <button type="submit" class="bg-[#ffcc99] text-black font-bold py-2 rounded-lg hover:bg-[#e6b87d]">Create Bot</button>
+        <input type="text" id="accessToken" placeholder="Page Access Token" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
+        <input type="text" id="adminId" placeholder="Admin ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
+        <button type="submit" class="bg-[#ffcc99] text-black font-bold py-2 rounded-lg hover:bg-[#e6b87d] transition">Create Bot</button>
       </form>
     </div>
 
-    <!-- Delete Bot -->
-    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow mb-10">
+    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow-lg mb-10">
       <h2 class="text-xl font-semibold mb-4">Delete Bot</h2>
       <form id="deleteBotForm" class="grid gap-4">
-        <input type="text" id="pageid" placeholder="Page ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none">
-        <input type="text" id="username" placeholder="Username" class="bg-[#2c2c3d] p-3 rounded-lg outline-none">
-        <input type="password" id="password" placeholder="Password" class="bg-[#2c2c3d] p-3 rounded-lg outline-none">
-        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg">Delete Bot</button>
+        <input type="text" id="pageid" placeholder="Page ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
+        <input type="text" id="username" placeholder="Username" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
+        <input type="password" id="password" placeholder="Password" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
+        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition">Delete Bot</button>
       </form>
     </div>
 
-    <!-- Active Sessions -->
-    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow">
+    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow-lg">
       <h2 class="text-xl font-semibold mb-4">Active Sessions</h2>
       <div id="sessions" class="grid gap-4"></div>
     </div>
   </div>
 
   <script>
-    const sessionContainer = document.getElementById("sessions");
-
-    async function fetchSessions() {
-      try {
-        const res = await fetch("/sessions");
-        const data = await res.json();
-        sessionContainer.innerHTML = data.session.map(session => `
-          <div class="bg-[#2c2c3d] p-4 rounded-lg shadow flex items-center gap-4">
-            <img src="${session.ProfileUrl}" alt="${session.NAME}" class="w-16 h-16 rounded-full object-cover">
-            <div>
-              <h3 class="text-lg font-bold">${session.NAME}</h3>
-              <p class="text-sm text-gray-300">Page ID: ${session.PAGEID}</p>
-              <p class="text-sm text-gray-300">Admin ID: ${session.ADMINID}</p>
+    const _0x1f = {
+      _0xa: "/sessions",
+      _0xb: "/create",
+      _0xc: "/delete",
+      _0xd: document.getElementById("sessions"),
+      _0xe: async () => {
+        try {
+          const _0xf = await fetch(_0x1f._0xa);
+          const _0x10 = await _0xf.json();
+          _0x1f._0xd.innerHTML = _0x10.session.map(_0x11 => `
+            <div class="bg-[#2c2c3d] p-4 rounded-lg shadow flex items-center gap-4">
+              <img src="${_0x11.ProfileUrl}" alt="${_0x11.NAME}" class="w-16 h-16 rounded-full object-cover">
+              <div>
+                <h3 class="text-lg font-bold">${_0x11.NAME}</h3>
+                <p class="text-sm text-gray-300">Page ID: ${_0x11.PAGEID}</p>
+                <p class="text-sm text-gray-300">Admin ID: ${_0x11.ADMINID}</p>
+              </div>
             </div>
-          </div>
-        `).join('');
-      } catch (error) {
-        console.error("Error fetching sessions:", error);
-        sessionContainer.innerHTML = `<p class="text-red-500">Failed to load sessions.</p>`;
+          `).join('');
+        } catch (_0x12) {
+          alert("Failed to fetch sessions.");
+        }
       }
-    }
+    };
 
-    document.getElementById("createBotForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const accessToken = document.getElementById("accessToken").value.trim();
-      const adminId = document.getElementById("adminId").value.trim();
-      if (!accessToken || !adminId) return alert("Please fill out all fields.");
+    document.getElementById("createBotForm").addEventListener("submit", async (_0x13) => {
+      _0x13.preventDefault();
+      const _0x14 = document.getElementById("accessToken").value.trim();
+      const _0x15 = document.getElementById("adminId").value.trim();
+      if (!_0x14 || !_0x15) return alert("Please fill out all fields.");
       try {
-        const res = await fetch(`/create?pageAccessToken=${accessToken}&adminid=${adminId}`);
-        const data = await res.json();
-        alert("Bot created successfully!");
-        fetchSessions();
-      } catch (err) {
-        alert("Error creating bot.");
+        const _0x16 = await fetch(`${_0x1f._0xb}?pageAccessToken=${_0x14}&adminid=${_0x15}`);
+        const _0x17 = await _0x16.json();
+        if (_0x17.error && _0x17.error.includes("already exists")) {
+          alert("Session already exists for this Page ID.");
+        } else if (_0x17.message) {
+          alert("Bot created successfully!");
+          _0x1f._0xe();
+        } else {
+          alert("Unexpected response.");
+        }
+      } catch (_0x18) {
+        alert("Failed to create bot.");
       }
     });
 
-    document.getElementById("deleteBotForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const pageid = document.getElementById("pageid").value.trim();
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-      if (!pageid || !username || !password) return alert("All fields are required.");
+    document.getElementById("deleteBotForm").addEventListener("submit", async (_0x19) => {
+      _0x19.preventDefault();
+      const _0x1a = document.getElementById("pageid").value.trim();
+      const _0x1b = document.getElementById("username").value.trim();
+      const _0x1c = document.getElementById("password").value.trim();
+      if (!_0x1a || !_0x1b || !_0x1c) return alert("All fields are required.");
       try {
-        await fetch(`https://betadash-pagebot-production.up.railway.app/delete?pageid=${pageid}&username=${username}&password=${password}`);
-        alert("Bot deleted successfully!");
-        fetchSessions();
-      } catch (err) {
-        alert("Error deleting bot.");
+        const _0x1d = await fetch(`${_0x1f._0xc}?pageid=${_0x1a}&username=${_0x1b}&password=${_0x1c}`);
+        const _0x1e = await _0x1d.json();
+        if (_0x1e.error === "Unauthorized access") {
+          alert("Incorrect username or password.");
+        } else if (_0x1e.message) {
+          alert("Bot deleted successfully!");
+          _0x1f._0xe();
+        } else {
+          alert("Unexpected response.");
+        }
+      } catch (_0x1f1) {
+        alert("Failed to delete bot.");
       }
     });
 
-    fetchSessions();
+    _0x1f._0xe();
   </script>
 </body>
 </html>
-
