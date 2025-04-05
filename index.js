@@ -137,7 +137,7 @@ const descriptions = [];
 const commands = new Map();
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, "page.html"));
+  res.sendFile(path.join(__dirname, "public", "page.html"));
 });
 
 /** 
