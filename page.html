@@ -263,424 +263,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon"        href="https://cdn0.iconfinder.com/data/icons/flat-round-arrow-arrow-head/512/Red_Arrow_Down-512.png"
-        type="image/x-icon">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script async src="https://pp.piddu.dev/milk.js" data-ackee-server="https://pp.piddu.dev"
-        data-ackee-domain-id="93394347-a467-40b0-bc73-2026eb00e8a4" data-ackee-opts='{"detailed":true}'></script>
-    <style>
-        * {
-            color: #fff;
-        }
-
-        body {
-            background-color: #070510;
-            background-image: url(/bg.png);
-            background-repeat: repeat;
-            -webkit-animation: bg-scrolling-reverse .92s infinite;
-            -moz-animation: bg-scrolling-reverse .92s infinite;
-            -o-animation: bg-scrolling-reverse .92s infinite;
-            animation: bg-scrolling-reverse .92s infinite;
-            -webkit-animation-timing-function: linear;
-            -moz-animation-timing-function: linear;
-            -o-animation-timing-function: linear;
-            animation-timing-function: linear;
-        }
-
-        @-webkit-keyframes bg-scrolling-reverse {
-            100% {
-                background-position: 50px 50px
-            }
-        }
-
-        @-moz-keyframes bg-scrolling-reverse {
-            100% {
-                background-position: 50px 50px
-            }
-        }
-
-        @-o-keyframes bg-scrolling-reverse {
-            100% {
-                background-position: 50px 50px
-            }
-        }
-
-        @keyframes bg-scrolling-reverse {
-            100% {
-                background-position: 50px 50px
-            }
-        }
-
-        @-webkit-keyframes bg-scrolling {
-            0% {
-                background-position: 50px 50px
-            }
-        }
-
-        @-moz-keyframes bg-scrolling {
-            0% {
-                background-position: 50px 50px
-            }
-        }
-
-        @-o-keyframes bg-scrolling {
-            0% {
-                background-position: 50px 50px
-            }
-        }
-
-        @keyframes bg-scrolling {
-            0% {
-                background-position: 50px 50px
-            }
-        }
-
-        :root {
-            --main: #ffcc99;
-            --secondary: hsl(222 13% 75%);
-        }
-
-        ::placeholder {
-            color: white !important;
-        }
-
-        #options-select .form-select {
-            width: 20rem;
-        }
-
-        .field {
-            width: 100%;
-            height: 45px;
-            margin: 45px 0;
-            display: flex;
-            position: relative;
-        }
-
-        .heading {
-            margin: 13vh 30px 0 70px;
-            text-align: center;
-        }
-
-        .forms {
-            width: 60%;
-            margin: 0 auto;
-            margin-bottom: 50px;
-            padding: 20px;
-            background: #121212;
-            border-radius: 10px;
-        }
-
-        .label {
-            position: absolute;
-            top: -30px;
-            font-weight: 500;
-        }
-
-        .form-select {
-            display: inline-flex;
-            flex-shrink: 0;
-            cursor: pointer;
-            -webkit-user-select: none;
-            user-select: none;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 3rem;
-            padding-left: 1rem;
-            padding-right: 2.5rem;
-            font-size: .875rem;
-            line-height: 1.25rem;
-            line-height: 2;
-            min-height: 3rem;
-            background-color: #ffffff0d;
-            font-weight: 600;
-            transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
-            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
-            transition-duration: .2s;
-            transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-            border-radius: .5rem;
-            background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
-            background-position: calc(100% - 20px) calc(1px + 50%), calc(100% - 16px) calc(1px + 50%);
-            background-size: 4px 4px, 4px 4px;
-            background-repeat: no-repeat;
-            border: none;
-            max-width: 100%;
-        }
-
-        .code {
-            color: #FFFFFF;
-            background: black;
-            box-sizing: border-box;
-            width: 100%;
-            border: 2px solid white;
-            border-radius: 5px;
-            padding-left: 15px;
-            padding: 25px 15px;
-            font-size: 18px;
-            transition: border-color 150ms ease;
-        }
-
-        .lab.green {
-            border: none;
-            background: rgb(16, 202, 16);
-            color: white;
-            display: flex;
-            justify-content: center;
-        }
-
-        i {
-            margin: 0 5px;
-        }
-
-        .lab {
-            padding: 0.5rem;
-            width: 14%;
-            font-family: sans-serif;
-            border-radius: 0.3rem;
-            cursor: pointer;
-            border: 2px solid white;
-            background: #ffffff0d;
-            color: white;
-            display: grid;
-            place-items: center;
-            transition: .3s all ease;
-        }
-
-        .lab:hover {
-            border: 2px solid white;
-            background: white;
-            color: black;
-        }
-
-        .form-select:focus {
-            border: none;
-            outline: 2px solid var(--main);
-            outline-offset: 2px;
-        }
-
-        .form-select * {
-            background: #070510;
-            color: white;
-        }
-
-        .radio-group {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .field .radio-field {
-            height: 25px;
-        }
-
-        .main-container input,
-        .main-container textarea {
-            flex-shrink: 1;
-            transition-duration: .2s;
-            transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-            height: 3rem;
-            padding-left: 1rem;
-            padding-right: 1rem;
-            font-size: .875rem;
-            line-height: 1.25rem;
-            line-height: 2;
-            border-width: 1px;
-            background-color: #ffffff0d;
-            width: 100%;
-            border-radius: 0.5rem;
-            border: none;
-        }
-
-        @media only screen and (max-width: 1300px) {
-            .heading {
-                margin: 100px 0px 30px 0px !important;
-            }
-
-            .forms {
-                width: 95%;
-            }
-
-            h1 {
-                font-size: 3rem !important;
-            }
-        }
-
-        .main-container input:focus,
-        .main-container textarea:focus {
-            border: none;
-            outline: 2px solid var(--main);
-            outline-offset: 2px;
-        }
-
-        .submit {
-            width: 100%;
-            height: 50px;
-            border: none;
-            background: black;
-            margin-top: -20px;
-            border-radius: 5px;
-            color: #fff;
-            border: 2px solid #ffcc99;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: 0.5s ease;
-        }
-
-        .submit:hover {
-            background: #ffcc99;
-            color: #fff;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .visible {
-            display: block;
-        }
-
-        .custom-alert {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 16px 24px;
-            background: linear-gradient(135deg, #181335, #333);
-            color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            text-align: center;
-            font-size: 16px;
-            max-width: 90%;
-            width: 100%;
-            max-width: 300px;
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .custom-alert.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .custom-alert.hide {
-            opacity: 0;
-            transform: translateX(-50%) translateY(-20px);
-        }
-    </style>
-    <title>Autopagebot</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AutoPagebot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712140.png">
+  <style>
+    body {
+      background-color: #0a0a0f;
+    }
+  </style>
 </head>
+<body class="text-white font-sans">
 
-<body>
-    <div class="main-container min-h-screen">
-        <div class="heading">
-            <h1 class="text-white text-7xl font-bold mb-[3%]" id="heading">Autopagebot <span
-                    class="text-[#ffcc99]">Manager</span></h1>
-        </div>
-        <div class="forms">
-            <div id="code-submit">
-                <form onsubmit="return false;">
-                    <div class="container">
-                        <div class="field">
-                            <div class="label">Page Access Token</div>
-                            <input id="pageAccessToken" autocomplete="off" name="pageAccessToken" type="text"
-                                placeholder="Enter Page Access Token" required />
-                        </div>
-                        <div class="field">
-                            <div class="label">Admin ID</div>
-                            <input id="adminId" autocomplete="off" name="adminId" type="text"
-                                placeholder="Enter Admin ID" required />
-                        </div>
-                        <button type="submit" id="createBot" class="submit">Create Bot</button>
-                    </div>
-                </form>
+  <div class="max-w-4xl mx-auto p-6">
+    <h1 class="text-4xl font-bold text-center mb-10 text-[#ffcc99]">AutopageBot Dashboard</h1>
+
+    <!-- Add Bot -->
+    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow mb-10">
+      <h2 class="text-xl font-semibold mb-4">Add New Bot</h2>
+      <form id="createBotForm" class="grid gap-4">
+        <input type="text" id="accessToken" placeholder="Page Access Token" class="bg-[#2c2c3d] p-3 rounded-lg outline-none">
+        <input type="text" id="adminId" placeholder="Admin ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none">
+        <button type="submit" class="bg-[#ffcc99] text-black font-bold py-2 rounded-lg hover:bg-[#e6b87d]">Create Bot</button>
+      </form>
+    </div>
+
+    <!-- Delete Bot -->
+    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow mb-10">
+      <h2 class="text-xl font-semibold mb-4">Delete Bot</h2>
+      <form id="deleteBotForm" class="grid gap-4">
+        <input type="text" id="pageid" placeholder="Page ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none">
+        <input type="text" id="username" placeholder="Username" class="bg-[#2c2c3d] p-3 rounded-lg outline-none">
+        <input type="password" id="password" placeholder="Password" class="bg-[#2c2c3d] p-3 rounded-lg outline-none">
+        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg">Delete Bot</button>
+      </form>
+    </div>
+
+    <!-- Active Sessions -->
+    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow">
+      <h2 class="text-xl font-semibold mb-4">Active Sessions</h2>
+      <div id="sessions" class="grid gap-4"></div>
+    </div>
+  </div>
+
+  <script>
+    const sessionContainer = document.getElementById("sessions");
+
+    async function fetchSessions() {
+      try {
+        const res = await fetch("/sessions");
+        const data = await res.json();
+        sessionContainer.innerHTML = data.session.map(session => `
+          <div class="bg-[#2c2c3d] p-4 rounded-lg shadow flex items-center gap-4">
+            <img src="${session.ProfileUrl}" alt="${session.NAME}" class="w-16 h-16 rounded-full object-cover">
+            <div>
+              <h3 class="text-lg font-bold">${session.NAME}</h3>
+              <p class="text-sm text-gray-300">Page ID: ${session.PAGEID}</p>
+              <p class="text-sm text-gray-300">Admin ID: ${session.ADMINID}</p>
             </div>
-            <div id="session-list">
-                <h2 class="text-white text-3xl font-bold mb-4">Active Sessions</h2>
-                <ul id="sessions"></ul>
-            </div>
-        </div>
-        <script>
-            const createBotBtn = document.getElementById("createBot");
-            const pageAccessTokenInput = document.getElementById("pageAccessToken");
-            const adminIdInput = document.getElementById("adminId");
-            const sessionsList = document.getElementById("sessions");
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error("Error fetching sessions:", error);
+        sessionContainer.innerHTML = `<p class="text-red-500">Failed to load sessions.</p>`;
+      }
+    }
 
-            const showCustomAlert = (message) => {
-                const alert = document.querySelector('.custom-alert');
-                if (alert) {
-                    alert.remove();
-                }
-                const newAlert = document.createElement('div');
-                newAlert.className = "custom-alert show";
-                newAlert.textContent = message;
-                document.body.appendChild(newAlert);
-                setTimeout(() => {
-                    newAlert.classList.remove("show");
-                    newAlert.classList.add("hide");
-                    setTimeout(() => {
-                        document.body.removeChild(newAlert);
-                    }, 300);
-                }, 3000);
-            };
+    document.getElementById("createBotForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const accessToken = document.getElementById("accessToken").value.trim();
+      const adminId = document.getElementById("adminId").value.trim();
+      if (!accessToken || !adminId) return alert("Please fill out all fields.");
+      try {
+        const res = await fetch(`/create?pageAccessToken=${accessToken}&adminid=${adminId}`);
+        const data = await res.json();
+        alert("Bot created successfully!");
+        fetchSessions();
+      } catch (err) {
+        alert("Error creating bot.");
+      }
+    });
 
-            const createBot = async () => {
-                const pageAccessToken = pageAccessTokenInput.value.trim();
-                const adminId = adminIdInput.value.trim();
+    document.getElementById("deleteBotForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const pageid = document.getElementById("pageid").value.trim();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      if (!pageid || !username || !password) return alert("All fields are required.");
+      try {
+        await fetch(`https://betadash-pagebot-production.up.railway.app/delete?pageid=${pageid}&username=${username}&password=${password}`);
+        alert("Bot deleted successfully!");
+        fetchSessions();
+      } catch (err) {
+        alert("Error deleting bot.");
+      }
+    });
 
-                if (!pageAccessToken || !adminId) {
-                    showCustomAlert("Please enter both Page Access Token and Admin ID.");
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`/create?pageAccessToken=${pageAccessToken}&adminid=${adminId}`);
-                    const data = await response.json();
-                    if (data.main) {
-                        showCustomAlert("Bot created successfully!");
-                        fetchSessions();
-                    } else {
-                        showCustomAlert("Failed to create bot.");
-                    }
-                } catch (error) {
-                    showCustomAlert("Error creating bot.");
-                }
-            };
-
-            const fetchSessions = async () => {
-                try {
-                    const response = await fetch('/sessions');
-                    const data = await response.json();
-                    if (data.session) {
-                        sessionsList.innerHTML = '';
-                        data.session.forEach(session => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `
-                                <div class="session-item">
-                                    <img src="${session.ProfileUrl}" alt="${session.NAME}" class="session-img">
-                                    <div class="session-details">
-                                        <h3>${session.NAME}</h3>
-                                        <p>Page ID: ${session.PAGEID}</p>
-                                        <p>Admin ID: ${session.ADMINID}</p>
-                                    </div>
-                                </div>
-                            `;
-                            sessionsList.appendChild(li);
-                        });
-                    }
-                } catch (error) {
-                    showCustomAlert("Error fetching sessions.");
-                }
-            };
-
-            createBotBtn.addEventListener("click", createBot);
-            fetchSessions();
-        </script>
+    fetchSessions();
+  </script>
 </body>
 </html>
+
