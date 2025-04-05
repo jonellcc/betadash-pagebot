@@ -598,78 +598,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AutoPagebot</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712140.png" />
-  <style>
-    body {
-      background-color: #070510;
-      background-image: url(/bg.png);
-      background-repeat: repeat;
-      -webkit-animation: bg-scrolling-reverse .92s infinite;
-      -moz-animation: bg-scrolling-reverse .92s infinite;
-      -o-animation: bg-scrolling-reverse .92s infinite;
-      animation: bg-scrolling-reverse .92s infinite;
-      -webkit-animation-timing-function: linear;
-      -moz-animation-timing-function: linear;
-      -o-animation-timing-function: linear;
-      animation-timing-function: linear;
-    }
-
-    @-webkit-keyframes bg-scrolling-reverse {
-      100% {
-        background-position: 50px 50px;
-      }
-    }
-
-    @-moz-keyframes bg-scrolling-reverse {
-      100% {
-        background-position: 50px 50px;
-      }
-    }
-
-    @-o-keyframes bg-scrolling-reverse {
-      100% {
-        background-position: 50px 50px;
-      }
-    }
-
-    @keyframes bg-scrolling-reverse {
-      100% {
-        background-position: 50px 50px;
-      }
-    }
-
-    @-webkit-keyframes bg-scrolling {
-      0% {
-        background-position: 50px 50px;
-      }
-    }
-
-    @-moz-keyframes bg-scrolling {
-      0% {
-        background-position: 50px 50px;
-      }
-    }
-
-    @-o-keyframes bg-scrolling {
-      0% {
-        background-position: 50px 50px;
-      }
-    }
-
-    @keyframes bg-scrolling {
-      0% {
-        background-position: 50px 50px;
-      }
-    }
-
-    :root {
-      --main: #ffcc99;
-      --secondary: hsl(222 13% 75%);
-    }
-  </style>
+  <link rel="icon" href="https://i.imgur.com/bJQxmed.jpeg" />
 </head>
-<body class="text-white font-sans relative">
+<body class="bg-[#0a0a0f] text-white font-sans relative">
+
   <div class="container mx-auto py-10 px-4 max-w-4xl">
     <h1 class="text-4xl font-bold text-center mb-10 text-[#ffcc99]">Auto-Pagebot</h1>
 
@@ -700,10 +632,10 @@
           <div class="flex items-center gap-2">
             <input type="text" readonly id="webhookUrl" value="https://betadash-pagebot-production.up.railway.app/webhook" class="bg-[#2c2c3d] p-3 rounded-lg w-full outline-none text-sm" />
             <button id="copyWebhook" class="w-10 h-10 flex items-center justify-center bg-[#3b3b50] rounded hover:bg-[#505069] transition">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            </button>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
           </div>
         </div>
         <div class="flex-1">
@@ -711,10 +643,10 @@
           <div class="flex items-center gap-2">
             <input type="text" readonly id="verifyToken" value="shipazu" class="bg-[#2c2c3d] p-3 rounded-lg w-full outline-none text-sm" />
             <button id="copyToken" class="w-10 h-10 flex items-center justify-center bg-[#3b3b50] rounded hover:bg-[#505069] transition">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            </button>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+         </button>
           </div>
         </div>
       </div>
@@ -836,14 +768,14 @@
         alert(error.message);
       }
     });
-
-_0x._render();
+    _0x._render();
   </script>
     <body>   
 <script src="https://cdn.jsdelivr.net/npm/howler@2.2.4/dist/howler.min.js"></script>
     <script>
         let tracks = [
-"https://raw.github.com/Cliffvincent/Jahzb/main/videoplayback.mp3"
+"https://raw.github.com/Cliffvincent/Jahzb/main/videoplayback.mp3",
+"https://raw.github.com/Cliffvincent/Jahzb/main/umaasa.mp4"
         ];
 
         let randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
@@ -859,18 +791,5 @@ _0x._render();
 
         sound.play();
   </script>
-<script>
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'F12') {
-      e.preventDefault();
-    }
-    if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-      e.preventDefault();
-    }
-    if (e.ctrlKey && e.key === 'u') {
-      e.preventDefault();
-    }
-  });
-    </script>
 </body>
 </html>
