@@ -396,7 +396,7 @@
     _0x._render();
   </script>
 </body>
-</html> -->
+</html> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -408,74 +408,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712140.png" />
 </head>
- <style>
-   body {
-  background-color: #070510;
-  background-image: url(/bg.png);
-  background-repeat: repeat;
-  -webkit-animation: bg-scrolling-reverse .92s infinite;
-  -moz-animation: bg-scrolling-reverse .92s infinite;
-  -o-animation: bg-scrolling-reverse .92s infinite;
-  animation: bg-scrolling-reverse .92s infinite;
-  -webkit-animation-timing-function: linear;
-  -moz-animation-timing-function: linear;
-  -o-animation-timing-function: linear;
-  animation-timing-function: linear;
-}
-
-@-webkit-keyframes bg-scrolling-reverse {
-  100% {
-      background-position: 50px 50px
-  }
-}
-
-@-moz-keyframes bg-scrolling-reverse {
-  100% {
-      background-position: 50px 50px
-  }
-}
-
-@-o-keyframes bg-scrolling-reverse {
-  100% {
-      background-position: 50px 50px
-  }
-}
-
-@keyframes bg-scrolling-reverse {
-  100% {
-      background-position: 50px 50px
-  }
-}
-
-@-webkit-keyframes bg-scrolling {
-  0% {
-      background-position: 50px 50px
-  }
-}
-
-@-moz-keyframes bg-scrolling {
-  0% {
-      background-position: 50px 50px
-  }
-}
-
-@-o-keyframes bg-scrolling {
-  0% {
-      background-position: 50px 50px
-  }
-}
-
-@keyframes bg-scrolling {
-  0% {
-      background-position: 50px 50px
-  }
-}
-
-:root {
-  --main: #ffcc99;
-  --secondary: hsl(222 13% 75%);
-}
-</style>
+ 
 <body class="bg-[#0a0a0f] text-white font-sans relative">
 
   <div class="container mx-auto py-10 px-4 max-w-4xl">
@@ -656,4 +589,215 @@
     _0x._render();
   </script>
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutoPagebot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712140.png" />
+  <style>
+    :root {
+      --main: #ffcc99;
+      --secondary: hsl(222 13% 75%);
+    }
+
+    body {
+      background-color: #070510;
+      background-image: url(/bg.png);
+      background-repeat: repeat;
+      animation: bg-scroll 0.92s linear infinite;
+    }
+
+    @keyframes bg-scroll {
+      100% {
+        background-position: 50px 50px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-[#0a0a0f] text-white font-sans relative">
+
+  <div class="container mx-auto py-10 px-4 max-w-4xl">
+    <h1 class="text-4xl font-bold text-center mb-10 text-[#ffcc99]">Auto-Pagebot</h1>
+
+    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow-lg mb-10">
+      <h2 class="text-xl font-semibold mb-4">Create pagebot</h2>
+      <form id="createBotForm" class="grid gap-4">
+        <input type="text" id="accessToken" placeholder="Page Access Token" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
+        <input type="text" id="adminId" placeholder="Admin ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
+        <button type="submit" class="bg-[#ffcc99] text-black font-bold py-2 rounded-lg hover:bg-[#e6b87d] transition">Submit</button>
+      </form>
+    </div>
+
+    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow-lg mb-10">
+      <h2 class="text-xl font-semibold mb-4">Delete pagebot</h2>
+      <form id="deleteBotForm" class="grid gap-4">
+        <input type="text" id="pageid" placeholder="Page ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
+        <input type="text" id="username" placeholder="Username" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
+        <input type="password" id="password" placeholder="Password" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
+        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition">Delete</button>
+      </form>
+    </div>
+
+    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow-lg mb-10">
+      <h2 class="text-xl font-semibold mb-4">Webhook & Verify Token</h2>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex-1">
+          <p class="text-sm text-gray-300 mb-2">Webhook URL</p>
+          <div class="flex items-center gap-2">
+            <input type="text" readonly id="webhookUrl" value="https://betadash-pagebot-production.up.railway.app/webhook" class="bg-[#2c2c3d] p-3 rounded-lg w-full outline-none text-sm" />
+            <button id="copyWebhook" class="w-10 h-10 flex items-center justify-center bg-[#3b3b50] rounded hover:bg-[#505069] transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="flex-1">
+          <p class="text-sm text-gray-300 mb-2">Verify Token</p>
+          <div class="flex items-center gap-2">
+            <input type="text" readonly id="verifyToken" value="shipazu" class="bg-[#2c2c3d] p-3 rounded-lg w-full outline-none text-sm" />
+            <button id="copyToken" class="w-10 h-10 flex items-center justify-center bg-[#3b3b50] rounded hover:bg-[#505069] transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-[#1e1e2f] p-6 rounded-xl shadow-lg">
+      <h2 class="text-xl font-semibold mb-4">Active Sessions</h2>
+      <div id="sessions" class="grid gap-4"></div>
+    </div>
+  </div>
+
+  <script>
+    const _0x = {
+      _surl: "/sessions",
+      _capi: "/create",
+      _dapi: "/delete",
+      _sessBox: document.getElementById("sessions"),
+      _render: async () => {
+        try {
+          const r = await fetch(_0x._surl);
+          const j = await r.json();
+          const m = j.main;
+          const s = j.session;
+          let html = `
+            <div class="bg-[#2c2c3d] p-4 rounded-lg shadow flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+              <div class="flex items-center gap-4">
+                <img src="${m.profileUrl}" alt="${m.NAME}" class="w-16 h-16 rounded-full object-cover">
+                <div>
+                  <h3 class="text-lg font-bold">${m.NAME} <span class="text-sm text-green-400 ml-2">[MAIN]</span></h3>
+                  <p class="text-sm text-gray-300">Page ID: ${m.PAGEID}</p>
+                  <p class="text-sm text-gray-300">Admins: ${m.ADMINS.join(', ')}</p>
+                </div>
+              </div>
+            </div>
+          `;
+          s.forEach(i => {
+            html += `
+              <div class="bg-[#2c2c3d] p-4 rounded-lg shadow flex items-center gap-4">
+                <img src="${i.ProfileUrl}" alt="${i.NAME}" class="w-16 h-16 rounded-full object-cover">
+                <div>
+                  <h3 class="text-lg font-bold">${i.NAME}</h3>
+                  <p class="text-sm text-gray-300">Page ID: ${i.PAGEID}</p>
+                  <p class="text-sm text-gray-300">Admin ID: ${i.ADMINID}</p>
+                </div>
+              </div>
+            `;
+          });
+          _0x._sessBox.innerHTML = html;
+        } catch {
+          alert("Failed to load sessions");
+        }
+      }
+    };
+
+    function copyWithFeedback(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        btn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        `;
+        setTimeout(() => {
+          btn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          `;
+        }, 2000);
+      });
+    }
+
+    document.getElementById("copyWebhook").addEventListener("click", function () {
+      copyWithFeedback(this, document.getElementById("webhookUrl").value);
+    });
+
+    document.getElementById("copyToken").addEventListener("click", function () {
+      copyWithFeedback(this, document.getElementById("verifyToken").value);
+    });
+
+    document.getElementById("createBotForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const token = document.getElementById("accessToken").value.trim();
+      const admin = document.getElementById("adminId").value.trim();
+      if (!token || !admin) return alert("Please fill out all fields");
+      try {
+        const res = await fetch(`${_0x._capi}?pageAccessToken=${token}&adminid=${admin}`);
+        const data = await res.json();
+        if (data.error?.includes("already exists")) {
+          alert("Session already exists for this Page ID");
+        } else if (data.message) {
+          alert("Bot created successfully!");
+          _0x._render();
+        } else {
+          alert("Invalid pageAccessToken");
+        }
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    document.getElementById("deleteBotForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const pid = document.getElementById("pageid").value.trim();
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+      if (!pid || !user || !pass) return alert("All fields are required");
+      try {
+        const res = await fetch(`${_0x._dapi}?pageid=${pid}&username=${user}&password=${pass}`);
+        const data = await res.json();
+        if (data.error === "Unauthorized access") {
+          alert("Incorrect username or password");
+        } else if (data.message) {
+          alert("Bot deleted successfully!");
+          _0x._render();
+        } else {
+          alert("No user in sessions");
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    const music = new Howl({
+      src: ["/PurpleDream.mp3"],
+      autoplay: true,
+      loop: true,
+      volume: 0.5
+    });
+
+    _0x._render();
+  </script>
+</body>
 </html>
+
