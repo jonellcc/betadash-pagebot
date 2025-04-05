@@ -265,30 +265,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AutopageBot</title>
+  <title>AutoPagebot</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712140.png" />
 </head>
 <body class="bg-[#0a0a0f] text-white font-sans">
   <div class="container mx-auto py-10 px-4 max-w-4xl">
-    <h1 class="text-4xl font-bold text-center mb-10 text-[#ffcc99]">AutopageBot</h1>
+    <h1 class="text-4xl font-bold text-center mb-10 text-[#ffcc99]">Auto-Pagebot</h1>
 
     <div class="bg-[#1e1e2f] p-6 rounded-xl shadow-lg mb-10">
-      <h2 class="text-xl font-semibold mb-4">Add New Bot</h2>
+      <h2 class="text-xl font-semibold mb-4">Create pagebot</h2>
       <form id="createBotForm" class="grid gap-4">
         <input type="text" id="accessToken" placeholder="Page Access Token" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
         <input type="text" id="adminId" placeholder="Admin ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
-        <button type="submit" class="bg-[#ffcc99] text-black font-bold py-2 rounded-lg hover:bg-[#e6b87d] transition">Create Bot</button>
+        <button type="submit" class="bg-[#ffcc99] text-black font-bold py-2 rounded-lg hover:bg-[#e6b87d] transition">Create pageBot</button>
       </form>
     </div>
 
     <div class="bg-[#1e1e2f] p-6 rounded-xl shadow-lg mb-10">
-      <h2 class="text-xl font-semibold mb-4">Delete Bot</h2>
+      <h2 class="text-xl font-semibold mb-4">Delete pageBot</h2>
       <form id="deleteBotForm" class="grid gap-4">
         <input type="text" id="pageid" placeholder="Page ID" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
         <input type="text" id="username" placeholder="Username" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
         <input type="password" id="password" placeholder="Password" class="bg-[#2c2c3d] p-3 rounded-lg outline-none" />
-        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition">Delete Bot</button>
+        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition">Delete pageBot</button>
       </form>
     </div>
 
@@ -306,29 +306,50 @@
       _0xd: document.getElementById("sessions"),
       _0xe: async () => {
         try {
-          const _0xf = await fetch(_0x1f._0xa);
-          const _0x10 = await _0xf.json();
-          _0x1f._0xd.innerHTML = _0x10.session.map(_0x11 => `
-            <div class="bg-[#2c2c3d] p-4 rounded-lg shadow flex items-center gap-4">
-              <img src="${_0x11.ProfileUrl}" alt="${_0x11.NAME}" class="w-16 h-16 rounded-full object-cover">
-              <div>
-                <h3 class="text-lg font-bold">${_0x11.NAME}</h3>
-                <p class="text-sm text-gray-300">Page ID: ${_0x11.PAGEID}</p>
-                <p class="text-sm text-gray-300">Admin ID: ${_0x11.ADMINID}</p>
+          const r = await fetch(_0x1f._0xa);
+          const j = await r.json();
+          const m = j.main;
+          const s = j.session;
+          let html = `
+            <div class="bg-[#2c2c3d] p-4 rounded-lg shadow flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+              <div class="flex items-center gap-4">
+                <img src="${m.profileUrl}" alt="${m.NAME}" class="w-16 h-16 rounded-full object-cover">
+                <div>
+                  <h3 class="text-lg font-bold">${m.NAME} <span class="text-sm text-green-400 ml-2">[MAIN]</span></h3>
+                  <p class="text-sm text-gray-300">Page ID: ${m.PAGEID}</p>
+                  <p class="text-sm text-gray-300">Admins: ${m.ADMINS.join(', ')}</p>
+                </div>
+              </div>
+              <div class="grid gap-2">
+                <button onclick="_0x._copy('${m.WEBHOOK}')" class="bg-[#3b3b50] px-3 py-1 rounded text-sm hover:bg-[#505069] transition">Copy Webhook</button>
+                <button onclick="_0x._copy('${m.VERIFY_TOKEN}')" class="bg-[#3b3b50] px-3 py-1 rounded text-sm hover:bg-[#505069] transition">Copy Verify Token</button>
               </div>
             </div>
-          `).join('');
-        } catch (_0x12) {
-          alert("Failed to fetch sessions.");
+          `;
+
+         s.forEach(i => {
+            html += `
+              <div class="bg-[#2c2c3d] p-4 rounded-lg shadow flex items-center gap-4">
+                <img src="${i.ProfileUrl}" alt="${i.NAME}" class="w-16 h-16 rounded-full object-cover">
+                <div>
+                  <h3 class="text-lg font-bold">${i.NAME}</h3>
+                  <p class="text-sm text-gray-300">Page ID: ${i.PAGEID}</p>
+                  <p class="text-sm text-gray-300">Admin ID: ${i.ADMINID}</p>
+                </div>
+              </div>
+            `;
+          });
+          _0x._sessBox.innerHTML = html;
+        } catch {
+          alert("Failed to load sessions", "#ef4444");
         }
       }
     };
-
     document.getElementById("createBotForm").addEventListener("submit", async (_0x13) => {
       _0x13.preventDefault();
       const _0x14 = document.getElementById("accessToken").value.trim();
       const _0x15 = document.getElementById("adminId").value.trim();
-      if (!_0x14 || !_0x15) return alert("Please fill out all fields.");
+      if (!_0x14 || !_0x15) return alert("Please Provide a pageAccessToken and pageid first");
       try {
         const _0x16 = await fetch(`${_0x1f._0xb}?pageAccessToken=${_0x14}&adminid=${_0x15}`);
         const _0x17 = await _0x16.json();
@@ -338,10 +359,10 @@
           alert("Bot created successfully!");
           _0x1f._0xe();
         } else {
-          alert("Unexpected response.");
+          alert("Invalid pageAccessToken");
         }
       } catch (_0x18) {
-        alert("Failed to create bot.");
+        alert(_0x18.message);
       }
     });
 
@@ -360,10 +381,10 @@
           alert("Bot deleted successfully!");
           _0x1f._0xe();
         } else {
-          alert("Unexpected response.");
+          alert("No user in sessions");
         }
       } catch (_0x1f1) {
-        alert("Failed to delete bot.");
+        alert(_0x1f1.message);
       }
     });
 
@@ -371,3 +392,4 @@
   </script>
 </body>
 </html>
+
