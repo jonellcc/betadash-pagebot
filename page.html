@@ -408,6 +408,74 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712140.png" />
 </head>
+ <style>
+   body {
+  background-color: #070510;
+  background-image: url(/bg.png);
+  background-repeat: repeat;
+  -webkit-animation: bg-scrolling-reverse .92s infinite;
+  -moz-animation: bg-scrolling-reverse .92s infinite;
+  -o-animation: bg-scrolling-reverse .92s infinite;
+  animation: bg-scrolling-reverse .92s infinite;
+  -webkit-animation-timing-function: linear;
+  -moz-animation-timing-function: linear;
+  -o-animation-timing-function: linear;
+  animation-timing-function: linear;
+}
+
+@-webkit-keyframes bg-scrolling-reverse {
+  100% {
+      background-position: 50px 50px
+  }
+}
+
+@-moz-keyframes bg-scrolling-reverse {
+  100% {
+      background-position: 50px 50px
+  }
+}
+
+@-o-keyframes bg-scrolling-reverse {
+  100% {
+      background-position: 50px 50px
+  }
+}
+
+@keyframes bg-scrolling-reverse {
+  100% {
+      background-position: 50px 50px
+  }
+}
+
+@-webkit-keyframes bg-scrolling {
+  0% {
+      background-position: 50px 50px
+  }
+}
+
+@-moz-keyframes bg-scrolling {
+  0% {
+      background-position: 50px 50px
+  }
+}
+
+@-o-keyframes bg-scrolling {
+  0% {
+      background-position: 50px 50px
+  }
+}
+
+@keyframes bg-scrolling {
+  0% {
+      background-position: 50px 50px
+  }
+}
+
+:root {
+  --main: #ffcc99;
+  --secondary: hsl(222 13% 75%);
+}
+</style>
 <body class="bg-[#0a0a0f] text-white font-sans relative">
 
   <div class="container mx-auto py-10 px-4 max-w-4xl">
@@ -577,6 +645,7 @@
       }
     });
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js">
     const music = new Howl({
       src: ["/PurpleDream.mp3"],
       autoplay: true,
