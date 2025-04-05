@@ -601,27 +601,75 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712140.png" />
   <style>
-    :root {
-      --main: #ffcc99;
-      --secondary: hsl(222 13% 75%);
-    }
-
     body {
       background-color: #070510;
       background-image: url(/bg.png);
       background-repeat: repeat;
-      animation: bg-scroll 0.92s linear infinite;
+      -webkit-animation: bg-scrolling-reverse .92s infinite;
+      -moz-animation: bg-scrolling-reverse .92s infinite;
+      -o-animation: bg-scrolling-reverse .92s infinite;
+      animation: bg-scrolling-reverse .92s infinite;
+      -webkit-animation-timing-function: linear;
+      -moz-animation-timing-function: linear;
+      -o-animation-timing-function: linear;
+      animation-timing-function: linear;
     }
 
-    @keyframes bg-scroll {
+    @-webkit-keyframes bg-scrolling-reverse {
       100% {
         background-position: 50px 50px;
       }
     }
+
+    @-moz-keyframes bg-scrolling-reverse {
+      100% {
+        background-position: 50px 50px;
+      }
+    }
+
+    @-o-keyframes bg-scrolling-reverse {
+      100% {
+        background-position: 50px 50px;
+      }
+    }
+
+    @keyframes bg-scrolling-reverse {
+      100% {
+        background-position: 50px 50px;
+      }
+    }
+
+    @-webkit-keyframes bg-scrolling {
+      0% {
+        background-position: 50px 50px;
+      }
+    }
+
+    @-moz-keyframes bg-scrolling {
+      0% {
+        background-position: 50px 50px;
+      }
+    }
+
+    @-o-keyframes bg-scrolling {
+      0% {
+        background-position: 50px 50px;
+      }
+    }
+
+    @keyframes bg-scrolling {
+      0% {
+        background-position: 50px 50px;
+      }
+    }
+
+    :root {
+      --main: #ffcc99;
+      --secondary: hsl(222 13% 75%);
+    }
   </style>
 </head>
-<body class="bg-[#0a0a0f] text-white font-sans relative">
-
+<body class="text-white font-sans relative">
   <div class="container mx-auto py-10 px-4 max-w-4xl">
     <h1 class="text-4xl font-bold text-center mb-10 text-[#ffcc99]">Auto-Pagebot</h1>
 
@@ -789,15 +837,39 @@
       }
     });
 
-    const music = new Howl({
-      src: ["/PurpleDream.mp3"],
-      autoplay: true,
-      loop: true,
-      volume: 0.5
-    });
+    <body>   
+<script src="https://cdn.jsdelivr.net/npm/howler@2.2.4/dist/howler.min.js"></script>
+    <script>
+        let tracks = [
+"/PurpleDream.mp3"
+        ];
 
+        let randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
+
+        let sound = new Howl({
+            src: [randomTrack],
+            autoplay: true,
+            loop: false,
+            format: ["mp3"],
+            volume: 1,
+            onend: () => {},
+        });
+
+        sound.play();
+</script>
+<script>
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12') {
+      e.preventDefault();
+    }
+    if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+      e.preventDefault();
+    }
+    if (e.ctrlKey && e.key === 'u') {
+      e.preventDefault();
+    }
+  });
     _0x._render();
   </script>
 </body>
 </html>
-
