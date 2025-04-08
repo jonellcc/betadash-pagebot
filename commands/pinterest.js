@@ -1,43 +1,74 @@
-const axios = require('axios');
-
 module.exports = {
   name: 'pinterest',
   description: 'Fetch images from Pinterest',
   author: 'coffee',
-  usage: 'pinterest <search term> | <number of images (1-5)>',
-  async execute(senderId, args, pageAccessToken, sendMessage) {
+  usage: 'pinterest <search term> | <number of images>',
+  async execute(senderId, args, pageAccessToken, sendMessage, fetch) {
     if (!args || args.length < 1) {
-      return await sendMessage(senderId, { text: '📷 | Please use this format:\npinterest search_name | 1-5' }, pageAccessToken);
+      return await sendMessage(senderId, {
+        text: '📷 | Please use this format:\npinterest search_name | number of images'
+      }, pageAccessToken);
     }
 
     const input = args.join(" ");
     const [searchTerm, numImagesRaw] = input.split(" | ");
-    let numImages = parseInt(numImagesRaw) || 1;
+    let numImages = Math.max(1, parseInt(numImagesRaw) || 1);
 
-    numImages = Math.abs(numImages);
-
-    if (numImages > 5) {
-      return await sendMessage(senderId, { text: 'The number of images cannot exceed 5. Only 5 number limit will be generated to image.' }, pageAccessToken);
+    if (numImages > 13) {
+      return await sendMessage(senderId, {
+        text: 'The number of images cannot exceed 13. Only 13 image limit will be generated.'
+      }, pageAccessToken);
     }
-
-    numImages = Math.min(numImages, 5);
-    numImages = Math.max(numImages, 1);
 
     const apiUrl = `https://betadash-uploader.vercel.app/pinterest?search=${encodeURIComponent(searchTerm)}&count=${numImages}`;
 
     try {
-      const res = await axios.get(apiUrl);
-      const images = res.data.data?.slice(0, numImages);
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      const images = data.data?.slice(0, numImages);
 
-      if (images && images.length > 0) {
-        for (const imageUrl of images) {
-          await sendMessage(senderId, { attachment: { type: 'image', payload: { url: imageUrl } } }, pageAccessToken);
-        }
-      } else {
-        await sendMessage(senderId, { text: 'No images found for your search.' }, pageAccessToken);
+      if (!images || images.length === 0) {
+        return await sendMessage(senderId, {
+          text: 'No images found for your search.'
+        }, pageAccessToken);
       }
+
+      if (images.length > 5) {
+        const elements = images.slice(0, 13).map((url, i) => ({
+          title: `Result ${i + 1}`,
+          image_url: url,
+          subtitle: searchTerm,
+          buttons: [{
+            type: "web_url",
+            url: url,
+            title: "View Image"
+          }]
+        }));
+
+        return await sendMessage(senderId, {
+          attachment: {
+            type: "template",
+            payload: {
+              template_type: "generic",
+              elements
+            }
+          }
+        }, pageAccessToken);
+      }
+
+      for (const url of images) {
+        await sendMessage(senderId, {
+          attachment: {
+            type: 'image',
+            payload: { url }
+          }
+        }, pageAccessToken);
+      }
+
     } catch (error) {
-      await sendMessage(senderId, { text: error.message || 'An error occurred while fetching images.' }, pageAccessToken);
+      await sendMessage(senderId, {
+        text: error.message || 'An error occurred while fetching images.'
+      }, pageAccessToken);
     }
   },
 };
