@@ -23,13 +23,13 @@ module.exports = {
     numImages = Math.min(numImages, 5);
     numImages = Math.max(numImages, 1);
 
-    const apiUrl = `https://pin-kshitiz.vercel.app/pin?search=${encodeURIComponent(searchTerm)}`;
+    const apiUrl = `https://betadash-uploader.vercel.app/pinterest?search=${encodeURIComponent(searchTerm)}&count=${numImages}`;
 
     try {
       const res = await axios.get(apiUrl);
-      const images = res.data.data.slice(0, numImages);
+      const images = res.data.data?.slice(0, numImages);
 
-      if (images.length > 0) {
+      if (images && images.length > 0) {
         for (const imageUrl of images) {
           await sendMessage(senderId, { attachment: { type: 'image', payload: { url: imageUrl } } }, pageAccessToken);
         }
@@ -37,7 +37,7 @@ module.exports = {
         await sendMessage(senderId, { text: 'No images found for your search.' }, pageAccessToken);
       }
     } catch (error) {
-      await sendMessage(senderId, { text: 'Error: Unable to fetch images from Pinterest.' }, pageAccessToken);
+      await sendMessage(senderId, { text: error.message || 'An error occurred while fetching images.' }, pageAccessToken);
     }
   },
 };
