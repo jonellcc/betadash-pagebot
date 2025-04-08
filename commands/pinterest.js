@@ -26,8 +26,8 @@ module.exports = {
     const apiUrl = `https://pin-kshitiz.vercel.app/pin?search=${encodeURIComponent(searchTerm)}`;
 
     try {
-      const { data } = await axios.get(apiUrl);
-      const images = data.result.slice(0, numImages);
+      const res = await axios.get(apiUrl);
+      const images = res.data.data.slice(0, numImages);
 
       if (images.length > 0) {
         for (const imageUrl of images) {
