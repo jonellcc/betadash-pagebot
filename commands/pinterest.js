@@ -16,9 +16,9 @@ module.exports = {
     const [searchTerm, numImagesRaw] = input.split(" | ");
     let numImages = Math.max(1, parseInt(numImagesRaw) || 1);
 
-    if (numImages > 13) {
+    if (numImages > 10) {
       return await sendMessage(senderId, {
-        text: 'The number of images cannot exceed 13. Only 13 image limit will be generated.'
+        text: 'The number of images cannot exceed 10. Only 10 image limit will be generated in carousel generic attachment.'
       }, pageAccessToken);
     }
 
@@ -35,7 +35,7 @@ module.exports = {
       }
 
       if (images.length > 5) {
-        const elements = images.slice(0, 13).map((url, i) => ({
+        const elements = images.slice(0, 10).map((url, i) => ({
           title: `Result ${i + 1}`,
           image_url: url,
           subtitle: searchTerm,
