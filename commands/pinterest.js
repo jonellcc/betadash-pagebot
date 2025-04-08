@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 module.exports = {
   name: 'pinterest',
   description: 'Fetch images from Pinterest',
@@ -23,7 +25,7 @@ module.exports = {
     const apiUrl = `https://betadash-uploader.vercel.app/pinterest?search=${encodeURIComponent(searchTerm)}&count=${numImages}`;
 
     try {
-      const response = await fetch(apiUrl);
+      const response = await axios.get(apiUrl);
       const images = response.data.data.slice(0, numImages);
 
       if (!images || images.length === 0) {
