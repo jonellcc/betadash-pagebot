@@ -24,8 +24,7 @@ module.exports = {
 
     try {
       const response = await fetch(apiUrl);
-      const data = await response.json();
-      const images = data.data?.slice(0, numImages);
+      const images = response.data.data?.slice(0, numImages);
 
       if (!images || images.length === 0) {
         return await sendMessage(senderId, {
