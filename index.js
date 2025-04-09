@@ -918,7 +918,7 @@ await sendMessage(senderId, { text: _0ch }, pageAccessToken);
       return;
 }
 
-if (messageText && messageText.includes("ghibli")) {
+if (messageText && messageText.startsWith("ghibli")) {
     try {
      if (!imageUrl) {
      await sendMessage(senderId, { text: "Reply a photo to to convert ghibli style" }, pageAccessToken);
