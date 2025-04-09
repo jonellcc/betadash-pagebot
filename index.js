@@ -706,6 +706,104 @@ if (containsBannedKeyword) {
   return;
 }
 
+
+const triviaData = {};
+
+async function revealAnswer(senderId) {
+  if (!triviaData[senderId].answered) {
+    const { correctIndex, options } = triviaData[senderId];
+    const correctLetter = String.fromCharCode(65 + correctIndex);
+    await sendMessage(
+      senderId,
+      {
+        text: `Time's up! The correct answer is:\n\n${correctLetter}. ${options[correctLetter]}`,
+      },
+      pageAccessToken
+    );
+    triviaData[senderId].answered = true;
+  }
+}
+
+if (messageText && messageText.toLowerCase().startsWith("quiz")) {
+  try {
+    const res = await fetch("https://betadash-api-swordslush-production.up.railway.app/quiz");
+    const data = await res.json();
+    const question = data.questions[0];
+    const options = question.choices;
+    const correctLetter = question.correct_answer;
+    const correctIndex = Object.keys(options).indexOf(correctLetter);
+
+    if (triviaData[senderId]) {
+      clearTimeout(triviaData[senderId].timeout);
+      delete triviaData[senderId];
+    }
+
+    triviaData[senderId] = {
+      correctIndex,
+      answered: false,
+      options,
+    };
+
+    const quickReplies = Object.keys(options).map((key) => ({
+      content_type: "text",
+      title: `${key}. ${options[key]}`,
+      payload: key,
+    }));
+
+    const timeout = setTimeout(() => {
+      revealAnswer(senderId);
+    }, 30000);
+
+    triviaData[senderId].timeout = timeout;
+
+    await sendMessage(
+      senderId,
+      {
+        text: question.question,
+        quick_replies: quickReplies,
+      },
+      pageAccessToken
+    );
+  } catch (error) {
+    console.error("Quiz error:", error);
+  }
+}
+
+if (
+  messageText &&
+  /^[a-d]$/i.test(messageText.toLowerCase()) &&
+  triviaData[senderId] &&
+  !triviaData[senderId].answered
+) {
+  const userAnswer = messageText.toUpperCase();
+  const { correctIndex, options } = triviaData[senderId];
+  const correctLetter = String.fromCharCode(65 + correctIndex);
+
+  clearTimeout(triviaData[senderId].timeout);
+  triviaData[senderId].answered = true;
+
+  if (userAnswer === correctLetter) {
+    await sendMessage(
+      senderId,
+      {
+        text: `You are correct! The answer is:\n\n${userAnswer}. ${options[userAnswer]}`,
+      },
+      pageAccessToken
+    );
+  } else {
+    await sendMessage(
+      senderId,
+      {
+        text: `Sorry, your answer is wrong. The correct answer is:\n\n${correctLetter}. ${options[correctLetter]}`,
+      },
+      pageAccessToken
+    );
+  }
+}
+
+  
+ 
+
 if (messageText && messageText.toLowerCase().startsWith("imgur")) {
     try {
 if (!imageUrl) {
