@@ -706,7 +706,7 @@ if (containsBannedKeyword) {
   return;
 }
 
-if (messageText && messageText.startsWith("imgur")) {
+if (messageText && messageText.toLowerCase().startsWith("imgur")) {
     try {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Reply to an image to upload in imgur" }, pageAccessToken);
@@ -725,7 +725,7 @@ if (!imageUrl) {
       return;
 }
 
-if (messageText && messageText.startsWith("removebg")) {
+if (messageText && messageText.toLowerCase().startsWith("removebg")) {
     try {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to Remove background image" }, pageAccessToken);
@@ -740,7 +740,7 @@ if (!imageUrl) {
 }
 
 
-if (messageText && messageText.startsWith("recognize")) {
+if (messageText && messageText.toLowerCase().startsWith("recognize")) {
     try {
    if (!imageUrl) {
       sendMessage(senderId, { text: "Reply to a short audio or video" }, pageAccessToken);
@@ -767,7 +767,7 @@ if (messageText && messageText.startsWith("recognize")) {
 }
 
 
-if (messageText && messageText.startsWith("faceswap")) {
+if (messageText && messageText.toLowerCase().startsWith("faceswap")) {
   try {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Reply with two image to combine face" }, pageAccessToken);
@@ -789,7 +789,7 @@ if (!imageUrl) {
       return;
 }
 
-if (messageText && messageText.includes("Get started")) {
+if (messageText && messageText.toLowerCase().startsWith("Get started")) {
   try {
 const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`);
     const profileUrl = response.data.picture_large.data.url;
@@ -834,7 +834,7 @@ const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,p
       return;
 }
 
-if (messageText && messageText.startsWith("remini")) {
+if (messageText && messageText.toLowerCase().startsWith("remini")) {
     try {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to Enhancing image" }, pageAccessToken);
@@ -849,7 +849,7 @@ if (!imageUrl) {
 }
 
 
-if (messageText && messageText.startsWith("upscale")) {
+if (messageText && messageText.toLowerCase().startsWith("upscale")) {
     try {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to Enhancing image" }, pageAccessToken);
@@ -866,7 +866,7 @@ const en = await axios.get(upsc);
 }
 
 
-if (messageText && messageText.startsWith("imgbb")) {
+if (messageText && messageText.toLowerCase().startsWith("imgbb")) {
     try { 
        if (!imageUrl) {
       sendMessage(senderId, { text: "Please reply by image to get the imgbb url" }, pageAccessToken);
@@ -886,7 +886,7 @@ await sendMessage(senderId, { text: yawa}, pageAccessToken);
 }
 
 
-if (messageText && messageText.startsWith("tinyurl")) {
+if (messageText && messageText.toLowerCase().startsWith("tinyurl")) {
     try { 
 if (!imageUrl) {
       sendMessage(senderId, { text: "Please reply by image to get the shorten url" }, pageAccessToken);
@@ -902,7 +902,7 @@ await sendMessage(senderId, { text: dh }, pageAccessToken);
       return;
 }
 
-if (messageText && messageText.startsWith("ocr")) {
+if (messageText && messageText.toLowerCase().startsWith("ocr")) {
     try { 
 if (!imageUrl) {
       sendMessage(senderId, { text: "Please reply by image to get the text" }, pageAccessToken);
@@ -918,7 +918,7 @@ await sendMessage(senderId, { text: _0ch }, pageAccessToken);
       return;
 }
 
-if (messageText && messageText.startsWith("ghibli")) {
+if (messageText && messageText.toLowerCase().startsWith("ghibli")) {
     try {
      if (!imageUrl) {
      await sendMessage(senderId, { text: "Reply a photo to to convert ghibli style" }, pageAccessToken);
@@ -984,7 +984,7 @@ attachment: {
     return;
   } **/
 
-if (messageText && messageText.startsWith("aidetect")) {
+if (messageText && messageText.toLowerCase().startsWith("aidetect")) {
     try {
         if (!content) {
             sendMessage(senderId, { text: "Please reply by message" }, pageAccessToken);
@@ -1036,7 +1036,7 @@ ${additional_feedback || ""}`;
 }
 
 
-if (messageText && messageText.startsWith("humanize")) {
+if (messageText && messageText.toLowerCase().startsWith("humanize")) {
     try {
         if (!content) {
             sendMessage(senderId, { text: "Please reply by a message first" }, pageAccessToken);
