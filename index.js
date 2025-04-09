@@ -743,10 +743,10 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
       options,
     };
 
-    const quickReplies = Object.keys(options).map((key) => ({
-      content_type: "text",
-      title: `${key}. ${options[key]}`,
-      payload: `${key}.toUpperCase(). ${options[key].toUpperCase()}`,
+    const buttons = Object.keys(options).map((key) => ({
+      type: "postback",
+      title: `${key}. ${options[key].toUpperCase()}`,
+      payload: key.toUpperCase(),
     }));
 
     const timeout = setTimeout(() => {
