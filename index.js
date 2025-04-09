@@ -707,16 +707,17 @@ if (containsBannedKeyword) {
 }
 
 
+
 const triviaData = {};
 
 async function revealAnswer(senderId) {
   if (!triviaData[senderId].answered) {
     const { correctIndex, options } = triviaData[senderId];
-    const correctLetter = String.fromCharCode(65 + correctIndex);
+    const correctLetter = Object.keys(options)[correctIndex];
     await sendMessage(
       senderId,
       {
-        text: `Time's up! The correct answer is:\n\n${correctLetter}. ${options[correctLetter]}`,
+        text: `Time's up! The correct answer is:\n\n${correctLetter}. ${options[correctLetter].toUpperCase()}`,
       },
       pageAccessToken
     );
@@ -762,7 +763,7 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
           type: "template",
           payload: {
             template_type: "button",
-            text: question.question,
+            text: decodeURIComponent(question.question),
             buttons: buttons,
           },
         },
@@ -770,23 +771,25 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
       pageAccessToken
     );
   } catch (error) {
-    console.error("Quiz error:", error);
+    console.error("Quiz error:", error.message);
   }
 }
 
+// HANDLE POSTBACK FROM BUTTON
 if (
   event.postback &&
   /^[A-D]$/.test(event.postback.payload) &&
   triviaData[senderId] &&
   !triviaData[senderId].answered
 ) {
-  const userAnswer = event.postback.payload.toUpperCase();  const { correctIndex, options } = triviaData[senderId];
+  const userAnswer = event.postback.payload.toUpperCase();
+  const { correctIndex, options } = triviaData[senderId];
   const correctLetter = Object.keys(options)[correctIndex];
 
   clearTimeout(triviaData[senderId].timeout);
   triviaData[senderId].answered = true;
-  
-if (userAnswer === correctLetter) {
+
+  if (userAnswer === correctLetter) {
     await sendMessage(
       senderId,
       {
@@ -804,7 +807,8 @@ if (userAnswer === correctLetter) {
     );
   }
 }
- 
+
+
 
 if (messageText && messageText.toLowerCase().startsWith("imgur")) {
     try {
