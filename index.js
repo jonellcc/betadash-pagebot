@@ -708,105 +708,10 @@ if (containsBannedKeyword) {
 
 
 
-const triviaData = {};
 
-async function revealAnswer(senderId) {
-  if (!triviaData[senderId].answered) {
-    const { correctIndex, options } = triviaData[senderId];
-    const correctLetter = Object.keys(options)[correctIndex];
-    await sendMessage(
-      senderId,
-      {
-        text: `Time's up! The correct answer is:\n\n${correctLetter}. ${options[correctLetter].toUpperCase()}`,
-      },
-      pageAccessToken
-    );
-    triviaData[senderId].answered = true;
-  }
-}
 
-if (messageText && messageText.toLowerCase().startsWith("quiz")) {
-  try {
-    const res = await axios.get("https://betadash-api-swordslush-production.up.railway.app/quiz");
-    const question = res.data.questions[0];
-    const options = question.choices;
-    const correctLetter = question.correct_answer;
-    const correctIndex = Object.keys(options).indexOf(correctLetter);
 
-    if (triviaData[senderId]) {
-      clearTimeout(triviaData[senderId].timeout);
-      delete triviaData[senderId];
-    }
 
-    triviaData[senderId] = {
-      correctIndex,
-      answered: false,
-      options,
-    };
-
-    const buttons = Object.keys(options).map((key) => ({
-      type: "postback",
-      title: `${key}. ${options[key]}`,
-      payload: key.toUpperCase(),
-    }));
-
-    const timeout = setTimeout(() => {
-      revealAnswer(senderId);
-    }, 30000);
-
-    triviaData[senderId].timeout = timeout;
-
-    await sendMessage(
-      senderId,
-      {
-        attachment: {
-          type: "template",
-          payload: {
-            template_type: "button",
-            text: question.question,
-            buttons: buttons,
-          },
-        },
-      },
-      pageAccessToken
-    );
-  } catch (error) {
-    console.error("Quiz error:", error.message);
-  }
-}
-
-// HANDLE POSTBACK FROM BUTTON
-if (
-  event.postback &&
-  /^[A-D]$/.test(event.postback.payload) &&
-  triviaData[senderId] &&
-  !triviaData[senderId].answered
-) {
-  const userAnswer = event.postback.payload.toUpperCase();
-  const { correctIndex, options } = triviaData[senderId];
-  const correctLetter = Object.keys(options)[correctIndex];
-
-  clearTimeout(triviaData[senderId].timeout);
-  triviaData[senderId].answered = true;
-
-  if (userAnswer === correctLetter) {
-    await sendMessage(
-      senderId,
-      {
-        text: `You are correct! The answer is:\n\n${userAnswer}. ${options[userAnswer].toUpperCase()}`,
-      },
-      pageAccessToken
-    );
-  } else {
-    await sendMessage(
-      senderId,
-      {
-        text: `Sorry, your answer is wrong. The correct answer is:\n\n${correctLetter}. ${options[correctLetter].toUpperCase()}`,
-      },
-      pageAccessToken
-    );
-  }
-}
 
 
 
