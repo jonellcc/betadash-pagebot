@@ -747,7 +747,7 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
     const quickReplies = Object.keys(options).map((key) => ({
       content_type: "text",
       title: `${key}. ${options[key]}`,
-      payload: key,
+      payload: `${key}.toUpperCase(). ${options[key].toUpperCase()}`,
     }));
 
     const timeout = setTimeout(() => {
@@ -1185,7 +1185,7 @@ if (messageText && messageText.toLowerCase().startsWith("humanize")) {
     }
   } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText)
 && !redditVideoRegex.test(messageText)
-&& !snapchatRegex.test(messageText) && haha !== messageText && If !== messageText && j !== messageText && x !== messageText && fac !== messageText && khz !== messageText && !event.message.is_echo) {
+&& !snapchatRegex.test(messageText) && haha !== messageText && If !== messageText && j !== messageText && x !== messageText && fac !== messageText && khz !== messageText && "quiz" !== messageText && !event.message.is_echo) {
    try {
   let text;
     if (imageUrl) {
