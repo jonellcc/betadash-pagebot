@@ -16,21 +16,28 @@ module.exports = {
       const response = await axios.get(apiUrl);
       const videos = response.data.result.slice(0, 10);
 
-      const elements = videos.map(video => ({
-        title: video.title,
-        image_url: video.image,
-        default_action: {
-          type: "web_url",
-          url: video.videoUrl,
-          webview_height_ratio: "compact"
-        },
-        buttons: [
-          {
-            type: 'web_url',
-            url: video.videoUrl,
-            title: 'Watch Video'
-          }
-        ]
+      const elements = await Promise.all(videos.map(async (video) => {
+        const jh = await axios.get(`https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(video.image)}`);
+        const lhs = jh.data.url;
+        const ldh = await axios.get(`https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(video.videoUrl)}`);
+        const hxh = ldh.data.url;
+
+        return {
+          title: video.title,
+          image_url: lhs,
+          default_action: {
+            type: "web_url",
+            url: hxh,
+            webview_height_ratio: "compact"
+          },
+          buttons: [
+            {
+              type: 'web_url',
+              url: hxh,
+              title: 'Watch Video'
+            }
+          ]
+        };
       }));
 
       const message = {
