@@ -768,24 +768,26 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
   }
 }
 
+const userPayload = event.message?.quick_reply?.payload;
+
 if (
-  messageText &&
-  /^[a-d]$/i.test(messageText.toLowerCase()) &&
+  userPayload &&
+  /^[A-D]$/.test(userPayload) &&
   triviaData[senderId] &&
   !triviaData[senderId].answered
 ) {
-  const userAnswer = messageText.toUpperCase();
+  const userAnswer = userPayload.toUpperCase();
   const { correctIndex, options } = triviaData[senderId];
-  const correctLetter = String.fromCharCode(65 + correctIndex);
+  const correctLetter = Object.keys(options)[correctIndex];
 
   clearTimeout(triviaData[senderId].timeout);
   triviaData[senderId].answered = true;
-
-  if (userAnswer === correctLetter) {
+  
+if (userAnswer === correctLetter) {
     await sendMessage(
       senderId,
       {
-        text: `You are correct! The answer is:\n\n${userAnswer}. ${options[userAnswer]}`,
+        text: `You are correct! The answer is:\n\n${userAnswer}. ${options[userAnswer].toUpperCase()}`,
       },
       pageAccessToken
     );
@@ -793,14 +795,12 @@ if (
     await sendMessage(
       senderId,
       {
-        text: `Sorry, your answer is wrong. The correct answer is:\n\n${correctLetter}. ${options[correctLetter]}`,
+        text: `Sorry, your answer is wrong. The correct answer is:\n\n${correctLetter}. ${options[correctLetter].toUpperCase()}`,
       },
       pageAccessToken
     );
   }
 }
-
-  
  
 
 if (messageText && messageText.toLowerCase().startsWith("imgur")) {
