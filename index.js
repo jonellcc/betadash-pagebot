@@ -927,10 +927,10 @@ if (messageText && messageText.startsWith("ghibli")) {
 
   await sendMessage(senderId, {text: "Converting to ghibli style please wait... 3 to 5 minutes "}, pageAccessToken);
       
-   const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${imgurLink)}`;      
+   const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;      
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
-        const yawa = `https://betadash-api-swordslush-production.up.railway.app/ghibli?imageUrl=${encodeURIComponent(imageUrl)}`;
+        const yawa = `https://betadash-api-swordslush-production.up.railway.app/ghibli?imageUrl=${imgurLink}`;
    const lsn = await axios.get(yawa);
    const img = lsn.data.imageUrl;
         
