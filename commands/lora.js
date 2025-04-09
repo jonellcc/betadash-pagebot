@@ -1,9 +1,9 @@
 const axios = require('axios');
 
 module.exports = {
-  name: 'ghibliv2',
+  name: 'lora',
   description: 'ghibli image generator',
-  usage: 'ghibliv2 <prompt>',
+  usage: 'lora <prompt>',
   author: 'yazky',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     if (!args || !Array.isArray(args) || args.length === 0) {
