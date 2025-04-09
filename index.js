@@ -726,8 +726,8 @@ async function revealAnswer(senderId) {
 
 if (messageText && messageText.toLowerCase().startsWith("quiz")) {
   try {
-    const { data } = await axios.get("https://betadash-api-swordslush-production.up.railway.app/quiz");
-    const question = data.questions[0];
+    const res = await axios.get("https://betadash-api-swordslush-production.up.railway.app/quiz");
+    const question = .res.data.questions[0];
     const options = question.choices;
     const correctLetter = question.correct_answer;
     const correctIndex = Object.keys(options).indexOf(correctLetter);
