@@ -15,7 +15,9 @@ module.exports = {
 
     try {
       const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/ghibliv2?prompt=${encodeURIComponent(prompt)}`;
-      const { imageUrl } = await axios.get(apiUrl);
+      const jdh = await axios.get(apiUrl);
+      const imageUrl = jdh.data.imageUrl;
+
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: imageUrl } } }, pageAccessToken);
 
     } catch (error) {
