@@ -917,6 +917,31 @@ await sendMessage(senderId, { text: _0ch }, pageAccessToken);
       return;
 }
 
+if (messageText && messageText.startsWith("ghibli")) {
+    try {
+     if (!imageUrl) {
+      sendMessage(senderId, { text: "Reply a photo to to convert ghibli style" }, pageAccessToken);
+      return;
+    }     
+
+  await sendMessage(senderId, {text: "Converting to ghibli style please wait... 3 to 5 minutes "}, pageAccessToken)
+const yawa = `https://betadash-api-swordslush-production.up.railway.app/ghibli?imageUrl=${encodeURIComponent (imageUrl)}`;
+   conat lsn = await axios.get(yawa);
+   const img = lsn.data.imageUrl;
+     await sendMessage(senderId, { 
+attachment: { 
+    type: 'image', 
+    payload: { 
+        url: img,
+        is_reusable: true
+      } 
+     } 
+    }, pageAccessToken);
+    } catch (error) {
+      await sendMessage(senderId, {text: error.message}, pageAccessToken);
+   }
+    return;
+  }  
 
  if (messageText && messageText.startsWith("zombie")) {
     try {
