@@ -926,7 +926,7 @@ if (messageText && messageText.startsWith("ghibli")) {
 
   await sendMessage(senderId, {text: "Converting to ghibli style please wait... 3 to 5 minutes "}, pageAccessToken)
 const yawa = `https://betadash-api-swordslush-production.up.railway.app/ghibli?imageUrl=${encodeURIComponent (imageUrl)}`;
-   conat lsn = await axios.get(yawa);
+   const lsn = await axios.get(yawa);
    const img = lsn.data.imageUrl;
      await sendMessage(senderId, { 
 attachment: { 
