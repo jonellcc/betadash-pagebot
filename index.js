@@ -921,11 +921,11 @@ await sendMessage(senderId, { text: _0ch }, pageAccessToken);
 if (messageText && messageText.toLowerCase().startsWith("ghibli")) {
     try {
      if (!imageUrl) {
-     await sendMessage(senderId, { text: "Reply a photo to to convert ghibli style" }, pageAccessToken);
+     await sendMessage(senderId, { text: "𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝗍𝗈 𝖼𝗈𝗇𝗏𝖾𝗋𝗍 𝗀𝗁𝗂𝖻𝗅𝗂 𝗌𝗍𝗒𝗅𝖾" }, pageAccessToken);
       return;
     }     
 
-  await sendMessage(senderId, {text: "Converting to ghibli style please wait... 3 to 5 minutes "}, pageAccessToken);
+  await sendMessage(senderId, {text: "𝖢𝗈𝗇𝗏𝖾𝗋𝗍𝗂𝗇𝗀 𝗍𝗈 𝗀𝗁𝗂𝖻𝗅𝗂 𝗌𝗍𝗒𝗅𝖾 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂t 𝟥 𝗍𝗈 𝟧 𝗆𝗂𝗇𝗎𝗍𝖾𝗌..."}, pageAccessToken);
       
    const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;      
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
@@ -944,7 +944,7 @@ attachment: {
      } 
     }, pageAccessToken);
     } catch (error) {
-      await sendMessage(senderId, {text: error.message}, pageAccessToken);
+      await sendMessage(senderId, {text: "Sorry i can't convert that to ghibli style just try again different image must clear and clear and not blurd"}, pageAccessToken);
    }
     return;
   }  
