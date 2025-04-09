@@ -1042,7 +1042,7 @@ attachment: {
      } 
     }, pageAccessToken);
     } catch (error) {
-      await sendMessage(senderId, {text: "Sorry i can't convert that to ghibli style just try again different image must clear and clear and not blurd"}, pageAccessToken);
+      await sendMessage(senderId, {text: "Sorry i can't convert that to ghibli style just try again different image must clear and clean and not blurd"}, pageAccessToken);
    }
     return;
   }  
