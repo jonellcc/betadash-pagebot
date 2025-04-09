@@ -758,8 +758,14 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
     await sendMessage(
       senderId,
       {
-        text: question.question,
-        quick_replies: quickReplies,
+        attachment: {
+          type: "template",
+          payload: {
+            template_type: "button",
+            text: question.question,
+            buttons: buttons,
+          },
+        },
       },
       pageAccessToken
     );
@@ -768,16 +774,13 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
   }
 }
 
-const userPayload = event.message?.quick_reply?.payload;
-
 if (
-  userPayload &&
-  /^[A-D]$/.test(userPayload) &&
+  event.postback &&
+  /^[A-D]$/.test(event.postback.payload) &&
   triviaData[senderId] &&
   !triviaData[senderId].answered
 ) {
-  const userAnswer = userPayload.toUpperCase();
-  const { correctIndex, options } = triviaData[senderId];
+  const userAnswer = event.postback.payload.toUpperCase();  const { correctIndex, options } = triviaData[senderId];
   const correctLetter = Object.keys(options)[correctIndex];
 
   clearTimeout(triviaData[senderId].timeout);
