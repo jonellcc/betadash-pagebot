@@ -746,7 +746,7 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
 
     const buttons = Object.keys(options).map((key) => ({
       type: "postback",
-      title: `${key}. ${options[key].toUpperCase()}`,
+      title: `${key}. ${options[key]}`,
       payload: key.toUpperCase(),
     }));
 
@@ -763,7 +763,7 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
           type: "template",
           payload: {
             template_type: "button",
-            text: decodeURIComponent(question.question),
+            text: question.question,
             buttons: buttons,
           },
         },
