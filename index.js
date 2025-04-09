@@ -617,6 +617,7 @@ const If = "aidetect";
 const j = "humanize";
 const x = "\uD83D\uDC4D";
 const fac = "faceswap";
+const khz = "ghibli";
 /** const k = "U+1F44D";
 
 const thb = await getAttachments(k); **/
@@ -670,7 +671,7 @@ const bannedKeywords = [
   'pussy', 'dick', 'nude',  'hot', 'clothes', 'sugar', 'fucked', 'step',
   'shit', 'bitch', 'hentai', 'sex', 'boobs', 'cute girl undressed', 'undressed', 
   'naked', 'underwear', 'sexy', 'panty', 'fuckers', 'fck', 'fucking', 'vagina', 'intercourse', 
-  'penis', 'gae', 'panties', 'fellatio', 'blow job', 'blow', 'skin', 'segs', 'porn', 'loli', 'kantutan','lulu', 'kayat', 'bilat',
+  'penis', 'gae', 'panties', 'fellatio', 'blow job', 'blow', 'segs', 'porn', 'loli', 'kantutan','lulu', 'kayat', 'bilat',
   'ahegao', 'dildo', 'vibrator', 'asses', 'butt', 'asshole', 'cleavage', 'arse', 'dic', 'puss'
 ];
 
@@ -917,7 +918,7 @@ await sendMessage(senderId, { text: _0ch }, pageAccessToken);
       return;
 }
 
-if (messageText && messageText.startsWith("ghibli")) {
+if (messageText && messageText.includes("ghibli")) {
     try {
      if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to to convert ghibli style" }, pageAccessToken);
@@ -1081,7 +1082,7 @@ if (messageText && messageText.startsWith("humanize")) {
     }
   } else if (!regEx_tiktok.test(messageText) && !facebookLinkRegex.test(messageText) && !instagramLinkRegex.test(messageText) && !youtubeLinkRegex.test(messageText) && !spotifyLinkRegex.test(messageText) && !soundcloudRegex.test(messageText) && !capcutLinkRegex.test(messageText)
 && !redditVideoRegex.test(messageText)
-&& !snapchatRegex.test(messageText) && haha !== messageText && If !== messageText && j !== messageText && x !== messageText && fac !== messageText && !event.message.is_echo) {
+&& !snapchatRegex.test(messageText) && haha !== messageText && If !== messageText && j !== messageText && x !== messageText && fac !== messageText && khz !== messageText && !event.message.is_echo) {
    try {
   let text;
     if (imageUrl) {
