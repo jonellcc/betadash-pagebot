@@ -921,14 +921,18 @@ await sendMessage(senderId, { text: _0ch }, pageAccessToken);
 if (messageText && messageText.includes("ghibli")) {
     try {
      if (!imageUrl) {
-      sendMessage(senderId, { text: "Reply a photo to to convert ghibli style" }, pageAccessToken);
+     await sendMessage(senderId, { text: "Reply a photo to to convert ghibli style" }, pageAccessToken);
       return;
     }     
 
-  await sendMessage(senderId, {text: "Converting to ghibli style please wait... 3 to 5 minutes "}, pageAccessToken)
-const yawa = `https://betadash-api-swordslush-production.up.railway.app/ghibli?imageUrl=${encodeURIComponent (imageUrl)}`;
+  await sendMessage(senderId, {text: "Converting to ghibli style please wait... 3 to 5 minutes "}, pageAccessToken);
+   const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${imgurLink)}`;      
+        const imgurResponse = await axios.get(imgurApiUrl, { headers } );
+        const imgurLink = imgurResponse.data.uploaded.image;
+        const yawa = `https://betadash-api-swordslush-production.up.railway.app/ghibli?imageUrl=${encodeURIComponent (imageUrl)}`;
    const lsn = await axios.get(yawa);
    const img = lsn.data.imageUrl;
+        
      await sendMessage(senderId, { 
 attachment: { 
     type: 'image', 
