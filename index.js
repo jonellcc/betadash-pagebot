@@ -588,13 +588,13 @@ async function handleFeedback(event, feedback, pageAccessToken) {
     let responseText = feedback.feedback === "Good response"
         ? "𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝖿𝖾𝖾𝖽𝖻𝖺𝖼𝗄! 😊"
         : "𝖲𝗈𝗋𝗋𝗒 𝖺𝖻𝗈𝗎𝗍 𝗍𝗁𝖺𝗍! 𝖶𝖾'𝗅𝗅 𝗍𝗋𝗒 𝗍𝗈 𝗂𝗆𝗉𝗋𝗈𝗏𝖾.";
-    
+
     await sendMessage(event.sender.id, { text: responseText }, pageAccessToken);
 }
 
 async function handleReaction(event, reaction, pageAccessToken) {
     let responseText = { text: `𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝗋𝖾𝖺𝖼𝗍𝗂𝗈𝗇: ${reaction.emoji} (${reaction.reaction})` };
-    
+
     await sendMessage(event.sender.id, responseText, pageAccessToken);
 }
 
@@ -629,7 +629,7 @@ content = await getMessage(event.message.reply_to.mid);
 }
 const cleanContent = content.replace(/[✦✧⟡] \| 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭\.𝟱|━━━━━━━━━━━━━/g, "").trim();
 const combinedContent = cleanContent ? `${messageText} ${cleanContent}` : messageText;
-  
+
 let imageUrl = '';
 
 if (event.message && event.message.attachments) {
@@ -926,14 +926,14 @@ await sendMessage(senderId, { text: _0ch }, pageAccessToken);
     }     
 
   await sendMessage(senderId, {text: "𝖢𝗈𝗇𝗏𝖾𝗋𝗍𝗂𝗇𝗀 𝗍𝗈 𝗀𝗁𝗂𝖻𝗅𝗂 𝗌𝗍𝗒𝗅𝖾 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂t 𝟥 𝗍𝗈 𝟧 𝗆𝗂𝗇𝗎𝗍𝖾𝗌..."}, pageAccessToken);
-      
+
    const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;      
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.uploaded.image;
         const yawa = `https://betadash-api-swordslush-production.up.railway.app/ghibli?imageUrl=${imgurLink}`;
    const lsn = await axios.get(yawa);
    const img = lsn.data.imageUrl;
-        
+
      await sendMessage(senderId, { 
 attachment: { 
     type: 'image', 
@@ -1233,7 +1233,7 @@ const headResponse = await axios.head(apiUrl, { headers });
           }
         ]
       }));
-      
+
       await sendMessage(senderId, {
         attachment: {
           type: "template",
@@ -1243,7 +1243,6 @@ const headResponse = await axios.head(apiUrl, { headers });
           }
         }
       }, pageAccessToken);
-    }
 
    if (music) {
     await sendMessage(senderId, {
@@ -1256,6 +1255,7 @@ const headResponse = await axios.head(apiUrl, { headers });
             },
           },
         pageAccessToken);
+       }
      } 
       else if (play) {
       const videoUrl = `https://tikwm.com${play}`;
@@ -1740,7 +1740,6 @@ console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to
 
 loadCommands();
 updateMessengerCommands();
-
 
 app.use((req, res, next) => {
   try {
