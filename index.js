@@ -1222,7 +1222,7 @@ const headResponse = await axios.head(apiUrl, { headers });
       { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
     );
 
-    const { title, hdplay, images } = data.data;
+    const { title, hdplay, music, images } = data.data;
 
     if (images && images.length > 0) {
       const elements = images.slice(0, 10).map((img, index) => ({
@@ -1238,8 +1238,18 @@ const headResponse = await axios.head(apiUrl, { headers });
         ]
       }));
 
-      await sendMessage(senderId, { text: "Note: In generic mode, only the first 10 images will be shown." }, pageAccessToken);
-
+      await sendMessage(senderId, {
+        attachment: {
+              type: 'audio',
+              payload: {
+                url: `https://tikwm.com${music}`,
+                is_reusable: true,
+              },
+            },
+          },
+          pageAccessToken
+        );
+      
       await sendMessage(senderId, {
         attachment: {
           type: "template",
@@ -1286,6 +1296,7 @@ const headResponse = await axios.head(apiUrl, { headers });
       }  
     } catch (error) {
     }
+  }
   } else if (youtubeLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖸𝗈𝗎𝗍𝗎𝖻𝖾, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
