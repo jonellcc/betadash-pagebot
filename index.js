@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const fonts = require('fontstyles');
 const axios = require('axios');
-const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
+const regEx_tiktok = /^https?:\/\/(www\.)?(tiktok\.com|vt\.tiktok\.com|vm\.tiktok\.com)\/.+$/;
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
 const instagramLinkRegex = /https:\/\/www\.instagram\.com\/reel\/[a-zA-Z0-9_-]+\/\?igsh=[a-zA-Z0-9_=-]+$/;
 const youtubeLinkRegex = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
@@ -706,15 +706,6 @@ if (containsBannedKeyword) {
   return;
 }
 
-
-
-
-
-
-
-
-
-
 if (messageText && messageText.toLowerCase().startsWith("imgur")) {
     try {
 if (!imageUrl) {
@@ -749,7 +740,7 @@ if (!imageUrl) {
 }
 
 
-if (messageText && messageText.toLowerCase().startsWith("recognize")) {
+/** if (messageText && messageText.toLowerCase().startsWith("recognize")) {
     try {
    if (!imageUrl) {
       sendMessage(senderId, { text: "Reply to a short audio or video" }, pageAccessToken);
@@ -773,7 +764,7 @@ if (messageText && messageText.toLowerCase().startsWith("recognize")) {
      sendMessage(senderId, { text: error.message}, pageAccessToken);
         }
       return;
-}
+} **/
 
 
 if (messageText && messageText.toLowerCase().startsWith("faceswap")) {
@@ -927,7 +918,7 @@ await sendMessage(senderId, { text: _0ch }, pageAccessToken);
       return;
 }
 
-if (messageText && messageText.toLowerCase().startsWith("ghibli")) {
+/** if (messageText && messageText.toLowerCase().startsWith("ghibli")) {
     try {
      if (!imageUrl) {
      await sendMessage(senderId, { text: "𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝗍𝗈 𝖼𝗈𝗇𝗏𝖾𝗋𝗍 𝗀𝗁𝗂𝖻𝗅𝗂 𝗌𝗍𝗒𝗅𝖾" }, pageAccessToken);
@@ -982,7 +973,7 @@ attachment: {
     return;
   }
 
-/** if (messageText && messageText.includes("gdrive")) {
+ if (messageText && messageText.includes("gdrive")) {
     try {
         const rec = `https://ccprojectapis.ddns.net/api/gdrive?url=${encodeURIComponent(imageUrl)}`;
      const ap = await axios.get(rec);
@@ -1220,21 +1211,53 @@ const headResponse = await axios.head(apiUrl, { headers });
       }
     } catch (error) {
     }
-  } else if (regEx_tiktok.test(messageText)) {
-    try {
-      sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖳𝗂𝗄𝗍𝗈𝗄, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' },  pageAccessToken);
-      const response = await axios.post(`https://www.tikwm.com/api/`, {url: messageText}, { headers });
-      const data = response.data.data;
-      const shotiUrl = data.play;
-      const avatar = data.author.avatar;
-      const username = data.author.nickname;
-      const unique_id = data.author.unique_id;
+   } else if (regEx_tiktok.test(messageText)) {
+  try {
+    sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖳𝗂𝗄𝗍𝗈𝗄, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
 
-const headResponse = await axios.head(shotiUrl, { headers });
+    const url = messageText;
+    const { data } = await axios.post(
+      "https://tikwm.com/api/",
+      `url=${encodeURIComponent(url)}&count=12&cursor=0&web=1&hd=1`,
+      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+    );
+
+    const { title, hdplay, images } = data.data;
+
+    if (images && images.length > 0) {
+      const elements = images.slice(0, 10).map((img, index) => ({
+        title: `Image ${index + 1}`,
+        image_url: img,
+        subtitle: title || "TikTok Image",
+        buttons: [
+          {
+            type: "web_url",
+            url: img,
+            title: "View Full"
+          }
+        ]
+      }));
+
+      await sendMessage(senderId, { text: "Note: In generic mode, only the first 10 images will be shown." }, pageAccessToken);
+
+      await sendMessage(senderId, {
+        attachment: {
+          type: "template",
+          payload: {
+            template_type: "generic",
+            elements: elements
+          }
+        }
+      }, pageAccessToken);
+    }
+
+    if (hdplay) {
+      const videoUrl = `https://tikwm.com${hdplay}`;
+      const headResponse = await axios.head(videoUrl);
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
       if (fileSize > 25 * 1024 * 1024) {
-        sendMessage(senderId, {
+        await sendMessage(senderId, {
           attachment: {
             type: 'template',
             payload: {
@@ -1243,7 +1266,7 @@ const headResponse = await axios.head(shotiUrl, { headers });
               buttons: [
                 {
                   type: 'web_url',
-                  url: shotiUrl,
+                  url: videoUrl,
                   title: 'Watch Video'
                 }
               ]
@@ -1251,16 +1274,16 @@ const headResponse = await axios.head(shotiUrl, { headers });
           }
         }, pageAccessToken);
       } else {
-        sendMessage(senderId, {
+        await sendMessage(senderId, {
           attachment: {
             type: 'video',
             payload: {
-              url: shotiUrl,
+              url: videoUrl,
               is_reusable: true
             }
           }
         }, pageAccessToken);
-      }
+      }  
     } catch (error) {
     }
   } else if (youtubeLinkRegex.test(messageText)) {
