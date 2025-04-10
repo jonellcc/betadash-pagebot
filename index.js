@@ -1216,13 +1216,9 @@ const headResponse = await axios.head(apiUrl, { headers });
     sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖳𝗂𝗄𝗍𝗈𝗄, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
 
     const url = messageText;
-    const { data } = await axios.post(
-      "https://tikwm.com/api/",
-      `url=${encodeURIComponent(url)}&count=12&cursor=0&web=1&hd=1`,
-      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-    );
+    const dataa  = await axios.get(`https://tikwm.com/api/?url=${encodeURIComponent(messageText)}&count=12&cursor=0&web=1&hd=1`);
 
-    const { title, hdplay, music, images } = data.data;
+    const { title, play, music, images } = dataa.data;
 
     if (images && images.length > 0) {
       const elements = images.slice(0, 10).map((img, index) => ({
@@ -1233,22 +1229,10 @@ const headResponse = await axios.head(apiUrl, { headers });
           {
             type: "web_url",
             url: img,
-            title: "View Full"
+            title: "View Image"
           }
         ]
       }));
-
-      await sendMessage(senderId, {
-        attachment: {
-              type: 'audio',
-              payload: {
-                url: `https://tikwm.com${music}`,
-                is_reusable: true,
-              },
-            },
-          },
-          pageAccessToken
-        );
       
       await sendMessage(senderId, {
         attachment: {
@@ -1261,8 +1245,20 @@ const headResponse = await axios.head(apiUrl, { headers });
       }, pageAccessToken);
     }
 
-    if (hdplay) {
-      const videoUrl = `https://tikwm.com${hdplay}`;
+    await sendMessage(senderId, {
+        attachment: {
+              type: 'audio',
+              payload: {
+                url: `https://tikwm.com${music}`,
+                is_reusable: true,
+              },
+            },
+          },
+          pageAccessToken
+        );
+
+    if (play) {
+      const videoUrl = `https://tikwm.com${play}`;
       const headResponse = await axios.head(videoUrl);
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
