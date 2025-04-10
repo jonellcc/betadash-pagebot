@@ -1218,7 +1218,7 @@ const headResponse = await axios.head(apiUrl, { headers });
     const url = messageText;
     const dataa  = await axios.get(`https://tikwm.com/api/?url=${encodeURIComponent(messageText)}&count=12&cursor=0&web=1&hd=1`);
 
-    const { title, play, music, images } = dataa.data;
+    const { title, play, music, images } = dataa.data.data;
 
     if (images && images.length > 0) {
       const elements = images.slice(0, 10).map((img, index) => ({
