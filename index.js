@@ -1293,7 +1293,10 @@ const headResponse = await axios.head(apiUrl, { headers });
             }
           }
         }, pageAccessToken);
-      }  
+      }
+    }
+  } catch (error) {
+   }
   } else if (youtubeLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖸𝗈𝗎𝗍𝗎𝖻𝖾, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
