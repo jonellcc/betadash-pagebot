@@ -1245,6 +1245,7 @@ const headResponse = await axios.head(apiUrl, { headers });
       }, pageAccessToken);
     }
 
+   if (music) {
     await sendMessage(senderId, {
         attachment: {
               type: 'audio',
@@ -1256,8 +1257,9 @@ const headResponse = await axios.head(apiUrl, { headers });
           },
           pageAccessToken
         );
+    }
 
-    if (play) {
+     if (play) {
       const videoUrl = `https://tikwm.com${play}`;
       const headResponse = await axios.head(videoUrl);
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
