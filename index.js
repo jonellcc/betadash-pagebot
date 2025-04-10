@@ -1255,11 +1255,9 @@ const headResponse = await axios.head(apiUrl, { headers });
               },
             },
           },
-          pageAccessToken
-        );
-    }
-
-     if (play) {
+          pageAccessToken);
+       }
+     } else if (play) {
       const videoUrl = `https://tikwm.com${play}`;
       const headResponse = await axios.head(videoUrl);
       const fileSize = parseInt(headResponse.headers['content-length'], 10);
