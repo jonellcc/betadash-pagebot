@@ -6,7 +6,15 @@ module.exports = {
   author: 'Cliff',
   async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
     const links = [
-"https://i.imgur.com/EIoKHsc.mp4",
+  "https://i.imgur.com/vwmA33q.mp4",
+  "https://i.imgur.com/f8DkZS9.mp4",
+  "https://i.imgur.com/YQ3VgZE.mp4",
+  "https://i.imgur.com/TOQQ1So.mp4",
+  "https://i.imgur.com/wrDzggx.mp4",
+  "https://i.imgur.com/Lnr3DZA.mp4",
+  "https://i.imgur.com/K8L5gt8.mp4",
+  "https://i.imgur.com/TZpZHLn.mp4",
+  "https://i.imgur.com/EIoKHsc.mp4",
   "https://i.imgur.com/0HMrgWJ.mp4",
   "https://i.imgur.com/bbZsqXm.mp4",
  "https://i.imgur.com/uA4sNw7.mp4",
