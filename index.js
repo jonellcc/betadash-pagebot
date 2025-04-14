@@ -1358,7 +1358,7 @@ const headResponse = await axios.head(apiUrl, { headers });
 
 const audio = response.data.download.file_url;
 
-  sendMessage(
+  await sendMessage(
         senderId,
         {
           attachment: {
@@ -1376,18 +1376,19 @@ const audio = response.data.download.file_url;
                     webview_height_ratio: "tall"
                   },
                   buttons: [
-                     {
-                     type: 'web_url',
-                     url: audio,
-                     title: 'Download Music',                     
-                  }
-               ]
-             }
-           }
-        },
-        pageAccessToken
-      ); 
-
+              {
+                type: 'web_url',
+                url: audio,
+                title: 'Download Music',                     
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  pageAccessToken
+);
 
       if (audio) {
         sendMessage(senderId, {
