@@ -707,16 +707,10 @@ if (containsBannedKeyword) {
 
 const triviaData = {};
 
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
+
 
 async function revealAnswer(senderId) {
-  if (!triviaData[senderId].answered) {
+  if (!triviaData[senderId]?.answered) {
     const { correctLetter, correctText } = triviaData[senderId];
     await sendMessage(
       senderId,
@@ -737,18 +731,17 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
     const correctLetter = question.correct_answer;
     const correctText = options[correctLetter];
 
-    const wrongChoices = Object.entries(options)
-      .filter(([key]) => key !== correctLetter)
-      .slice(0, 2); // only take 2 wrong choices
-
-    const selectedChoices = shuffleArray([
-      [correctLetter, correctText],
-      ...wrongChoices,
-    ]).slice(0, 3); // total of 3 choices
+    const selectedKeys = ["A", "B", "C"];
+    const buttons = selectedKeys.map((key) => ({
+      type: "postback",
+      title: `${key}. ${options[key].toUpperCase()}`,
+      payload: JSON.stringify({
+        answer: key,
+      }),
+    }));
 
     if (triviaData[senderId]) {
       clearTimeout(triviaData[senderId].timeout);
-      delete triviaData[senderId];
     }
 
     triviaData[senderId] = {
@@ -756,12 +749,6 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
       correctText,
       answered: false,
     };
-
-    const buttons = selectedChoices.map(([key, value]) => ({
-      type: "postback",
-      title: `${key}. ${value.toUpperCase()}`,
-      payload: key.toUpperCase(),
-    }));
 
     const timeout = setTimeout(() => {
       revealAnswer(senderId);
@@ -776,7 +763,7 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
           type: "template",
           payload: {
             template_type: "button",
-            text: question.question,
+            text: decodeURIComponent(question.question),
             buttons: buttons,
           },
         },
@@ -784,19 +771,27 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
       pageAccessToken
     );
   } catch (error) {
-    await sendMessage(senderId, {text: error.message}, pageAccessToken);
+    console.error("Quiz error:", error.message);
   }
 }
 
 if (
   event.postback &&
-  /^[A-D]$/.test(event.postback.payload) &&
+  event.postback.payload &&
   triviaData[senderId] &&
   !triviaData[senderId].answered
 ) {
-  const userAnswer = event.postback.payload.toUpperCase();
-  const { correctLetter, correctText } = triviaData[senderId];
+  let userAnswer = null;
 
+  try {
+    const payloadData = JSON.parse(event.postback.payload);
+    userAnswer = payloadData.answer.toUpperCase();
+  } catch (e) {
+    console.error("Invalid payload", e);
+    return;
+  }
+
+  const { correctLetter, correctText } = triviaData[senderId];
   clearTimeout(triviaData[senderId].timeout);
   triviaData[senderId].answered = true;
 
@@ -818,6 +813,7 @@ if (
     );
   }
 }
+
   
 
 if (messageText && messageText.toLowerCase().startsWith("imgur")) {
