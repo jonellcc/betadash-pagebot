@@ -226,8 +226,6 @@ app.post('/webhook', (req, res) => {
             handleMessage(event, token);
           } else if (event.postback && event.postback.payload === "GET_STARTED_PAYLOAD") {
             WelcomeMessage(event, token);
-          } else if (event.postback) {
-            handlePostback(event, token);
           } else if (event.response_feedback) {
             handleFeedback(event, event.response_feedback, token);
           } else if (event.reaction) {
