@@ -733,9 +733,7 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
     const buttons = selectedKeys.map((key) => ({
       type: "postback",
       title: `${key}. ${options[key]}`,
-      payload: JSON.stringify({
-        answer: key,
-      }),
+      payload: `${key.toUpperCase()}. ${options[key].toUpperCase()}`,
     }));
 
     if (triviaData[senderId]) {
@@ -761,7 +759,7 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
           type: "template",
           payload: {
             template_type: "button",
-            text: decodeURIComponent(question.question),
+            text: question.question,
             buttons: buttons,
           },
         },
