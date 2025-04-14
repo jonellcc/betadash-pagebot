@@ -706,6 +706,122 @@ if (containsBannedKeyword) {
   return;
 }
 
+
+const triviaData = {};
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+async function revealAnswer(senderId) {
+  if (!triviaData[senderId].answered) {
+    const { correctLetter, correctText } = triviaData[senderId];
+    await sendMessage(
+      senderId,
+      {
+        text: `Time's up! The correct answer is:\n\n${correctLetter}. ${correctText.toUpperCase()}`,
+      },
+      pageAccessToken
+    );
+    triviaData[senderId].answered = true;
+  }
+}
+
+if (messageText && messageText.toLowerCase().startsWith("quiz")) {
+  try {
+    const res = await axios.get("https://betadash-api-swordslush-production.up.railway.app/quiz");
+    const question = res.data.questions[0];
+    const options = question.choices;
+    const correctLetter = question.correct_answer;
+    const correctText = options[correctLetter];
+
+    const wrongChoices = Object.entries(options)
+      .filter(([key]) => key !== correctLetter)
+      .slice(0, 2); // only take 2 wrong choices
+
+    const selectedChoices = shuffleArray([
+      [correctLetter, correctText],
+      ...wrongChoices,
+    ]).slice(0, 3); // total of 3 choices
+
+    if (triviaData[senderId]) {
+      clearTimeout(triviaData[senderId].timeout);
+      delete triviaData[senderId];
+    }
+
+    triviaData[senderId] = {
+      correctLetter,
+      correctText,
+      answered: false,
+    };
+
+    const buttons = selectedChoices.map(([key, value]) => ({
+      type: "postback",
+      title: `${key}. ${value.toUpperCase()}`,
+      payload: key.toUpperCase(),
+    }));
+
+    const timeout = setTimeout(() => {
+      revealAnswer(senderId);
+    }, 30000);
+
+    triviaData[senderId].timeout = timeout;
+
+    await sendMessage(
+      senderId,
+      {
+        attachment: {
+          type: "template",
+          payload: {
+            template_type: "button",
+            text: question.question,
+            buttons: buttons,
+          },
+        },
+      },
+      pageAccessToken
+    );
+  } catch (error) {
+    await sendMessage(senderId, {text: error.message}, pageAccessToken);
+  }
+}
+
+if (
+  event.postback &&
+  /^[A-D]$/.test(event.postback.payload) &&
+  triviaData[senderId] &&
+  !triviaData[senderId].answered
+) {
+  const userAnswer = event.postback.payload.toUpperCase();
+  const { correctLetter, correctText } = triviaData[senderId];
+
+  clearTimeout(triviaData[senderId].timeout);
+  triviaData[senderId].answered = true;
+
+  if (userAnswer === correctLetter) {
+    await sendMessage(
+      senderId,
+      {
+        text: `You are correct! The answer is:\n\n${userAnswer}. ${correctText.toUpperCase()}`,
+      },
+      pageAccessToken
+    );
+  } else {
+    await sendMessage(
+      senderId,
+      {
+        text: `Sorry, your answer is wrong. The correct answer is:\n\n${correctLetter}. ${correctText.toUpperCase()}`,
+      },
+      pageAccessToken
+    );
+  }
+}
+  
+
 if (messageText && messageText.toLowerCase().startsWith("imgur")) {
     try {
 if (!imageUrl) {
