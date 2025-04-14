@@ -609,6 +609,7 @@ async function handleMessage(event, pageAccessToken) {
 
 const senderId = event.sender.id;
 const messageText = event.message.text;
+const postbackPayload = event.postback?.payload;
 const haha = "More shoti";
 const messageId = event.message.mid;
 const If = "aidetect";
@@ -767,51 +768,42 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
       pageAccessToken
     );
   } catch (error) {
-    console.error("Quiz error:", error.message);
-  }
+   }
 }
 
-if (
-  event.postback &&
-  event.postback.payload &&
-  triviaData[senderId] &&
-  !triviaData[senderId].answered
-) {
-  let userAnswer = null;
+if (event.postback && event.postback.payload) {
+  const senderId = event.sender.id;
 
   try {
     const payloadData = JSON.parse(event.postback.payload);
-    userAnswer = payloadData.answer.toUpperCase();
-  } catch (e) {
-    console.error("Invalid payload", e);
-    return;
-  }
+    const userAnswer = payloadData.answer.toUpperCase();
 
-  const { correctLetter, correctText } = triviaData[senderId];
-  clearTimeout(triviaData[senderId].timeout);
-  triviaData[senderId].answered = true;
+    const { correctLetter, correctText } = triviaData[senderId];
+    clearTimeout(triviaData[senderId].timeout);
+    triviaData[senderId].answered = true;
 
-  if (userAnswer === correctLetter) {
-    await sendMessage(
-      senderId,
-      {
-        text: `You are correct! The answer is:\n\n${userAnswer}. ${correctText.toUpperCase()}`,
-      },
-      pageAccessToken
-    );
-  } else {
-    await sendMessage(
-      senderId,
-      {
-        text: `Sorry, your answer is wrong. The correct answer is:\n\n${correctLetter}. ${correctText.toUpperCase()}`,
-      },
-      pageAccessToken
-    );
+    if (userAnswer === correctLetter) {
+      await sendMessage(
+        senderId,
+        {
+          text: `You are correct! The answer is:\n\n${userAnswer}. ${correctText.toUpperCase()}`,
+        },
+        pageAccessToken
+      );
+    } else {
+      await sendMessage(
+        senderId,
+        {
+          text: `Sorry, your answer is wrong. The correct answer is:\n\n${correctLetter}. ${correctText.toUpperCase()}`,
+        },
+        pageAccessToken
+      );
+    }
+  } catch (err) {
   }
 }
-
   
-
+  
 if (messageText && messageText.toLowerCase().startsWith("imgur")) {
     try {
 if (!imageUrl) {
