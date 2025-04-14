@@ -9,7 +9,7 @@ const regEx_tiktok = /^https?:\/\/(www\.)?(tiktok\.com|vt\.tiktok\.com|vm\.tikto
 const facebookLinkRegex = /https:\/\/www\.facebook\.com\/\S+/;
 const instagramLinkRegex = /https:\/\/www\.instagram\.com\/reel\/[a-zA-Z0-9_-]+\/\?igsh=[a-zA-Z0-9_=-]+$/;
 const youtubeLinkRegex = /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
-const spotifyLinkRegex = /^https?:\/\/open\.spotify\.com\/track\/[a-zA-Z0-9]+$/;
+const spotifyLinkRegex = /^https?:\/\/open\.spotify\.com\/track\/[a-zA-Z0-9]+(\?.*)?$/;
 const soundcloudRegex = /^https?:\/\/soundcloud\.com\/([a-zA-Z0-9-]+)\/([a-zA-Z0-9-]+)(?:\/([a-zA-Z0-9-]+))?(?:\?.*)?$/;
 const capcutLinkRegex = /https:\/\/www\.capcut\.com\/t\/[A-Za-z0-9]+/;
 const redditVideoRegex = /https:\/\/www\.reddit\.com\/r\/[A-Za-z0-9_]+\/comments\/[A-Za-z0-9]+\/[A-Za-z0-9_]+\/?/;
@@ -1369,12 +1369,18 @@ const audio = response.data.download.file_url;
                 {
                   title: track_name,
                   image_url: cover_image,
-                  subtitle: `${album_artist} ${release_date}`,
+                  subtitle: `${album_artist}`,
                   default_action: {
                     type: "web_url",
                     url: cover_image,
                     webview_height_ratio: "tall"
-                  }
+                  },
+                  buttons: [
+                     {
+                     type: 'web_url',
+                     url: audio,
+                     title: 'Download Music',                     
+                   },          
                 }
               ]
             }
