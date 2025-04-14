@@ -609,7 +609,7 @@ async function handleMessage(event, pageAccessToken) {
 
 const senderId = event.sender.id;
 const messageText = event.message.text;
-const postbackPayload = event.postback?.payload;
+const payloadData = event.postback?.payload;
 const haha = "More shoti";
 const messageId = event.message.mid;
 const If = "aidetect";
@@ -714,7 +714,7 @@ async function revealAnswer(senderId) {
     await sendMessage(
       senderId,
       {
-        text: `Time's up! The correct answer is:\n\n${correctLetter}. ${correctText.toUpperCase()}`,
+        text: `Time's up! The correct answer is:\n\n${correctLetter}. ${correctText}`,
       },
       pageAccessToken
     );
@@ -775,8 +775,7 @@ if (event.postback && event.postback.payload) {
   const senderId = event.sender.id;
 
   try {
-    const payloadData = JSON.parse(event.postback.payload);
-    const userAnswer = payloadData.answer.toUpperCase();
+    const userAnswer = payloadData.answer;
 
     const { correctLetter, correctText } = triviaData[senderId];
     clearTimeout(triviaData[senderId].timeout);
