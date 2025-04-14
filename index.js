@@ -706,6 +706,8 @@ if (containsBannedKeyword) {
 }
 
 
+const triviaData = {};
+
 async function revealAnswer(senderId) {
   if (!triviaData[senderId].answered) {
     const { correctIndex, options } = triviaData[senderId];
@@ -717,16 +719,16 @@ async function revealAnswer(senderId) {
   }
 }
 
-const triviaData = {};
 
-async function handleMessage(senderId, messageText) {
+
   if (messageText && messageText.toLowerCase().startsWith("quiz")) {
     try {
-      const response = await axios.get('https://betadash-api-swordslush-production.up.railway.app/quiz');      
+      const response = await axios.get('https://betadash-api-swordslush-production.up.railway.app/quiz');
       const question = response.data.questions[0];
       const options = Object.values(question.choices);
 
       if (triviaData[senderId]) {
+        clearTimeout(triviaData[senderId].timeout);
         delete triviaData[senderId];
       }
 
@@ -742,19 +744,22 @@ async function handleMessage(senderId, messageText) {
 
       triviaData[senderId].timeout = timeout;
 
+      const buttons = options.slice(0, 3).map((option, index) => ({
+        content_type: "text",
+        title: String.fromCharCode(65 + index),
+        payload: String.fromCharCode(65 + index).toLowerCase(),
+      }));
+
       await sendMessage(senderId, {
         text: question.question,
-        quick_replies: options.slice(0, 3).map((option, index) => ({
-          content_type: "text",
-          title: `${String.fromCharCode(65 + index)}. ${option}`,
-          payload: String.fromCharCode(65 + index).toLowerCase(),
-        })),
+        buttons: buttons,
       }, pageAccessToken);
 
     } catch (error) {
-      console.error("Error fetching quiz data:", error);
     }
-  } else if (messageText && /^[a-c]$/.test(messageText.toLowerCase()) && !triviaData[senderId].answered) {
+  }
+
+  if (messageText && /^[a-c]$/.test(messageText.toLowerCase()) && !triviaData[senderId].answered) {
     const userAnswer = messageText.toLowerCase();
     const { correctIndex, options } = triviaData[senderId];
     const correctLetter = String.fromCharCode(65 + correctIndex).toLowerCase();
@@ -768,11 +773,13 @@ async function handleMessage(senderId, messageText) {
       }, pageAccessToken);
     } else {
       await sendMessage(senderId, {
-        text: `Sorry, your answer is wrong. The correct answer is:\n\n${String.fromCharCode(65 + correctIndex)}. ${options[correctIndex]}`,
+        text: `Sorry, your answer is wrong. The correct answer is:\n\n${correctLetter.toUpperCase()}. ${options[correctIndex]}`,
       }, pageAccessToken);
     }
   }
 }
+
+
 
 
 if (messageText && messageText.toLowerCase().startsWith("removebg")) {
