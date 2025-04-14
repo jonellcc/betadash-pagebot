@@ -1380,11 +1380,10 @@ const audio = response.data.download.file_url;
                      type: 'web_url',
                      url: audio,
                      title: 'Download Music',                     
-                   },          
-                }
-              ]
-            }
-          }
+                  }
+               ]
+             }
+           }
         },
         pageAccessToken
       ); 
