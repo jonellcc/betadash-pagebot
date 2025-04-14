@@ -707,8 +707,6 @@ if (containsBannedKeyword) {
 
 const triviaData = {};
 
-
-
 async function revealAnswer(senderId) {
   if (!triviaData[senderId]?.answered) {
     const { correctLetter, correctText } = triviaData[senderId];
@@ -734,7 +732,7 @@ if (messageText && messageText.toLowerCase().startsWith("quiz")) {
     const selectedKeys = ["A", "B", "C"];
     const buttons = selectedKeys.map((key) => ({
       type: "postback",
-      title: `${key}. ${options[key].toUpperCase()}`,
+      title: `${key}. ${options[key]}`,
       payload: JSON.stringify({
         answer: key,
       }),
