@@ -706,121 +706,74 @@ if (containsBannedKeyword) {
 }
 
 
-const triviaData = {};
-
 async function revealAnswer(senderId) {
-  if (!triviaData[senderId]?.answered) {
-    const { correctLetter, correctText } = triviaData[senderId];
-    await sendMessage(
-      senderId,
-      {
-        text: `Time's up! The correct answer is:\n\n${correctLetter}. ${correctText}`,
-      },
-      pageAccessToken
-    );
+  if (!triviaData[senderId].answered) {
+    const { correctIndex, options } = triviaData[senderId];
+    const correctLetter = String.fromCharCode(65 + correctIndex);
+    await sendMessage(senderId, {
+      text: `Time's up! The correct answer is:\n\n${correctLetter}. ${options[correctIndex]}`,
+    }, pageAccessToken);
     triviaData[senderId].answered = true;
   }
 }
 
-if (messageText && messageText.toLowerCase().startsWith("quiz")) {
-  try {
-    const res = await axios.get("https://betadash-api-swordslush-production.up.railway.app/quiz");
-    const question = res.data.questions[0];
-    const options = question.choices;
-    const correctLetter = question.correct_answer;
-    const correctText = options[correctLetter];
+const triviaData = {};
 
-    const selectedKeys = ["A", "B", "C"];
-    const buttons = selectedKeys.map((key) => ({
-      type: "postback",
-      title: `${key}. ${options[key]}`,
-      payload: `${key.toUpperCase()}. ${options[key].toUpperCase()}`,
-    }));
+async function handleMessage(senderId, messageText) {
+  if (messageText && messageText.toLowerCase().startsWith("quiz")) {
+    try {
+      const response = await axios.get('https://betadash-api-swordslush-production.up.railway.app/quiz');      
+      const question = response.data.questions[0];
+      const options = Object.values(question.choices);
 
-    if (triviaData[senderId]) {
-      clearTimeout(triviaData[senderId].timeout);
+      if (triviaData[senderId]) {
+        delete triviaData[senderId];
+      }
+
+      triviaData[senderId] = {
+        correctIndex: options.indexOf(question.correct_answer),
+        answered: false,
+        options: options,
+      };
+
+      const timeout = setTimeout(() => {
+        revealAnswer(senderId);
+      }, 30000);
+
+      triviaData[senderId].timeout = timeout;
+
+      await sendMessage(senderId, {
+        text: question.question,
+        quick_replies: options.slice(0, 3).map((option, index) => ({
+          content_type: "text",
+          title: `${String.fromCharCode(65 + index)}. ${option}`,
+          payload: String.fromCharCode(65 + index).toLowerCase(),
+        })),
+      }, pageAccessToken);
+
+    } catch (error) {
+      console.error("Error fetching quiz data:", error);
     }
+  } else if (messageText && /^[a-c]$/.test(messageText.toLowerCase()) && !triviaData[senderId].answered) {
+    const userAnswer = messageText.toLowerCase();
+    const { correctIndex, options } = triviaData[senderId];
+    const correctLetter = String.fromCharCode(65 + correctIndex).toLowerCase();
 
-    triviaData[senderId] = {
-      correctLetter,
-      correctText,
-      answered: false,
-    };
-
-    const timeout = setTimeout(() => {
-      revealAnswer(senderId);
-    }, 30000);
-
-    triviaData[senderId].timeout = timeout;
-
-    await sendMessage(
-      senderId,
-      {
-        attachment: {
-          type: "template",
-          payload: {
-            template_type: "button",
-            text: question.question,
-            buttons: buttons,
-          },
-        },
-      },
-      pageAccessToken
-    );
-  } catch (error) {
-   }
-}
-
-if (event.postback && event.postback.payload) {
-  const senderId = event.sender.id;
-
-  try {
-    const userAnswer = payloadData.answer;
-
-    const { correctLetter, correctText } = triviaData[senderId];
     clearTimeout(triviaData[senderId].timeout);
     triviaData[senderId].answered = true;
 
     if (userAnswer === correctLetter) {
-      await sendMessage(
-        senderId,
-        {
-          text: `You are correct! The answer is:\n\n${userAnswer}. ${correctText.toUpperCase()}`,
-        },
-        pageAccessToken
-      );
+      await sendMessage(senderId, {
+        text: `You are correct! The answer is:\n\n${userAnswer.toUpperCase()}. ${options[correctIndex]}`,
+      }, pageAccessToken);
     } else {
-      await sendMessage(
-        senderId,
-        {
-          text: `Sorry, your answer is wrong. The correct answer is:\n\n${correctLetter}. ${correctText.toUpperCase()}`,
-        },
-        pageAccessToken
-      );
+      await sendMessage(senderId, {
+        text: `Sorry, your answer is wrong. The correct answer is:\n\n${String.fromCharCode(65 + correctIndex)}. ${options[correctIndex]}`,
+      }, pageAccessToken);
     }
-  } catch (err) {
   }
 }
-  
-  
-if (messageText && messageText.toLowerCase().startsWith("imgur")) {
-    try {
-if (!imageUrl) {
-      sendMessage(senderId, { text: "Reply to an image to upload in imgur" }, pageAccessToken);
-      return;
-    }     
-        const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
-        const imgurResponse = await axios.get(imgurApiUrl, { headers } );
-        const imgurLink = imgurResponse.data.uploaded.image;
-        const h = {
-            text: `Here is the Imgur link for the image you provided:\n\n${imgurLink}`
-        };
-        sendMessage(senderId, h, pageAccessToken);
-    } catch (error) {
-     sendMessage(senderId, { text: error.message}, pageAccessToken);
-        }
-      return;
-}
+
 
 if (messageText && messageText.toLowerCase().startsWith("removebg")) {
     try {
