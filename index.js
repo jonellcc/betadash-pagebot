@@ -1076,10 +1076,10 @@ if (messageText && messageText.toLowerCase().startsWith("humanize")) {
    try {
   let text;
     if (imageUrl) {
-const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
-        const imgurResponse = await axios.get(imgurApiUrl, { headers } );
-        const imgurLink = imgurResponse.data.uploaded.image;
-        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&&imageUrl=${imgurLink}`;
+const apiUrl = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;
+const fuck = await axios.get(apiUrl);
+const dh = fuck.data.url;
+        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&imageUrl=${dh}`;
 const s = ["✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
         const response = await axios.get(apiUrl, { headers });
