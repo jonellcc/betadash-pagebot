@@ -16,15 +16,16 @@ module.exports = {
       const response = await axios.get(apiUrl);
       const videos = response.data.result.slice(0, 10);
 
-      const elements = await Promise.all(videos.map(async (video) => {
+      const elements = await Promise.all(videos.map(async (video, index) => {
         const jh = await axios.get(`https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(video.image)}`);
         const lhs = jh.data.url;
         const ldh = await axios.get(`https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(video.videoUrl)}`);
         const hxh = ldh.data.url;
 
         return {
-          title: video.title,
+          title: `Video ${index + 1}`,
           image_url: lhs,
+          subtitle: video.title,
           default_action: {
             type: "web_url",
             url: hxh,
