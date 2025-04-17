@@ -18,7 +18,7 @@ const _0xlt = sendMessage;
 
     try {
       const _0xz = await axios.get(_0xk);
-      const _0xv = _0xz.data.result;
+      const _0xv = _0xz.data.result.slice(0, 10);
 
       const _0xe = await Promise.all(_0xv.map(async (_0xi) => {
         const _0xm = await axios.get(`https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(_0xi.image)}`);
