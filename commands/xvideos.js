@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = {
-  name: 'xvidoes',
+  name: 'xvideos',
   description: 'Random pinay adult vidoes',
   author: 'yazky',
 
