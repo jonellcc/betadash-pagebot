@@ -591,6 +591,10 @@ async function handleFeedback(event, feedback, pageAccessToken) {
 }
 
 async function handleReaction(event, reaction, pageAccessToken) {
+    if (reaction.action !== 'react') {
+        return;
+    }
+
     const reactionMap = {
         '❤': 'heart',
         '👍': 'like',
@@ -598,14 +602,18 @@ async function handleReaction(event, reaction, pageAccessToken) {
         '😮': 'wow',
         '😢': 'sad',
         '😡': 'angry',
+        // Add more mappings as needed
     };
 
     const reactionType = reactionMap[reaction.emoji] || 'other';
-    const action = reaction.action === 'react' ? 'reacted with' : 'removed the reaction';
-    const responseText = { text: `𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 ${action} 𝗒𝗈𝗎𝗋 𝗋𝖾𝖺𝖼𝗍𝗂𝗈𝗇: ${reaction.emoji} (${reactionType})` };
+
+    const responseText = {
+        text: `𝖳𝗁𝖺𝗇𝗄𝗌 𝖿𝗈𝗋 𝗒𝗈𝗎𝗋 𝗋𝖾𝖺𝖼𝗍𝗂𝗈𝗇: ${reaction.emoji} (${reactionType})`
+    };
 
     await sendMessage(event.sender.id, responseText, pageAccessToken);
 }
+
 
 async function handleMessage(event, pageAccessToken) {
     if (!event || !event.sender || !event.message || !event.sender.id) {
