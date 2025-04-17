@@ -4,14 +4,12 @@ module.exports = {
   name: 'xvideos',
   description: 'Random pinay adult vidoes',
   author: 'yazky',
-
-async execute(senderId, args, pageAccessToken, sendMessage) {
+  async execute(senderId, args, pageAccessToken, sendMessage) {
 
 const _0xlg = senderId;
 const _0xlj = args;
 const _0xla = pageAccessToken;
 const _0xlt = sendMessage;
-
 
     const _0xn = parseInt(_0xlj[0]);
     const _0xp = isNaN(_0xn) || _0xn < 1 ? 1 : _0xn;
