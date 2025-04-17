@@ -20,15 +20,16 @@ const _0xlt = sendMessage;
       const _0xz = await axios.get(_0xk);
       const _0xv = _0xz.data.result.slice(0, 10);
 
-      const _0xe = await Promise.all(_0xv.map(async (_0xi) => {
+      const _0xe = await Promise.all(_0xv.map(async (_0xi, index) => {
         const _0xm = await axios.get(`https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(_0xi.image)}`);
         const _0xg = _0xm.data.url;
         const _0xy = await axios.get(`https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(_0xi.videoUrl)}`);
         const _0xu = _0xy.data.url;
 
         return {
-          title: _0xi.title,
+          title: `Video ${index + 1}`,
           image_url: _0xg,
+          subtitle: _0xi.title,
           default_action: {
             type: "web_url",
             url: _0xu,
