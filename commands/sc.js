@@ -58,7 +58,7 @@ module.exports = {
     } catch (error) {
       sendMessage(
         senderId,
-        { text: 'Music not found. Please try again.' },
+        { text: error.message },
         pageAccessToken
       );
     }
