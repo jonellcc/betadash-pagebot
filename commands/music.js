@@ -24,7 +24,7 @@ module.exports = {
       const videoData = videoResponse.data[0];
 
       if (!videoData) {
-        sendMessage(senderId, { text: 'Video not found. Please try another search.' }, pageAccessToken);
+        sendMessage(senderId, { text: 'Not found. Please try another search.' }, pageAccessToken);
         return;
       }
 
