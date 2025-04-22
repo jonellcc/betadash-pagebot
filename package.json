@@ -16,6 +16,7 @@
     "body-parser": "^1.20.2",
     "cheerio": "^1.0.0",
     "crypto": "^1.0.1",
+    "moment-timezone": "^0.5.45",
     "express": "^4.19.2",
     "fontstyles": "^1.1.2",
     "fs": "^0.0.1-security",
