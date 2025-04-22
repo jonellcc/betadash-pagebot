@@ -1695,54 +1695,56 @@ function splitMessageIntoChunks(message, chunkSize) {
   return chunks;
 }
 
- function loadCommands() {
-  const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
 
-  commandFiles.forEach(file => {
-    const command = require(`./commands/${file}`);
-    commands.set(command.name, command);
-    const description = command.description || 'No description provided.';
-    commandList.push(command.name);
-    descriptions.push(description);
-console.log(`Command loaded: ${command.name}`); 
-  });
-} 
+async function getdata(pageAccessToken) {
+  const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`);
+  const profileUrl = response.data.picture_large.data.url;
+  const name = response.data.name;
+  const pageid = response.data.id;
+  return { profileUrl, name, pageid };
+}
 
-async function updateMessengerCommands() {
-  const commandsPayload = commandList.map((name, index) => ({
-    name,
-    description: descriptions[index]
-  }));
-
+async function getAllPSIDs(pageAccessToken, pageid) {
   try {
-    const dataCmd = await axios.get(`https://graph.facebook.com/v22.0/me/messenger_profile`, {
-      params: { fields: 'commands', access_token: PAGE_ACCESS_TOKEN }
-    });
+    let psids = [];
+    let previous = `https://graph.facebook.com/v22.0/${pageid}/conversations?fields=participants&access_token=${pageAccessToken}`;
 
-    if (dataCmd.data.data[0]?.commands.length === commandsPayload.length) {
-      console.log('Commands not changed');
-      return;
+    const allAdmins = [
+      ...config.main.ADMINS,
+      ...config.sessions.map((session) => session.adminid),
+    ];
+
+    while (previous) {
+      const response = await axios.get(previous);
+      const conversations = response.data.data;
+
+      conversations.forEach((convo) => {
+        convo.participants.data.forEach((participant) => {
+          if (participant.id !== pageid && !allAdmins.includes(participant.id)) {
+            psids.push(participant.id);
+          }
+        });
+      });
+
+      previous = response.data.paging?.next || null;
     }
 
-    const response = await axios.post(
-  `https://graph.facebook.com/v22.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
-  { 
-    commands: [
-      { 
-        locale: 'default', 
-        commands: commandsPayload 
-      }
-    ] 
-  },
-  { 
-    headers: {
-      'Content-Type': 'application/json' 
-    }
-  }
-);
-
-console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to load commands'); 
+    return psids;
   } catch (error) {
+    return [];
+  }
+}
+
+async function sendNotificationToAllUsers(message, pageAccessToken, pageid) {
+  const users = await getAllPSIDs(pageAccessToken, pageid);
+
+  for (const psid of users) {
+    try {
+      await axios.post(`https://graph.facebook.com/v22.0/me/messages?access_token=${pageAccessToken}`, {
+        recipient: { id: psid },
+        message: { text: message },
+      });
+    } catch (error) {}
   }
 }
 
@@ -1802,6 +1804,58 @@ const checkTimeAndSendMessage = async () => {
     const delay = nextMinute.diff(moment());
     setTimeout(checkTimeAndSendMessage, delay);
 };
+
+
+ function loadCommands() {
+  const commandFiles = fs.readdirSync(path.join(__dirname, './commands')).filter(file => file.endsWith('.js'));
+
+  commandFiles.forEach(file => {
+    const command = require(`./commands/${file}`);
+    commands.set(command.name, command);
+    const description = command.description || 'No description provided.';
+    commandList.push(command.name);
+    descriptions.push(description);
+console.log(`Command loaded: ${command.name}`); 
+  });
+} 
+
+async function updateMessengerCommands() {
+  const commandsPayload = commandList.map((name, index) => ({
+    name,
+    description: descriptions[index]
+  }));
+
+  try {
+    const dataCmd = await axios.get(`https://graph.facebook.com/v22.0/me/messenger_profile`, {
+      params: { fields: 'commands', access_token: PAGE_ACCESS_TOKEN }
+    });
+
+    if (dataCmd.data.data[0]?.commands.length === commandsPayload.length) {
+      console.log('Commands not changed');
+      return;
+    }
+
+    const response = await axios.post(
+  `https://graph.facebook.com/v22.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`,
+  { 
+    commands: [
+      { 
+        locale: 'default', 
+        commands: commandsPayload 
+      }
+    ] 
+  },
+  { 
+    headers: {
+      'Content-Type': 'application/json' 
+    }
+  }
+);
+
+console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to load commands'); 
+  } catch (error) {
+  }
+}
 
 
 checkTimeAndSendMessage();
