@@ -1790,7 +1790,7 @@ const checkTimeAndSendMessage = async () => {
         lastMessage = dateNow;
 
         try {
-            const { pageid } = await getdata(pageAccessToken);
+            const { pageid } = await getdata(PAGE_ACCESS_TOKEN);
             await sendNotificationToAllUsers(
                 convertToBold(messageData.message),
                 pageAccessToken,
