@@ -1752,13 +1752,13 @@ const moment = require('moment-timezone');
 
 const arrayData = {
     "06:00:00 AM": {
-        message: "⏰ Time Check: 6:00 AM!\n\nRise and shine! Have a wonderful start to your day!"
+        message: "⏰ **Time Check: 6:00 AM!**\n\nRise and shine! Have a wonderful start to your day!"
     },
     "08:00:00 AM": {
-        message: "⏰ Time Check: 8:00 AM!\n\nWishing everyone a great morning!"
+        message: "⏰ **Time Check: 8:00 AM!**\n\nWishing everyone a great morning!"
     },
     "10:00:00 AM": {
-        message: "⏰ Time Check: 10:00 AM!\n\nKeep pushing—you're doing amazing!"
+        message: "⏰ **Time Check: 10:00 AM!**\n\nKeep pushing—you're doing amazing!"
     },
     "12:00:00 PM": {
         message: "⏰ **Time Check: 12:00 PM!**\n\nIt's noon! Don’t forget to take a break and grab some lunch."
