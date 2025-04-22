@@ -1746,7 +1746,65 @@ console.log(response.data.result === 'success' ? 'Commands loaded!' : 'Failed to
   }
 }
 
+const moment = require('moment-timezone');
 
+const arrayData = {
+    "06:00:00 AM": {
+        message: "⏰ Time Check: 6:00 AM!\n\nRise and shine! Have a wonderful start to your day!"
+    },
+    "08:00:00 AM": {
+        message: "⏰ Time Check: 8:00 AM!\n\nWishing everyone a great morning!"
+    },
+    "10:00:00 AM": {
+        message: "⏰ Time Check: 10:00 AM!\n\nKeep pushing—you're doing amazing!"
+    },
+    "12:00:00 PM": {
+        message: "⏰ **Time Check: 12:00 PM!**\n\nIt's noon! Don’t forget to take a break and grab some lunch."
+    },
+    "05:00:00 PM": {
+        message: "⏰ **Time Check: 5:00 PM!**\n\nThe day is winding down—great job today!"
+    },
+    "10:00:00 PM": {
+        message: "⏰ **Time Check: 10:00 PM!**\n\nTime to unwind. Rest well, everyone!"
+    },
+    "12:00:00 AM": {
+        message: "⏰ **Time Check: 12:00 MN!**\n\nMidnight thoughts? Don’t forget to take care of yourself."
+    }
+};
+
+let lastMessage = 0;
+
+const checkTimeAndSendMessage = async () => {
+    const now = moment().tz('Asia/Manila');
+    const currentTime = now.format('hh:mm:ss A');
+
+    const messageData = arrayData[currentTime];
+
+    if (messageData) {
+        const dateNow = Date.now();
+        if (dateNow - lastMessage < 1 * 60 * 60 * 1000) {
+            return;
+        }
+        lastMessage = dateNow;
+
+        try {
+            const { pageid } = await getdata(pageAccessToken);
+            await sendNotificationToAllUsers(
+                messageData.message,
+                pageAccessToken,
+                pageid
+            );
+        } catch (error) {
+        }
+    }
+
+    const nextMinute = moment().add(1, 'minute').startOf('minute');
+    const delay = nextMinute.diff(moment());
+    setTimeout(checkTimeAndSendMessage, delay);
+};
+
+
+checkTimeAndSendMessage();
 loadCommands();
 updateMessengerCommands();
 
