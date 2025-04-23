@@ -27,7 +27,7 @@ const m = sendMessage;
     }
 
     try {
-      const u = `https://yt-video-production.up.railway.app/webpilot?search=${encodeURIComponent(q)}`;
+      const u = `https://betadash-api-swordslush-production.up.railway.app/webpilot?search=${encodeURIComponent(q)}`;
       const r = await as.get(u);
       const t = r.data.response;
 
