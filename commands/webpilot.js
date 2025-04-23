@@ -1,49 +1,42 @@
-const as = require('axios');
+const axios = require('axios');
 
-function sy(m, c) {
-  const r = [];
-  for (let i = 0; i < m.length; i += c) {
-    r.push(m.slice(i, i + c));
+function splitMessageIntoChunks(message, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < message.length; i += chunkSize) {
+    chunks.push(message.slice(i, i + chunkSize));
   }
-  return r;
+  return chunks;
 }
 
 module.exports = {
   name: 'webpilot',
-  description: 'Webpilot Search Engine',
-  author: 'yazky (rest api)',
-    async execute(senderId, args, pageAccessToken, sendMessage) {
+  description: 'Webpilot search engine',
+  author: 'Cliff',
+  async execute(senderId, args, pageAccessToken, sendMessage) {
+    const query = args.join(' ');
 
-const s = senderId;
-const a = args;
-const p = pageAccessToken;
-const m = sendMessage;
-
-    const q = a.join(' ');
-
-    if (!q) {
-     await m(s, { text: 'Please provide a question first.' }, p);
+    if (!query) {
+      await sendMessage(senderId, { text: 'Please provide a text you want to search' }, pageAccessToken);
       return;
     }
 
     try {
-      const u = `https://betadash-api-swordslush-production.up.railway.app/webpilot?search=${encodeURIComponent(q)}`;
-      const r = await as.get(u);
-      const t = r.data.response;
+      const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/webpilot?search=${encodeURIComponent(query)}`;
+      const response = await axios.get(apiUrl);
 
-      const l = 2000;
-      if (t.length > l) {
-        const c = sy(t, l);
-        for (const x of c) {
-          const f = `🗨 𝗪𝗲𝗯𝗽𝗶𝗹𝗼𝘁\n━━━━━━━━━━━━\n${x}\n━━━━━ ✕ ━━━━━`;
-          await m(s, { text: f }, p);
+      const resultMessage = `𝗪𝗲𝗯𝗽𝗶𝗹𝗼𝘁\n━━━━━━━━━━━━\n${response.data.response}\n━━━━━ ✕ ━━━━━`;
+      const maxMessageLength = 2000;
+
+      if (resultMessage.length > maxMessageLength) {
+        const messages = splitMessageIntoChunks(resultMessage, maxMessageLength);
+        for (const message of messages) {
+          await sendMessage(senderId, { text: message }, pageAccessToken);
         }
       } else {
-        const f = `🗨 𝗪𝗲𝗯𝗽𝗶𝗹𝗼𝘁\n━━━━━━━━━━━━━\n${t}\n━━━━━ ✕ ━━━━━`;
-        await m(s, { text: f }, p);
+        await sendMessage(senderId, { text: resultMessage }, pageAccessToken);
       }
-    } catch (e) {
-     await m(s, { text: e.message }, p);
+    } catch (error) {
+      await sendMessage(senderId, { text: `Error: ${error.message}` }, pageAccessToken);
     }
   }
 };
