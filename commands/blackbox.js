@@ -27,7 +27,7 @@ module.exports = {
     try {
       sendMessage(senderId, { text: '🔍 Searching, Please Wait....' }, pageAccessToken);
 
-      const apiUrl = `https://yt-video-production.up.railway.app/blackbox?ask=${encodeURIComponent(prompt)}`;
+      const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/blackbox-pro?ask=${encodeURIComponent(prompt)}`;
       const response = await axios.get(apiUrl);
       const text = response.data.Response;
 
