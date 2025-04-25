@@ -135,6 +135,12 @@ const admin = config.ADMINS;
 const PAGE_ACCESS_TOKEN = config.PAGE_ACCESS_TOKEN; **/ const commandList = [];
 const descriptions = [];
 const commands = new Map();
+ const cooldownMap = new Map(); 
+const messageHistory = new Map(); 
+
+const COOLDOWN_SECONDS = 10;
+const SPAM_LIMIT = 4;
+const SPAM_WINDOW = 15 * 1000; 
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "public", "page.html"));
@@ -660,12 +666,6 @@ const khz = "ghibli";
 
 const thb = await getAttachments(k); **/
 
- const cooldownMap = new Map(); 
-const messageHistory = new Map(); 
-
-const COOLDOWN_SECONDS = 10;
-const SPAM_LIMIT = 4;
-const SPAM_WINDOW = 15 * 1000; 
 
 if (isOnCooldown(senderId)) {
     return;
