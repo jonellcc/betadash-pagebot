@@ -668,10 +668,12 @@ const thb = await getAttachments(k); **/
 if (now < userCooldown) {
   const active = Math.ceil((userCooldown - now) / 1000);
   await sendMessage(senderId, { text: `Please wait ${active} seconds before using the command again.` }, pageAccessToken);
+  return;
 }
 
 if (isSpamming(senderId)) {
     await sendMessage(senderId, {text: "You're sending messages too quickly. Please slow down."}, pageAccessToken);
+   return;
  }  
 
 cooldowns.set(senderId, now + delay * 1000);
