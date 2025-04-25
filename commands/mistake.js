@@ -23,10 +23,9 @@ module.exports = {
     }
 
     try {
-      const nya = await axios.get(apiUrl);
-      const res = nya.data.imageUrl;
+      const nya = await axios.get(apiUrl);      
 
-      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: res } } }, pageAccessToken);
+      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: nya } } }, pageAccessToken);
     } catch (error) {
       await sendMessage(senderId, { text: error.message }, pageAccessToken);
     }
