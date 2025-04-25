@@ -135,6 +135,13 @@ const admin = config.ADMINS;
 const PAGE_ACCESS_TOKEN = config.PAGE_ACCESS_TOKEN; **/ const commandList = [];
 const descriptions = [];
 const commands = new Map();
+const cooldowns = new Map();
+const messageHistory = new Map(); 
+
+const delay = 10; 
+const now = Date.now();
+const SPAM_LIMIT = 5;
+const SPAM_WINDOW = 15 * 1000;
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "public", "page.html"));
@@ -614,6 +621,23 @@ async function handleReaction(event, reaction, pageAccessToken) {
     await sendMessage(event.sender.id, responseText, pageAccessToken);
 }
 
+function isOnCooldown(senderId) {
+  const lastTime = cooldowns.get(senderId);
+  if (!lastTime) return false;
+  return (Date.now() - lastTime) < delay * 1000;
+}
+
+function isSpamming(senderId) {
+  const now = Date.now();
+  if (!messageHistory.has(senderId)) {
+    messageHistory.set(senderId, []);
+  }
+  const timestamps = messageHistory.get(senderId).filter(t => now - t < SPAM_WINDOW);
+  timestamps.push(now);
+  messageHistory.set(senderId, timestamps);
+  return timestamps.length > SPAM_LIMIT;
+}
+
 
 async function handleMessage(event, pageAccessToken) {
     if (!event || !event.sender || !event.message || !event.sender.id) {
@@ -626,6 +650,7 @@ async function handleMessage(event, pageAccessToken) {
     }
 
 const senderId = event.sender.id;
+const userCooldown = cooldowns.get(senderId) || 0;
 const messageText = event.message.text;
 const msgj = messageText || "Describe or answer this";
 const payloadData = event.postback?.payload;
@@ -640,6 +665,18 @@ const khz = "ghibli";
 
 const thb = await getAttachments(k); **/
 
+if (now < userCooldown) {
+  const active = Math.ceil((userCooldown - now) / 1000);
+  await sendMessage(senderId, { text: `Please wait ${active} seconds before using the command again.` }, pageAccessToken);
+}
+
+if (isSpamming(senderId)) {
+    await sendMessage(senderId, {text: "You're sending messages too quickly. Please slow down."}, pageAccessToken);
+ }  
+
+cooldowns.set(senderId, now + delay * 1000);
+
+  
 let content = "";
 
 if (event.message && event.message.reply_to) {
