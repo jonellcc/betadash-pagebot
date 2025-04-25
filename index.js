@@ -676,6 +676,8 @@ if (isSpamming(senderId)) {
     await sendMessage(senderId, {text: "You're sending messages too quickly. Please slow down."}, pageAccessToken);
 }
 
+  cooldownMap.set(senderId, Date.now());
+
   
 let content = "";
 
