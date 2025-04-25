@@ -627,6 +627,7 @@ async function handleMessage(event, pageAccessToken) {
 
 const senderId = event.sender.id;
 const messageText = event.message.text;
+const msgj = messageText || "Describe or answer this";
 const payloadData = event.postback?.payload;
 const haha = "More shoti";
 const messageId = event.message.mid;
@@ -645,7 +646,7 @@ if (event.message && event.message.reply_to) {
 content = await getMessage(event.message.reply_to.mid);
 }
 const cleanContent = content.replace(/[✦✧⟡] \| 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭\.𝟱|━━━━━━━━━━━━━/g, "").trim();
-const combinedContent = cleanContent ? `${messageText} ${cleanContent}` : messageText;
+const combinedContent = cleanContent ? `${msgj} ${msgj}` : msgj;
 
 let imageUrl = '';
 
