@@ -7,9 +7,10 @@ module.exports = {
   description: `${name} canvas`,
   usage: `${name} <userid or image url>`,
   author: 'cliff',
+  
   async execute(senderId, args, pageAccessToken, sendMessage) {
     if (!args || !Array.isArray(args) || args.length === 0) {
-      await sendMessage(senderId, { text: 'Please provide a userid or image URL to generate canvas' }, pageAccessToken);
+      await sendMessage(senderId, { text: 'Please provide a userid or image URL to generate canvas.' }, pageAccessToken);
       return;
     }
 
@@ -23,11 +24,15 @@ module.exports = {
     }
 
     try {
-      const nya = await axios.get(apiUrl);      
+      await sendMessage(senderId, {
+        attachment: {
+          type: 'image',
+          payload: { url: apiUrl }
+        }
+      }, pageAccessToken);
 
-      await sendMessage(senderId, { attachment: { type: 'image', payload: { url: nya } } }, pageAccessToken);
     } catch (error) {
-      await sendMessage(senderId, { text: error.message }, pageAccessToken);
+      await sendMessage(senderId, { text: `Error: ${error.message}` }, pageAccessToken);
     }
   }
 };
