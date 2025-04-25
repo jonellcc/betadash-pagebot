@@ -614,6 +614,24 @@ async function handleReaction(event, reaction, pageAccessToken) {
     await sendMessage(event.sender.id, responseText, pageAccessToken);
 }
 
+function isOnCooldown(senderId) {
+  const lastTime = cooldownMap.get(senderId);
+  if (!lastTime) return false;
+  return (Date.now() - lastTime) < COOLDOWN_SECONDS * 1000;
+}
+
+function isSpamming(senderId) {
+  const now = Date.now();
+  if (!messageHistory.has(senderId)) {
+    messageHistory.set(senderId, []);
+  }
+  const timestamps = messageHistory.get(senderId).filter(t => now - t < SPAM_WINDOW);
+  timestamps.push(now);
+  messageHistory.set(senderId, timestamps);
+  return timestamps.length > SPAM_LIMIT;
+}
+
+
 
 
 
@@ -642,31 +660,22 @@ const khz = "ghibli";
 
 const thb = await getAttachments(k); **/
 
-const cooldowns = new Map();
-const spamTracker = new Map();
-const delay = 10;
-const spamLimit = 3;
-const spamWindow = 15000;
+ const cooldownMap = new Map(); 
+const messageHistory = new Map(); 
 
-const now = Date.now();
-  const userCooldown = cooldowns.get(senderId) || 0;
-  const userSpam = spamTracker.get(senderId) || [];
+const COOLDOWN_SECONDS = 10;
+const SPAM_LIMIT = 4;
+const SPAM_WINDOW = 15 * 1000; 
 
-  if (now < userCooldown) {
-    const active = Math.ceil((userCooldown - now) / 1000);
-    await sendMessage(senderId, { text: `Please wait ${active} seconds before using the command again.` }, pageAccessToken);
+if (isOnCooldown(senderId)) {
     return;
   }
 
-  const recentMessages = userSpam.filter(ts => now - ts < spamWindow);
-  recentMessages.push(now);
-  spamTracker.set(senderId, recentMessages);
 
-  if (recentMessages.length > spamLimit) {
-    await sendMessage(senderId, { text: `You're sending messages too quickly. Please slow down.` }, pageAccessToken);
-  }
+if (isSpamming(senderId)) {
+    await sendMessage(senderId, {text: "You're sending messages too quickly. Please slow down."}, pageAccessToken);
+}
 
-  cooldowns.set(senderId, now + delay * 1000);
   
 let content = "";
 
