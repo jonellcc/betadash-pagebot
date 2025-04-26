@@ -139,6 +139,7 @@ const COOLDOWN_TIME = 10000; // 10 seconds in milliseconds
 const MAX_MESSAGES = 5;
 
 let userMessageCounts = {};
+let lastMessageTimes = {};
 
 const isSpamming = (userId) => {
     const currentTime = Date.now();
@@ -153,6 +154,21 @@ const isSpamming = (userId) => {
         return true;
     } else {
         userMessageCounts[userId].push(currentTime);
+        return false;
+    }
+};
+
+
+const isRecentMessage = (userId) => {
+    const currentTime = Date.now();
+    if (!lastMessageTimes[userId]) {
+        lastMessageTimes[userId] = 0;
+    }
+
+    if (currentTime - lastMessageTimes[userId] < COOLDOWN_TIME) {
+        return true;
+    } else {
+        lastMessageTimes[userId] = currentTime;
         return false;
     }
 };
@@ -663,7 +679,9 @@ const khz = "ghibli";
 const thb = await getAttachments(k); **/
 
 if (isSpamming(senderId)) {
+  if (!isRecentMessage(senderId)) {
   await sendMessage(senderId, {text: "You're sending messages too quickly. Please slow down."}, pageAccessToken);
+  }
 }
   
 let content = "";
