@@ -146,6 +146,7 @@ const isSpamming = (userId) => {
         userMessageCounts[userId] = [];
     }
 
+    // Remove messages older than the cooldown period
     userMessageCounts[userId] = userMessageCounts[userId].filter(timestamp => currentTime - timestamp < COOLDOWN_TIME);
 
     if (userMessageCounts[userId].length >= MAX_MESSAGES) {
