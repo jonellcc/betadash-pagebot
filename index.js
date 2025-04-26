@@ -627,7 +627,7 @@ function isSpamming(senderId) {
   const timestamps = messageHistory.get(senderId).filter(t => now - t < SPAM_WINDOW);
   timestamps.push(now);
   messageHistory.set(senderId, timestamps);
-  return timestamps.length > SPAM_LIMIT;
+  return;
 }
 
 async function handleMessage(event, pageAccessToken) {
@@ -658,6 +658,7 @@ const thb = await getAttachments(k); **/
 
 if (isSpamming(senderId)) {
     await sendMessage(senderId, {text: "You're sending messages too quickly. Please slow down."}, pageAccessToken);
+  return;
 }
 
 
