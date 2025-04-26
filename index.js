@@ -135,11 +135,9 @@ const admin = config.ADMINS;
 const PAGE_ACCESS_TOKEN = config.PAGE_ACCESS_TOKEN; **/ const commandList = [];
 const descriptions = [];
 const commands = new Map();
- const cooldownMap = new Map(); 
 const messageHistory = new Map(); 
 
-const COOLDOWN_SECONDS = 10;
-const SPAM_LIMIT = 4;
+const SPAM_LIMIT = 5;
 const SPAM_WINDOW = 15 * 1000; 
 
 app.get('/', (req, res) => {
@@ -620,11 +618,6 @@ async function handleReaction(event, reaction, pageAccessToken) {
     await sendMessage(event.sender.id, responseText, pageAccessToken);
 }
 
-function isOnCooldown(senderId) {
-  const lastTime = cooldownMap.get(senderId);
-  if (!lastTime) return false;
-  return (Date.now() - lastTime) < COOLDOWN_SECONDS * 1000;
-}
 
 function isSpamming(senderId) {
   const now = Date.now();
@@ -636,10 +629,6 @@ function isSpamming(senderId) {
   messageHistory.set(senderId, timestamps);
   return timestamps.length > SPAM_LIMIT;
 }
-
-
-
-
 
 async function handleMessage(event, pageAccessToken) {
     if (!event || !event.sender || !event.message || !event.sender.id) {
@@ -667,18 +656,11 @@ const khz = "ghibli";
 const thb = await getAttachments(k); **/
 
 
-if (isOnCooldown(senderId)) {
-    return;
-  }
-
-
 if (isSpamming(senderId)) {
     await sendMessage(senderId, {text: "You're sending messages too quickly. Please slow down."}, pageAccessToken);
 }
 
-  cooldownMap.set(senderId, Date.now());
 
-  
 let content = "";
 
 if (event.message && event.message.reply_to) {
