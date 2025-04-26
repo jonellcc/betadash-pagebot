@@ -134,11 +134,27 @@ const PORT = process.env.PORT || 8080;
 const admin = config.ADMINS;
 const PAGE_ACCESS_TOKEN = config.PAGE_ACCESS_TOKEN; **/ const commandList = [];
 const descriptions = [];
-const commands = new Map();
-const messageHistory = new Map(); 
+const commands = new Map(); 
+const COOLDOWN_TIME = 10000; // 10 seconds in milliseconds
+const MAX_MESSAGES = 5;
 
-const SPAM_LIMIT = 5;
-const SPAM_WINDOW = 15 * 1000; 
+let userMessageCounts = {};
+
+const isSpamming = (userId) => {
+    const currentTime = Date.now();
+    if (!userMessageCounts[userId]) {
+        userMessageCounts[userId] = [];
+    }
+
+    userMessageCounts[userId] = userMessageCounts[userId].filter(timestamp => currentTime - timestamp < COOLDOWN_TIME);
+
+    if (userMessageCounts[userId].length >= MAX_MESSAGES) {
+        return true;
+    } else {
+        userMessageCounts[userId].push(currentTime);
+        return false;
+    }
+};
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "public", "page.html"));
@@ -619,16 +635,6 @@ async function handleReaction(event, reaction, pageAccessToken) {
 }
 
 
-function isSpamming(senderId) {
-  const now = Date.now();
-  if (!messageHistory.has(senderId)) {
-    messageHistory.set(senderId, []);
-  }
-  const timestamps = messageHistory.get(senderId).filter(t => now - t < SPAM_WINDOW);
-  timestamps.push(now);
-  messageHistory.set(senderId, timestamps);
-  return;
-}
 
 async function handleMessage(event, pageAccessToken) {
     if (!event || !event.sender || !event.message || !event.sender.id) {
@@ -655,13 +661,10 @@ const khz = "ghibli";
 
 const thb = await getAttachments(k); **/
 
-
 if (isSpamming(senderId)) {
-    await sendMessage(senderId, {text: "You're sending messages too quickly. Please slow down."}, pageAccessToken);
-  return;
+  await sendMessage(senderId, {text: "You're sending messages too quickly. Please slow down."}, pageAccessToken);
 }
-
-
+  
 let content = "";
 
 if (event.message && event.message.reply_to) {
