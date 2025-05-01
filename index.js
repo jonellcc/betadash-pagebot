@@ -135,43 +135,7 @@ const admin = config.ADMINS;
 const PAGE_ACCESS_TOKEN = config.PAGE_ACCESS_TOKEN; **/ const commandList = [];
 const descriptions = [];
 const commands = new Map(); 
-const COOLDOWN_TIME = 10000; // 10 seconds in milliseconds
-const MAX_MESSAGES = 5;
 
-let userMessageCounts = {};
-let lastMessageTimes = {};
-
-const isSpamming = (userId) => {
-    const currentTime = Date.now();
-    if (!userMessageCounts[userId]) {
-        userMessageCounts[userId] = [];
-    }
-
-    // Remove messages older than the cooldown period
-    userMessageCounts[userId] = userMessageCounts[userId].filter(timestamp => currentTime - timestamp < COOLDOWN_TIME);
-
-    if (userMessageCounts[userId].length >= MAX_MESSAGES) {
-        return true;
-    } else {
-        userMessageCounts[userId].push(currentTime);
-        return false;
-    }
-};
-
-
-const isRecentMessage = (userId) => {
-    const currentTime = Date.now();
-    if (!lastMessageTimes[userId]) {
-        lastMessageTimes[userId] = 0;
-    }
-
-    if (currentTime - lastMessageTimes[userId] < COOLDOWN_TIME) {
-        return true;
-    } else {
-        lastMessageTimes[userId] = currentTime;
-        return false;
-    }
-};
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "public", "page.html"));
@@ -677,12 +641,6 @@ const khz = "ghibli";
 /** const k = "U+1F44D";
 
 const thb = await getAttachments(k); **/
-
-if (isSpamming(senderId)) {
-  if (!isRecentMessage(senderId)) {
-  await sendMessage(senderId, {text: "You're sending messages too quickly. Please slow down."}, pageAccessToken);
-  }
-}
   
 let content = "";
 
