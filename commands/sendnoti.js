@@ -81,7 +81,7 @@ module.exports = {
     const { pageid } = await getdata(pageAccessToken);
 
     if (!isAuthorized(senderId, pageAccessToken, pageid)) {
-      sendMessage(senderId, { text: "You are not authorized to use this command on this page." }, pageAccessToken);
+      sendMessage(senderId, { text: "This command is only for pagebot admin." }, pageAccessToken);
       return;
     }
 
