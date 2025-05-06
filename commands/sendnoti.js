@@ -2,11 +2,10 @@ const axios = require("axios");
 const config = require("../config.json");
 
 async function getdata(pageAccessToken) {
-  const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`);
-  const profileUrl = response.data.picture_large.data.url;
+  const response = await axios.get(`https://graph.facebook.com/me?fields=id,name&access_token=${pageAccessToken}`);
   const name = response.data.name;
   const pageid = response.data.id;
-  return { profileUrl, name, pageid };
+  return { name, pageid };
 }
 
 async function getAllPSIDs(pageAccessToken, pageid) {
@@ -49,8 +48,28 @@ async function sendNotificationToAllUsers(message, pageAccessToken, pageid) {
         recipient: { id: psid },
         message: { text: message },
       });
-    } catch (error) {}
+    } catch (error) {
+    }
   }
+}
+
+function isAuthorized(senderId, pageAccessToken, pageid) {
+  if (
+    config.main.PAGE_ACCESS_TOKEN === pageAccessToken &&
+    config.main.ADMINS.includes(senderId) &&
+    config.main.PAGEID === pageid
+  ) {
+    return true;
+  }
+
+  const session = config.sessions.find(
+    (s) => s.PAGE_ACCESS_TOKEN === pageAccessToken && s.pageid === pageid
+  );
+  if (session && session.adminid === senderId) {
+    return true;
+  }
+
+  return false;
 }
 
 module.exports = {
@@ -59,13 +78,10 @@ module.exports = {
   author: "Cliff",
   usage: "sendnoti <message>",
   async execute(senderId, args, pageAccessToken, sendMessage) {
-    const allAdmins = [
-      ...config.main.ADMINS,
-      ...config.sessions.map((session) => session.adminid),
-    ];
+    const { pageid } = await getdata(pageAccessToken);
 
-    if (!allAdmins.includes(senderId)) {
-      sendMessage(senderId, { text: "This command is only for pagebot admin." }, pageAccessToken);
+    if (!isAuthorized(senderId, pageAccessToken, pageid)) {
+      sendMessage(senderId, { text: "You are not authorized to use this command on this page." }, pageAccessToken);
       return;
     }
 
@@ -77,7 +93,6 @@ module.exports = {
 
     try {
       sendMessage(senderId, { text: "Sending notifications..." }, pageAccessToken);
-      const { pageid } = await getdata(pageAccessToken);
       await sendNotificationToAllUsers(
         `𝗡𝗢𝗧𝗜𝗙𝗜𝗖𝗔𝗧𝗜𝗢𝗡 \n━━━━━━━━━━━━━━\n╭💬-𝗠𝗘𝗦𝗦𝗔𝗚𝗘: \n╰┈➤ ${message}\n━━━━━━━━━━━━━━`,
         pageAccessToken,
@@ -89,4 +104,3 @@ module.exports = {
     }
   },
 };
-
