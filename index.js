@@ -924,21 +924,21 @@ await sendMessage(senderId, { text: _0ch }, pageAccessToken);
       return;
 }
 
-/** if (messageText && messageText.toLowerCase().startsWith("ghibli")) {
+ if (messageText && messageText.toLowerCase().startsWith("anime")) {
     try {
      if (!imageUrl) {
-     await sendMessage(senderId, { text: "𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝗍𝗈 𝖼𝗈𝗇𝗏𝖾𝗋𝗍 𝗀𝗁𝗂𝖻𝗅𝗂 𝗌𝗍𝗒𝗅𝖾" }, pageAccessToken);
+     await sendMessage(senderId, { text: "𝖱𝖾𝗉𝗅𝗒 𝖺 𝗉𝗁𝗈𝗍𝗈 𝗍𝗈 𝗍𝗈 𝖼𝗈𝗇𝗏𝖾𝗋𝗍 anime" }, pageAccessToken);
       return;
     }     
 
-  await sendMessage(senderId, {text: "𝖢𝗈𝗇𝗏𝖾𝗋𝗍𝗂𝗇𝗀 𝗍𝗈 𝗀𝗁𝗂𝖻𝗅𝗂 𝗌𝗍𝗒𝗅𝖾 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂t 𝟥 𝗍𝗈 𝟧 𝗆𝗂𝗇𝗎𝗍𝖾𝗌..."}, pageAccessToken);
+  await sendMessage(senderId, {text: "𝖢𝗈𝗇𝗏𝖾𝗋𝗍𝗂𝗇𝗀 𝗍𝗈 anime 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂t 2 minutes"}, pageAccessToken);
 
-   const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;      
+   const imgurApiUrl = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)`;      
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
-        const imgurLink = imgurResponse.data.uploaded.image;
-        const yawa = `https://betadash-api-swordslush-production.up.railway.app/ghibli?imageUrl=${imgurLink}`;
+        const imgurLink = imgurResponse.data.url;
+        const yawa = `http://45.134.39.193:6298/animirror?url=${imgurLink}`;
    const lsn = await axios.get(yawa);
-   const img = lsn.data.imageUrl;
+   const img = lsn.data.image_url;
 
      await sendMessage(senderId, { 
 attachment: { 
