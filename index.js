@@ -357,9 +357,8 @@ sendMessage(senderId, { text: payload }, pageAccessToken);
 
 async function profileM() {
   const url = `https://graph.facebook.com/v22.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
-  const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${PAGE_ACCESS_TOKEN}`);
-    const profileUrl = response.data.picture_large.data.url;
-    const { name, id } = response.data;
+  const response = await axios.get(`https://graph.facebook.com/me?fields=id,name&access_token=${PAGE_ACCESS_TOKEN}`);
+  const { name, id } = response.data;
   const payload = {
     get_started: { payload: "GET_STARTED_PAYLOAD" },
     greeting: [
@@ -436,9 +435,8 @@ async function sendMessage(senderId, message, pageAccessToken) {
 
 async function WelcomeMessage(event, pageAccessToken) {
 if (event.postback && event.postback.payload === "GET_STARTED_PAYLOAD") {
-    const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`
+    const response = await axios.get(`https://graph.facebook.com/me?fields=id,name&access_token=${pageAccessToken}`
     );
-    const profileUrl = response.data.picture_large.data.url;
     const { name, id } = response.data;
 
     const kumag = {
@@ -599,11 +597,12 @@ async function handleReaction(event, reaction, pageAccessToken) {
     const reactionMap = {
         '❤': 'heart',
         '👍': 'like',
-        '😂': 'haha',
+        '😆': 'haha',
         '😮': 'wow',
         '😢': 'sad',
         '😡': 'angry',
-        // Add more mappings as needed
+        '🥰': 'enlove',
+        '😭': 'cry'
     };
 
     const reactionType = reactionMap[reaction.emoji] || 'other';
@@ -797,8 +796,7 @@ if (!imageUrl) {
 
 if (messageText && messageText.toLowerCase().startsWith("Get started")) {
   try {
-const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`);
-    const profileUrl = response.data.picture_large.data.url;
+const response = await axios.get(`https://graph.facebook.com/me?fields=id,name&access_token=${pageAccessToken}`);
     const { name, id } = response.data;
     const kumag = {
   attachment: {
@@ -1679,7 +1677,7 @@ sendMessage(senderId, { text: kupal }, pageAccessToken);
       }, pageAccessToken);
     }
   } catch (error) {
-    sendMessage(senderId, { text: "An error occurred while processing the video. Please try again later." }, pageAccessToken);
+    sendMessage(senderId, { text: error.message }, pageAccessToken);
   }
 }
 
