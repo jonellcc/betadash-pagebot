@@ -878,9 +878,9 @@ if (messageText && messageText.toLowerCase().startsWith("imgbb")) {
       sendMessage(senderId, { text: "Please reply by image to get the imgbb url" }, pageAccessToken);
       return;
     }
-       const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
+       const imgurApiUrl = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
-        const imgurLink = imgurResponse.data.uploaded.image;
+        const imgurLink = imgurResponse.data.url;
         const rec = `https://betadash-api-swordslush.vercel.app/imgbb?url=${encodeURIComponent(imgurLink)}`;
      const ap = await axios.get(rec);
      const yawa = ap.data.imageUrl;
@@ -950,10 +950,10 @@ attachment: {
      } 
     }, pageAccessToken);
     } catch (error) {
-      await sendMessage(senderId, {text: "Sorry i can't convert that to ghibli style just try again different image must clear and clean and not blurd"}, pageAccessToken);
+      await sendMessage(senderId, {text: error.message}, pageAccessToken);
    }
     return;
-  }  **/
+  }  
 
  if (messageText && messageText.startsWith("zombie")) {
     try {
