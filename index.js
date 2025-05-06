@@ -779,13 +779,13 @@ if (!imageUrl) {
       sendMessage(senderId, { text: "Reply with two image to combine face" }, pageAccessToken);
       return;
     }     
-    const imgurApiUrl1 = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(yawa1)}`;
+    const imgurApiUrl1 = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(yawa1)}`;
     const imgurResponse1 = await axios.get(imgurApiUrl1, { headers });
-    const imgurLink1 = imgurResponse1.data.uploaded.image;
+    const imgurLink1 = imgurResponse1.data.url;
 
-    const imgurApiUrl2 = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(yawa2)}`;
+    const imgurApiUrl2 = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(yawa2)}`;
     const imgurResponse2 = await axios.get(imgurApiUrl2, { headers });
-    const imgurLink2 = imgurResponse2.data.uploaded.image;
+    const imgurLink2 = imgurResponse2.data.url;
 
     const bg = `https://kaiz-apis.gleeze.com/api/faceswap?swapUrl=${encodeURIComponent(imgurLink1)}&baseUrl=${encodeURIComponent(imgurLink2)}`;
     await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
@@ -953,7 +953,7 @@ attachment: {
       await sendMessage(senderId, {text: "Sorry i can't convert that to ghibli style just try again different image must clear and clean and not blurd"}, pageAccessToken);
    }
     return;
-  }  
+  }  **/
 
  if (messageText && messageText.startsWith("zombie")) {
     try {
@@ -961,9 +961,9 @@ if (!imageUrl) {
       sendMessage(senderId, { text: "Reply a photo to to generate canvas zombie face" }, pageAccessToken);
       return;
     }     
-    const imgurApiUrl = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
+    const imgurApiUrl = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
-        const imgurLink = imgurResponse.data.uploaded.image;
+        const imgurLink = imgurResponse.data.url;
 const yawa = `https://yt-video-production.up.railway.app/zombie?url=${imgurLink}`;
      await sendMessage(senderId, { 
 attachment: { 
@@ -1139,86 +1139,8 @@ const s = ["✧", "✦", "⟡"];
   }
 } catch (error) {
   }
-} else if (instagramLinkRegex.test(messageText)) {
-    try {
-      sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖨𝗇𝗌𝗍𝖺𝗀𝗋𝖺𝗆, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
-      const apiUrl = `https://yt-video-production.up.railway.app/insta?url=${encodeURIComponent(messageText)}`;
-      const response = await axios.get(apiUrl, { headers });
-      const videoUrl = response.data.result[0].url;
-
-const headResponse = await axios.head(videoUrl, { headers });
-      const fileSize = parseInt(headResponse.headers['content-length'], 10);
-
-      if (fileSize > 25 * 1024 * 1024) {
-        sendMessage(senderId, {
-          attachment: {
-            type: 'template',
-            payload: {
-              template_type: 'button',
-              text: `The Instagram video exceeds the 25 MB limit and cannot be sent.`,
-              buttons: [
-                {
-                  type: 'web_url',
-                  url: videoUrl,
-                  title: 'Watch Video'
-                }
-              ]
-            }
-          }
-        }, pageAccessToken);
-      } else {
-        sendMessage(senderId, {
-          attachment: {
-            type: 'video',
-            payload: {
-              url: videoUrl,
-              is_reusable: true
-            }
-          }
-        }, pageAccessToken);
-      }   
-    } catch (error) {
-    }
-  } else if (facebookLinkRegex.test(messageText)) {
-    try {
-      sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖥𝖺𝖼𝖾𝖻𝗈𝗈𝗄, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
-      const apiUrl = `https://betadash-search-download.vercel.app/fbdl?url=${encodeURIComponent(messageText)}`;
-
-const headResponse = await axios.head(apiUrl, { headers });
-      const fileSize = parseInt(headResponse.headers['content-length'], 10);
-
-      if (fileSize > 25 * 1024 * 1024) {
-        sendMessage(senderId, {
-          attachment: {
-            type: 'template',
-            payload: {
-              template_type: 'button',
-              text: `The Facebook video exceeds the 25 MB limit and cannot be sent.`,
-              buttons: [
-                {
-                  type: 'web_url',
-                  url: apiUrl,
-                  title: 'Watch Video'
-                }
-              ]
-            }
-          }
-        }, pageAccessToken);
-      } else {
-        sendMessage(senderId, {
-          attachment: {
-            type: 'video',
-            payload: {
-              url: apiUrl,
-              is_reusable: true
-            }
-          }
-        }, pageAccessToken);
-      }
-    } catch (error) {
-    }
-   } else if (regEx_tiktok.test(messageText)) {
-  try {
+} else if (regEx_tiktok.test(messageText)) {
+try {
     sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖳𝗂𝗄𝗍𝗈𝗄, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
 
     const url = messageText;
@@ -1299,6 +1221,84 @@ const headResponse = await axios.head(apiUrl, { headers });
     }
   } catch (error) {
     }
+  } else if (facebookLinkRegex.test(messageText)) {
+    try {
+      sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖥𝖺𝖼𝖾𝖻𝗈𝗈𝗄, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
+      const apiUrl = `https://betadash-search-download.vercel.app/fbdl?url=${encodeURIComponent(messageText)}`;
+
+const headResponse = await axios.head(apiUrl, { headers });
+      const fileSize = parseInt(headResponse.headers['content-length'], 10);
+
+      if (fileSize > 25 * 1024 * 1024) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: `The Facebook video exceeds the 25 MB limit and cannot be sent.`,
+              buttons: [
+                {
+                  type: 'web_url',
+                  url: apiUrl,
+                  title: 'Watch Video'
+                }
+              ]
+            }
+          }
+        }, pageAccessToken);
+      } else {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'video',
+            payload: {
+              url: apiUrl,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
+      }
+    } catch (error) {
+    }
+   } else if (instagramLinkRegex.test(messageText)) {   
+    try {
+      sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖨𝗇𝗌𝗍𝖺𝗀𝗋𝖺𝗆, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
+      const apiUrl = `https://yt-video-production.up.railway.app/insta?url=${encodeURIComponent(messageText)}`;
+      const response = await axios.get(apiUrl, { headers });
+      const videoUrl = response.data.result[0].url;
+
+const headResponse = await axios.head(videoUrl, { headers });
+      const fileSize = parseInt(headResponse.headers['content-length'], 10);
+
+      if (fileSize > 25 * 1024 * 1024) {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: `The Instagram video exceeds the 25 MB limit and cannot be sent.`,
+              buttons: [
+                {
+                  type: 'web_url',
+                  url: videoUrl,
+                  title: 'Watch Video'
+                }
+              ]
+            }
+          }
+        }, pageAccessToken);
+      } else {
+        sendMessage(senderId, {
+          attachment: {
+            type: 'video',
+            payload: {
+              url: videoUrl,
+              is_reusable: true
+            }
+          }
+        }, pageAccessToken);
+      }   
+    } catch (error) {
+    }   
   } else if (youtubeLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: '𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖸𝗈𝗎𝗍𝗎𝖻𝖾, 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂𝗍...' }, pageAccessToken);
