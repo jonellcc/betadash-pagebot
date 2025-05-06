@@ -933,7 +933,7 @@ await sendMessage(senderId, { text: _0ch }, pageAccessToken);
 
   await sendMessage(senderId, {text: "𝖢𝗈𝗇𝗏𝖾𝗋𝗍𝗂𝗇𝗀 𝗍𝗈 anime 𝗉𝗅𝖾𝖺𝗌𝖾 𝗐𝖺𝗂t 2 minutes"}, pageAccessToken);
 
-   const imgurApiUrl = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)`;      
+   const imgurApiUrl = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;      
         const imgurResponse = await axios.get(imgurApiUrl, { headers } );
         const imgurLink = imgurResponse.data.url;
         const yawa = `http://45.134.39.193:6298/animirror?url=${imgurLink}`;
