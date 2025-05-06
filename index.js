@@ -979,6 +979,8 @@ attachment: {
     return;
   }
 
+  /**
+
  if (messageText && messageText.includes("gdrive")) {
     try {
         const rec = `https://ccprojectapis.ddns.net/api/gdrive?url=${encodeURIComponent(imageUrl)}`;
@@ -988,7 +990,7 @@ attachment: {
     } catch (error) {
      }
     return;
-  } **/
+  }  **/
 
 if (messageText && messageText.toLowerCase().startsWith("aidetect")) {
     try {
