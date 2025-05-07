@@ -570,16 +570,14 @@ function convertToBold(text) {
 const font = (text) => [...text].map(c => fontMapping[c] || c).join('');  
 
 async function getMessage(mid) {
-  return await new Promise(async (resolve, reject) => {
-    if (!mid) resolve(null);
-    await axios.get(`https://graph.facebook.com/v22.0/${mid}?fields=message&access_token=${PAGE_ACCESS_TOKEN}`).then(data => {
-      resolve(data.data.message);
-    }).catch(err => {
-      reject(err);
-    });
-  });
+  if (!mid) return null;
+  try {
+    const response = await axios.get(`https://graph.facebook.com/v22.0/${mid}?fields=message&access_token=${PAGE_ACCESS_TOKEN}`);
+    return response.data.message || null;
+  } catch (error) {
+    return null;
+  }
 }
-
 
 async function handleFeedback(event, feedback, pageAccessToken) {
     let responseText = feedback.feedback === "Good response"
