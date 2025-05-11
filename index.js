@@ -1679,7 +1679,7 @@ sendMessage(senderId, { text: kupal }, pageAccessToken);
   }
 }
 
-if (messageText && messageText.toLowerCase().startsWit("More shoti")) {
+if (messageText && messageText.toLowerCase().startsWith("More shoti")) {
   const shotiCommand = commands.get('shoti');
   if (shotiCommand) {
     await shotiCommand.execute(senderId, [], pageAccessToken, sendMessage, pageAccessToken);
