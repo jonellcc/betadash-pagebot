@@ -784,7 +784,7 @@ if (!imageUrl) {
     const imgurResponse2 = await axios.get(imgurApiUrl2, { headers });
     const imgurLink2 = imgurResponse2.data.url;
 
-    const bg = `https://kaiz-apis.gleeze.com/api/faceswap?swapUrl=${encodeURIComponent(imgurLink1)}&baseUrl=${encodeURIComponent(imgurLink2)}`;
+    const bg = `https://kaiz-apis.gleeze.com/api/faceswap?swapUrl=${encodeURIComponent(imgurLink1)}&baseUrl=${encodeURIComponent(imgurLink2)}&apikey=2e58e712-a3ef-42bb-af1a-20baa7edb88e`;
     await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
   } catch (error) {
     sendMessage(senderId, { text: error.message}, pageAccessToken);
@@ -1098,7 +1098,7 @@ if (messageText && messageText.toLowerCase().startsWith("humanize")) {
 const lgg = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;
 const ghh = await axios.get(lgg);
 const lkj = ghh.data.url;
-        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&imageUrl=${lkj}`;
+        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&imageUrl=${lkj}&apikey=2e58e712-a3ef-42bb-af1a-20baa7edb88e`;
 const s = ["✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
         const response = await axios.get(apiUrl, { headers });
@@ -1107,7 +1107,7 @@ const s = ["✧", "✦", "⟡"];
       } else {
      const s = ["✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
-        const api = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}`;
+        const api = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&apikey=2e58e712-a3ef-42bb-af1a-20baa7edb88e`;
      const response = await axios.get(api);
       const anss = convertToBold(response.data.response);
         text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━\n${anss}\n━━━━━━━━━━━━━`;
@@ -1493,7 +1493,7 @@ const { download, thumbnail, quality, duration, title } = response.data;
 } else if (capcutLinkRegex.test(messageText)) {
     try {
       sendMessage(senderId, { text: 'Downloading Capcut, please wait...' }, pageAccessToken);
-      const capct = `https://kaiz-apis.gleeze.com/api/capcutdl?url=${encodeURIComponent(messageText)}`;
+      const capct = `https://kaiz-apis.gleeze.com/api/capcutdl?url=${encodeURIComponent(messageText)}&apikey=2e58e712-a3ef-42bb-af1a-20baa7edb88e`;
      const response = await axios.get(capct, { headers });
       const {title, url, thumbnail, size, quality} = response.data;
 
