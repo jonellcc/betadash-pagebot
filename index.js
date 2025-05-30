@@ -1098,7 +1098,7 @@ if (messageText && messageText.toLowerCase().startsWith("humanize")) {
 const lgg = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;
 const ghh = await axios.get(lgg);
 const lkj = ghh.data.url;
-        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&imageUrl=${lkj}&apikey=2e58e712-a3ef-42bb-af1a-20baa7edb88e`;
+        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&imageUrl=${lkj}&apikey=ceb699c9-cdac-452d-b312-d2d7970f59e9`;
 const s = ["✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
         const response = await axios.get(apiUrl, { headers });
@@ -1107,7 +1107,7 @@ const s = ["✧", "✦", "⟡"];
       } else {
      const s = ["✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
-        const api = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&apikey=2e58e712-a3ef-42bb-af1a-20baa7edb88e`;
+        const api = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&apikey=ceb699c9-cdac-452d-b312-d2d7970f59e9`;
      const response = await axios.get(api);
       const anss = convertToBold(response.data.response);
         text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━\n${anss}\n━━━━━━━━━━━━━`;
