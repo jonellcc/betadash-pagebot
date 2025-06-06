@@ -11,7 +11,7 @@ async function getdata(pageAccessToken) {
 async function getAllPSIDs(pageAccessToken, pageid) {
   try {
     let psids = [];
-    let previous = `https://graph.facebook.com/v22.0/${pageid}/conversations?fields=participants&access_token=${pageAccessToken}`;
+    let previous = `https://graph.facebook.com/v23.0/${pageid}/conversations?fields=participants&access_token=${pageAccessToken}`;
 
     const allAdmins = [
       ...config.main.ADMINS,
