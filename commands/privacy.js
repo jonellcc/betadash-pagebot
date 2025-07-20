@@ -54,9 +54,11 @@ Failure to comply may result in access restrictions.`;
     <meta name="author" content="Chatbot Community Team">
     <meta name="robots" content="index, follow">
     <title>Privacy Policy - ${name}Bot</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.6/dist/sweetalert2.min.css"> 
       <style>
     body { font-family: 'Outfit', sans-serif; }
     .fade-in { animation: fadeIn 1s cubic-bezier(0.4,0,0.2,1) both; }
@@ -156,8 +158,8 @@ Failure to comply may result in access restrictions.`;
         }
     }
 </style>
-</head>
-    <div class="relative w-full max-w-3xl bg-gradient-to-br from-slate-900 via-gray-900 to-blue-950/90 shadow-2xl rounded-3xl p-4 sm:p-10 border border-blue-900">
+<head>
+          <div class="relative w-full max-w-3xl bg-gradient-to-br from-slate-900 via-gray-900 to-blue-950/90 shadow-2xl rounded-3xl p-4 sm:p-10 border border-blue-900">
             <div class="pointer-events-none absolute inset-0 z-[-1] overflow-hidden">
               <div class="absolute top-10 left-[-50px] w-40 h-40 bg-blue-800 opacity-40 rounded-full blur-2xl animate-pulse"></div>
               <div class="absolute bottom-[10%] right-[-40px] w-28 h-28 bg-cyan-900 opacity-30 rounded-full blur-2xl animate-pulse"></div>
@@ -266,9 +268,8 @@ Failure to comply may result in access restrictions.`;
               </section>
             </div>
           </div>
-</script>
 </body>
-</html>`;
+<html>`;
 
 const filePath = path.join(`${__dirname}/../privacy/${pageid}.html`);
       await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
