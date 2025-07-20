@@ -1,11 +1,11 @@
 {
   "main": {
-    "Name": "Cliffbot",
-    "profileUrl": "https://i.ibb.co/JwBVyM3h/1743383821399.jpg",
-    "PAGE_ACCESS_TOKEN": "EAAOGSnFGWtcBO68tb3baw2SGkeBNRdNgoc8SnicM1UqP5vqx1MHyLDFUzjRzwo4s2Bs0M3k11F7lcYVl7S3tZB3LmsmDzAn8eLaqgN9xlAAuoN8xzRNEwhw4KK44c7oUyGCUHyTZB9CUeZCB09LZB9KOhS1wTl61XPsS8ZAK4MOSw2KyPJWOMsthf0YjDLiY9fwPGOELxdgZDZD",
+    "Name": "Tropp",
+    "profileUrl": "https://graph.facebook.com/100849055472459/picture?height=720&width=720",
+    "PAGE_ACCESS_TOKEN": "EAAGhpVPwmuMBO3aLu5V93R6aMokPpW9GOsRZCexCeR5WxlDPjD3RR2tcHwAYURdkQrSXfTd3vsnCuLkgiIHmVygz7iOoUzKiruCBCapaKdpEtDVkK2p30ZBL18DQxi8cDAVTRJMzFZABz3ELZCXHLiKNbKZAUDjJUXL5PPEQ1yPagZCzXeW1F1vOJcQ26BChNQ",
     "webhook": "https://betadash-pagebot-production.up.railway.app/webhook",
     "VERIFY_TOKEN": "shipazu",
-    "PAGEID": "493920247130641",
+    "PAGEID": "100849055472459",
     "ADMINS": [
       "7913024942132935",
       "8269473539829237",
@@ -13,20 +13,5 @@
     ]
   },
   "selfListen": false,
-  "sessions": [
-    {
-      "name": "Tropp",
-      "profileUrl": "https://i.ibb.co/svX3JprG/1743383598628.jpg",
-      "PAGE_ACCESS_TOKEN": "EAAGhpVPwmuMBO3aLu5V93R6aMokPpW9GOsRZCexCeR5WxlDPjD3RR2tcHwAYURdkQrSXfTd3vsnCuLkgiIHmVygz7iOoUzKiruCBCapaKdpEtDVkK2p30ZBL18DQxi8cDAVTRJMzFZABz3ELZCXHLiKNbKZAUDjJUXL5PPEQ1yPagZCzXeW1F1vOJcQ26BChNQ",
-      "pageid": "100849055472459",
-      "adminid": "8616968718388016"
-    },
-    {
-      "name": "Mecha Ai",
-      "profileUrl": "https://i.ibb.co/1JLtmqr9/image.jpg",
-      "PAGE_ACCESS_TOKEN": "EAAOGSnFGWtcBO9tKoTVsQUl4NuvpAqtrpYm7wciLCEyRKpYxCQX0LhwYozlPhbTMf4NNSvPI3y5SK1xMqh5eTXaECLwZBZBEp5zsfE1NJBZAiEW2Klh9o6qatmRJEeLzZBe7MINNYZBwcmq4mm7jZBmQwSZB7ZCZAnCKhqqajDH9qQ4ZA9Gn1Sptz344ZCeIcAJcCcMmEcZAdpchugZDZD",
-      "pageid": "702080219647160",
-      "adminid": "9094534933979863"
-    }
-  ]
+  "sessions": []
 }
