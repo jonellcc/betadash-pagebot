@@ -265,11 +265,9 @@ app.get('/create', async (req, res) => {
       return res.status(400).json({ error: 'Invalid pageAccconstken' });
     }
 
-    const response = await axios.get(`https://graph.facebook.com/me?fields=id,name,picture.width(720).height(720).as(picture_large)&access_token=${pageAccessToken}`);
-    const profileUrl = response.data.picture_large.data.url;
+    const response = await axios.get(`https://graph.facebook.com/me?fields=id,name&access_token=${pageAccessToken}`);
     const { name, id } = response.data;
-    const jhgf = await axios.get(`https://betadash-api-swordslush.vercel.app/imgbb?url=${encodeURIComponent(profileUrl)}`);
-    const prof = jhgf.data.imageUrl;
+    const prof = `https://graph.facebook.com/${id}/picture?height=720&width=720`;
     const existingSession = sessions.find(session => session.pageid === id);
     if (existingSession) {
       return res.status(409).json({ error: 'Session already exists for this pageid' });
