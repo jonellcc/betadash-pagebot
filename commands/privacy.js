@@ -186,7 +186,7 @@ Failure to comply may result in access restrictions.`;
                   <span class="w-7 h-7 bg-blue-900 text-blue-100 rounded-full font-bold flex items-center justify-center text-base">1</span>
                   <h2 class="text-lg sm:text-xl font-semibold text-blue-100">Introduction</h2>
                 </div>
-                <p class="ml-1 text-slate-300">At ${name}-AutoPagebot, we respect your privacy and handle your personal information responsibly. This Privacy Policy explains how we collect, use, and protect your data. By using Kaiz AI, you agree to the terms set forth in this policy.</p>
+                <p class="ml-1 text-slate-300">At ${name}-AutoPagebot, we respect your privacy and handle your personal information responsibly. This Privacy Policy explains how we collect, use, and protect your data. By using ${name} AI, you agree to the terms set forth in this policy.</p>
               </section>
               <section>
                 <div class="flex items-center gap-2 mb-2">
