@@ -156,7 +156,8 @@ Failure to comply may result in access restrictions.`;
         }
     }
 </style>
-          <div class="relative w-full max-w-3xl bg-gradient-to-br from-slate-900 via-gray-900 to-blue-950/90 shadow-2xl rounded-3xl p-4 sm:p-10 border border-blue-900">
+</head>
+    <div class="relative w-full max-w-3xl bg-gradient-to-br from-slate-900 via-gray-900 to-blue-950/90 shadow-2xl rounded-3xl p-4 sm:p-10 border border-blue-900">
             <div class="pointer-events-none absolute inset-0 z-[-1] overflow-hidden">
               <div class="absolute top-10 left-[-50px] w-40 h-40 bg-blue-800 opacity-40 rounded-full blur-2xl animate-pulse"></div>
               <div class="absolute bottom-[10%] right-[-40px] w-28 h-28 bg-cyan-900 opacity-30 rounded-full blur-2xl animate-pulse"></div>
@@ -264,7 +265,10 @@ Failure to comply may result in access restrictions.`;
                 <p class="ml-1 text-slate-300">If you have questions, concerns, or feedback regarding this privacy policy or ${name}-AutoPagebot's data practices, please contact us.</p>
               </section>
             </div>
-          </div>`;
+          </div>
+</script>
+</body>
+</html>`;
 
 const filePath = path.join(`${__dirname}/../privacy/${pageid}.html`);
       await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
