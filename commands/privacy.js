@@ -178,7 +178,7 @@ Failure to comply may result in access restrictions.`;
             </div>
             <div class="mb-7 text-base text-slate-200 fade-in" style="animation-delay:0.3s">
               <strong>Please review this privacy policy thoroughly.</strong>
-              Your privacy is very important to us, and we are dedicated to safeguarding the information you share when using Kaiz-AutoPagebot. This policy outlines how we manage your data.
+              Your privacy is very important to us, and we are dedicated to safeguarding the information you share when using ${name}-AutoPagebot. This policy outlines how we manage your data.
             </div>
             <div class="space-y-8">
               <section>
