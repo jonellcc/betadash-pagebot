@@ -268,7 +268,7 @@ app.get('/create', async (req, res) => {
   }
 
       if (!pageAccessToken.startsWith("EAA")) {
-      return res.status(400).json({ error: 'Invalid pageAccconstken' });
+      return res.status(400).json({ error: 'Invalid pageAccessToken' });
     }
 
     const response = await axios.get(`https://graph.facebook.com/me?fields=id,name&access_token=${pageAccessToken}`);
