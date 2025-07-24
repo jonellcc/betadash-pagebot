@@ -13,5 +13,13 @@
     ]
   },
   "selfListen": false,
-  "sessions": []
+  "sessions": [
+    {
+      "name": "Mecha Ai",
+      "profileUrl": "https://graph.facebook.com/702080219647160/picture?height=720&width=720",
+      "PAGE_ACCESS_TOKEN": "EAAeZBnEpjlk8BPHC1xZCL7OC7R26jeJmaTAEch5lGfZBBDuvAUqX8ZAGtciYxHJ6Nvid2YZA3cGdDdzOdre1EyEF9qnm7JsOCwRQBiDHNwD5oG2fjNjNi2I8Ax1osRWFIVZAyK3Ex3JqY6pa3rF4IEXDQMAmnc8bZC8EWTfOojF8vGuEpLizIzewWCoDSdhiCRZA5turmRPbkgZDZD",
+      "pageid": "702080219647160",
+      "adminid": "9094534933979863"
+    }
+  ]
 }
