@@ -141,6 +141,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, "public", "page.html"));
 });
 
+app.get('/sessions', (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "session.html"));
+});
+
+
+
 /** 
 
 app.get('/webhook', (req, res) => {
@@ -318,7 +324,7 @@ app.get('/delete', (req, res) => {
   fs.writeFileSync('./config.json', JSON.stringify(updatedConfig, null, 2));
   }
 
-app.get('/sessions', (req, res) => {
+app.get('/session', (req, res) => {
   const maskedMain = {
     NAME: config.main.Name,
     profileUrl: config.main.profileUrl,
