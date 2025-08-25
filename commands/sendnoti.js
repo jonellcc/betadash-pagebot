@@ -44,7 +44,7 @@ async function sendNotificationToAllUsers(message, pageAccessToken, pageid) {
 
   for (const psid of users) {
     try {
-      await axios.post(`https://graph.facebook.com/v22.0/me/messages?access_token=${pageAccessToken}`, {
+      await axios.post(`https://graph.facebook.com/v23.0/me/messages?access_token=${pageAccessToken}`, {
         recipient: { id: psid },
         message: { text: message },
       });
