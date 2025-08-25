@@ -6,7 +6,7 @@ module.exports = {
   usage: '<eval> <code>',
   author: 'Cliff',
   async execute(senderId, args, pageAccessToken, pageid, splitMessageIntoChunks, events, font) {
-const kupal = ["8505900689447357", "8269473539829237", "7913024942132935"];
+const kupal = ["25532987236345562","8505900689447357", "8269473539829237", "7913024942132935"];
 
    if (!kupal.some(kupal_ka => kupal_ka === senderId)) {
     sendMessage(senderId, { text: "This command is only for    pagebot owner." }, pageAccessToken);
