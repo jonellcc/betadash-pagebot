@@ -14,7 +14,7 @@ module.exports = {
     const uid = args.join(' ');
 
     try {
-      const apiUrl = `https://apiv2.kenliejugarap.com/ad?url=https://api-canvass.vercel.app/profile?uid=${uid}`;
+      const apiUrl = `https://betadash-api-swordslush-production.up.railway.app/adpic?userid=${uid}`;
 
       await sendMessage(senderId, { attachment: { type: 'image', payload: { url: apiUrl } } }, pageAccessToken);
 
