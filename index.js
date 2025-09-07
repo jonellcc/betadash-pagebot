@@ -747,7 +747,7 @@ if (!imageUrl) {
 }
 
 
-/** if (messageText && messageText.toLowerCase().startsWith("recognize")) {
+ if (messageText && messageText.toLowerCase().startsWith("recognize")) {
     try {
    if (!imageUrl) {
       sendMessage(senderId, { text: "Reply to a short audio or video" }, pageAccessToken);
@@ -771,7 +771,7 @@ if (!imageUrl) {
      sendMessage(senderId, { text: error.message}, pageAccessToken);
         }
       return;
-} **/
+}
 
 
 if (messageText && messageText.toLowerCase().startsWith("faceswap")) {
