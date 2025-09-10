@@ -788,7 +788,7 @@ if (!imageUrl) {
     const imgurResponse2 = await axios.get(imgurApiUrl2, { headers });
     const imgurLink2 = imgurResponse2.data.url;
 
-    const bg = `https://kaiz-apis.gleeze.com/api/faceswap?swapUrl=${encodeURIComponent(imgurLink1)}&baseUrl=${encodeURIComponent(imgurLink2)}&apikey=2e58e712-a3ef-42bb-af1a-20baa7edb88e`;
+    const bg = `https://betadash-api-swordslush-production.up.railway.app/faceswap?targetUrl=${encodeURIComponent(imgurLink1)}&swapUrl=${encodeURIComponent(imgurLink2)}`;
     await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
   } catch (error) {
     sendMessage(senderId, { text: error.message}, pageAccessToken);
