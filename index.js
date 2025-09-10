@@ -788,8 +788,8 @@ if (!imageUrl) {
     const imgurResponse2 = await axios.get(imgurApiUrl2, { headers });
     const imgurLink2 = imgurResponse2.data.url;
 
-    const bg = `https://betadash-api-swordslush-production.up.railway.app/faceswap?targetUrl=${encodeURIComponent(imgurLink1)}&swapUrl=${encodeURIComponent(imgurLink2)}`;
-    await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg } } }, pageAccessToken);
+    const bg = await axios.get(`https://betadash-api-swordslush-production.up.railway.app/faceswap?targetUrl=${encodeURIComponent(imgurLink1)}&swapUrl=${encodeURIComponent(imgurLink2)}`);
+    await sendMessage(senderId, { attachment: { type: 'image', payload: { url: bg.data.result } } }, pageAccessToken);
   } catch (error) {
     sendMessage(senderId, { text: error.message}, pageAccessToken);
         }
