@@ -6,7 +6,7 @@ const headers = {
 
 module.exports = {
   name: 'music',
-  description: 'Get music info from Shazam API',
+  description: 'Get music info and audio',
   author: 'Cliff',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     const query = args.join(' ');
@@ -63,6 +63,52 @@ module.exports = {
         },
         pageAccessToken
       );
+
+      const audioUrl = data.previewUrl;
+      if (!audioUrl) {
+        sendMessage(senderId, { text: `Sorry, no audio found for "${query}"` }, pageAccessToken);
+        return;
+      }
+
+      const headResponse = await axios.head(audioUrl, { headers });
+      const fileSize = parseInt(headResponse.headers['content-length'], 10);
+
+      if (fileSize > 25 * 1024 * 1024) {
+        await sendMessage(
+          senderId,
+          {
+            attachment: {
+              type: 'template',
+              payload: {
+                template_type: 'button',
+                text: 'Error: The audio file exceeds the 25 MB limit and cannot be sent.',
+                buttons: [
+                  {
+                    type: 'web_url',
+                    url: audioUrl,
+                    title: 'Download URL',
+                  },
+                ],
+              },
+            },
+          },
+          pageAccessToken
+        );
+      } else {
+        sendMessage(
+          senderId,
+          {
+            attachment: {
+              type: 'audio',
+              payload: {
+                url: audioUrl,
+                is_reusable: true,
+              },
+            },
+          },
+          pageAccessToken
+        );
+      }
     } catch (error) {
       sendMessage(senderId, { text: error.message }, pageAccessToken);
     }
