@@ -6,7 +6,7 @@ const headers = {
 
 module.exports = {
   name: 'music',
-  description: 'Get an MP3 download link for a song from YouTube',
+  description: 'Get music info from Shazam API',
   author: 'Cliff',
   async execute(senderId, args, pageAccessToken, sendMessage) {
     const query = args.join(' ');
@@ -16,26 +16,14 @@ module.exports = {
     }
 
     sendMessage(senderId, { text: `[ 🔍 ] 𝗳𝗶𝗻𝗱𝗶𝗻𝗴 𝗺𝘂𝘀𝗶𝗰 𝗳𝗼𝗿: '${query}', please wait...` }, pageAccessToken);
-    
 
     try {
-      const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(query)}`;
-      const videoResponse = await axios.get(videoSearchUrl, { headers });
-      const videoData = videoResponse.data[0];
+      const shazamUrl = `https://betadash-api-swordslush-production.up.railway.app/shazam?title=${encodeURIComponent(query)}&limit=1`;
+      const response = await axios.get(shazamUrl, { headers });
+      const data = response.data.results[0];
 
-      if (!videoData) {
+      if (!data) {
         sendMessage(senderId, { text: 'Not found. Please try another search.' }, pageAccessToken);
-        return;
-      }
-
-      const videoUrl = videoData.url;
-
-      const youtubeTrackUrl = `https://yt-video-production.up.railway.app/ytdl?url=${encodeURIComponent(videoUrl)}`;
-      const response = await axios.get(youtubeTrackUrl, { headers });
-      const { audio, title, thumbnail, duration } = response.data;
-
-      if (!audio) {
-        sendMessage(senderId, { text: `Sorry, no download link found for "${query}"` }, pageAccessToken);
         return;
       }
 
@@ -48,75 +36,35 @@ module.exports = {
               template_type: 'generic',
               elements: [
                 {
-                  title: title,
-                  image_url: thumbnail,
-                  subtitle: `Views: ${videoData.views}\nDuration: ${duration.label} (${duration.seconds}s)`,
+                  title: data.title,
+                  image_url: data.thumbnail,
+                  subtitle: `Artist: ${data.artistName}\nAlbum: ${data.albumName}\nGenre: ${data.genreNames.join(', ')}\nRelease: ${data.releaseDate}`,
                   default_action: {
                     type: 'web_url',
-                    url: thumbnail,
+                    url: data.appleMusicUrl,
                     webview_height_ratio: 'tall',
                   },
                   buttons: [
-                     {
-                     type: 'web_url',
-                     url: audio,
-                     title: 'Download Mp3',                     
-                   },
-                   {
-                     type: 'web_url',
-                     url: videoUrl,
-                     title: 'Watch on YouTube',                     
-                   },
+                    {
+                      type: 'web_url',
+                      url: data.appleMusicUrl,
+                      title: 'Apple Music',
+                    },
+                    {
+                      type: 'web_url',
+                      url: data.previewUrl,
+                      title: 'Preview',
+                    },
+                  ],
+                },
               ],
             },
-         ],
-      },
-    },
-  },
-  pageAccessToken
-);
-
-      const headResponse = await axios.head(audio, { headers });
-      const fileSize = parseInt(headResponse.headers['content-length'], 10);
-
-      if (fileSize > 25 * 1024 * 1024) {
-        await sendMessage(
-          senderId,
-          {
-            attachment: {
-              type: 'template',
-              payload: {
-                template_type: 'button',
-                text: 'Error: The audio file exceeds the 25 MB limit and cannot be sent.',
-                buttons: [
-                  {
-                    type: 'web_url',
-                    url: audio,
-                    title: 'Download URL',
-                  },
-                ],
-              },
-            },
           },
-          pageAccessToken
-        );
-      } else {
-        sendMessage(
-          senderId,
-          {
-            attachment: {
-              type: 'audio',
-              payload: {
-                url: audio,
-                is_reusable: true,
-              },
-            },
-          },
-          pageAccessToken
-        );
-      }
+        },
+        pageAccessToken
+      );
     } catch (error) {
-      sendMessage(senderId, { text: "The google audio Url cannot be sent:\n" +  error.message }, pageAccessToken);
+      sendMessage(senderId, { text: error.message }, pageAccessToken);
     }
   },
 };
