@@ -360,7 +360,7 @@ sendMessage(senderId, { text: payload }, pageAccessToken);
 }
 
 async function profileM() {
-  const url = `https://graph.facebook.com/v22.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
+  const url = `https://graph.facebook.com/v23.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
   const response = await axios.get(`https://graph.facebook.com/me?fields=id,name&access_token=${PAGE_ACCESS_TOKEN}`);
   const { name, id } = response.data;
   const payload = {
@@ -389,14 +389,14 @@ async function sendMessage(senderId, message, pageAccessToken) {
     }    
 
     try {
-        await axios.post('https://graph.facebook.com/v22.0/me/messages', {
+        await axios.post('https://graph.facebook.com/v23.0/me/messages', {
             recipient: { id: senderId },
             sender_action: 'mark_seen'
         }, {
             params: { access_token: pageAccessToken }
         });
 
-        await axios.post('https://graph.facebook.com/v22.0/me/messages', {
+        await axios.post('https://graph.facebook.com/v23.0/me/messages', {
             recipient: { id: senderId },
             sender_action: 'typing_on'
         }, {
@@ -421,11 +421,11 @@ async function sendMessage(senderId, message, pageAccessToken) {
             messagePayload.message.quick_replies = message.quick_replies;
         }
 
-        await axios.post('https://graph.facebook.com/v22.0/me/messages', messagePayload, {
+        await axios.post('https://graph.facebook.com/v23.0/me/messages', messagePayload, {
             params: { access_token: pageAccessToken }
         });
 
-        await axios.post('https://graph.facebook.com/v22.0/me/messages', {
+        await axios.post('https://graph.facebook.com/v23.0/me/messages', {
             recipient: { id: senderId },
             sender_action: 'typing_off'
         }, {
@@ -491,7 +491,7 @@ async function getImage(mid) {
   if (!mid) return;
 
   try {
-    const { data } = await axios.get(`https://graph.facebook.com/v22.0/${mid}/attachments`, {
+    const { data } = await axios.get(`https://graph.facebook.com/v23.0/${mid}/attachments`, {
       params: { access_token: `${PAGE_ACCESS_TOKEN}` }
     });
 
@@ -513,7 +513,7 @@ async function getAttachments(mid) {
     if (!mid) return;
 
     try {
-      const { data } = await axios.get(`https://graph.facebook.com/v22.0/${mid}/attachments`, {
+      const { data } = await axios.get(`https://graph.facebook.com/v23.0/${mid}/attachments`, {
         params: { access_token: `${PAGE_ACCESS_TOKEN}` }
      });
 
@@ -891,6 +891,37 @@ await sendMessage(senderId, { text: yawa}, pageAccessToken);
       return;
 }
 
+if (messageText && messageText.toLowerCase().startsWith("imgurl")) {
+    try { 
+if (!imageUrl) {
+      sendMessage(senderId, { text: "Please reply by attachment" }, pageAccessToken);
+      return;
+    }     
+      const apiUrll = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
+const fuckk = await axios.get(apiUrll);
+const dhh = fuck.data.uploaded.image;
+await sendMessage(senderId, { text: dhh }, pageAccessToken);
+    } catch (error) {
+     sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
+}
+
+
+
+if (messageText && messageText.toLowerCase().startsWith("getlink")) {
+    try { 
+if (!imageUrl) {
+      sendMessage(senderId, { text: "Please reply by attachment " }, pageAccessToken);
+      return;
+    }     
+
+await sendMessage(senderId, { text: `${encodeURIComponent(imageUrl)}` }, pageAccessToken);
+    } catch (error) {
+     sendMessage(senderId, { text: error.message}, pageAccessToken);
+        }
+      return;
+}
 
 if (messageText && messageText.toLowerCase().startsWith("tinyurl")) {
     try { 
