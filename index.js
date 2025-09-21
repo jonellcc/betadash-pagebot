@@ -899,7 +899,7 @@ if (!imageUrl) {
     }     
       const apiUrll = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
 const fuckk = await axios.get(apiUrll);
-const dhh = fuck.data.uploaded.image;
+const dhh = fuckk.data.uploaded.image;
 await sendMessage(senderId, { text: dhh }, pageAccessToken);
     } catch (error) {
      sendMessage(senderId, { text: error.message}, pageAccessToken);
@@ -916,7 +916,7 @@ if (!imageUrl) {
       return;
     }     
 
-await sendMessage(senderId, { text: `${encodeURIComponent(imageUrl)}` }, pageAccessToken);
+await sendMessage(senderId, { text: `${imageUrl}` }, pageAccessToken);
     } catch (error) {
      sendMessage(senderId, { text: error.message}, pageAccessToken);
         }
