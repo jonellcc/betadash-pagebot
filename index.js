@@ -15,9 +15,14 @@ const capcutLinkRegex = /https:\/\/www\.capcut\.com\/t\/[A-Za-z0-9]+/;
 const redditVideoRegex = /https:\/\/www\.reddit\.com\/r\/[A-Za-z0-9_]+\/comments\/[A-Za-z0-9]+\/[A-Za-z0-9_]+\/?/;
 const snapchatRegex = /https?:\/\/(www\.)?snapchat\.com\/spotlight\/[A-Za-z0-9_-]+/i;
 
+function agent() {
+    const chromeVersion = `${Math.floor(Math.random() * 6) + 130}.0.0.0`;
+    const oprVersion = `${Math.floor(Math.random() * 5) + 86}.0.0.0`;
+    return `Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Mobile Safari/537.36 OPR/${oprVersion}`;
+}
+
 const headers = {
-  'User-Agent': 'facebookexternalhit/1.1',
-  'Content-Type': 'application/json'
+    'User-Agent': agent()
 };
 
 const app = express();
@@ -896,8 +901,11 @@ if (messageText && messageText.toLowerCase().startsWith("imgurl")) {
 if (!imageUrl) {
       sendMessage(senderId, { text: "Please reply by attachment" }, pageAccessToken);
       return;
-    }     
-      const apiUrll = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imageUrl)}`;
+    }  const imgurApiUrll = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;
+        const imgurResponsie = await axios.get(imgurApiUrll, { headers } );
+        const imgurLinkk = imgurResponsie.data.url;
+           
+      const apiUrll = `https://betadash-uploader.vercel.app/imgur?link=${encodeURIComponent(imgurLinkk)}`;
 const fuckk = await axios.get(apiUrll);
 const dhh = fuckk.data.uploaded.image;
 await sendMessage(senderId, { text: dhh }, pageAccessToken);
