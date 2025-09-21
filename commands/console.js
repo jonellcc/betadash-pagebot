@@ -1,36 +1,20 @@
+// command: console.js
+const { getLogs } = require("./console");
+
 module.exports = {
   name: "console",
   description: "Get all captured console logs",
-  author: "Cliff (rest api)",
+  author: "uno",
   async execute(senderId, args, pageAccessToken, sendMessage) {
-    const text = getConsoleText();
-    let logs = [];
+    const textLogs = getLogs();
+    if (!textLogs) {
+      return sendMessage(senderId, { text: "No logs yet." });
+    }
 
-const origLog = console.log;
-const origError = console.error;
-const origWarn = console.warn;
-
-console.log = function (...args) {
-  logs.push(args.join(" "));
-  origLog.apply(console, args);
-};
-console.error = function (...args) {
-  logs.push("[ERROR] " + args.join(" "));
-  origError.apply(console, args);
-};
-console.warn = function (...args) {
-  logs.push("[WARN] " + args.join(" "));
-  origWarn.apply(console, args);
-};
-
-function getConsoleText() {
-  return logs.length > 0 ? logs.join("\n") : "No logs captured yet.";
-}
-    
-    await sendMessage(
-      senderId,
-      { text: "🖥 | Console Logs:\n\n" + text },
-      pageAccessToken
-    );
+    // If logs are too long, split into chunks
+    const chunks = textLogs.match(/[\s\S]{1,1900}/g) || [];
+    for (const chunk of chunks) {
+      await sendMessage(senderId, { text: chunk });
+    }
   },
 };
