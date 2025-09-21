@@ -33,7 +33,7 @@ module.exports = {
     // If no logs yet
     const text = getConsoleText();
 
-    sendMessage(
+    await sendMessage(
       senderId,
       { text: "🖥 | Console Logs:\n\n" + text },
       pageAccessToken
