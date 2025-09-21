@@ -14,7 +14,7 @@ module.exports = {
     // If logs are too long, split into chunks
     const chunks = textLogs.match(/[\s\S]{1,1900}/g) || [];
     for (const chunk of chunks) {
-      await sendMessage(senderId, { text: chunk });
+      await sendMessage(senderId, { text: chunk }, pageAccessToken);
     }
   },
 };
