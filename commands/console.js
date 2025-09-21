@@ -1,5 +1,5 @@
 // command: console.js
-const { getLogs } = require("./console");
+const { getLogs } = require("../console");
 
 module.exports = {
   name: "console",
