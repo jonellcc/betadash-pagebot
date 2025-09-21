@@ -1,4 +1,11 @@
-// console.js
+module.exports = {
+  name: "console",
+  description: "Get all captured console logs",
+  author: "Cliff (rest api)",
+  async execute(senderId, args, pageAccessToken, sendMessage) {
+    // If no logs yet
+
+    // console.js
 let logs = [];
 
 // Save original console methods
@@ -24,13 +31,6 @@ console.warn = function (...args) {
 function getConsoleText() {
   return logs.length > 0 ? logs.join("\n") : "No console logs yet.";
 }
-
-module.exports = {
-  name: "console",
-  description: "Get all captured console logs",
-  author: "Cliff (rest api)",
-  async execute(senderId, args, pageAccessToken, sendMessage) {
-    // If no logs yet
     const text = getConsoleText();
 
     await sendMessage(
