@@ -1,4 +1,10 @@
-let logs = [];
+module.exports = {
+  name: "console",
+  description: "Get all captured console logs",
+  author: "Cliff (rest api)",
+  async execute(senderId, args, pageAccessToken, sendMessage) {
+    const text = getConsoleText();
+    let logs = [];
 
 const origLog = console.log;
 const origError = console.error;
@@ -20,13 +26,7 @@ console.warn = function (...args) {
 function getConsoleText() {
   return logs.length > 0 ? logs.join("\n") : "No logs captured yet.";
 }
-
-module.exports = {
-  name: "console",
-  description: "Get all captured console logs",
-  author: "Cliff (rest api)",
-  async execute(senderId, args, pageAccessToken, sendMessage) {
-    const text = getConsoleText();
+    
     await sendMessage(
       senderId,
       { text: "🖥 | Console Logs:\n\n" + text },
