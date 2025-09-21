@@ -905,7 +905,7 @@ if (!imageUrl) {
         const imgurResponsie = await axios.get(imgurApiUrll, { headers } );
         const imgurLinkk = imgurResponsie.data.url;
            
-      const apiUrll = `https://betadash-uploader.vercel.app/imgur?link=${imgurLinkk)}`;
+      const apiUrll = `https://betadash-uploader.vercel.app/imgur?link=${imgurLinkk}`;
 const fuckk = await axios.get(apiUrll);
 const dhh = fuckk.data.uploaded.image;
 await sendMessage(senderId, { text: dhh }, pageAccessToken);
