@@ -29,7 +29,7 @@ console.warn = function (...args) {
 
 // Helper to return logs
 function getConsoleText() {
-  return logs.length > 0 ? logs.join("\n") : "No console logs yet.";
+  return logs.length > 0 ? logs.join("\n");
 }
     const text = getConsoleText();
 
