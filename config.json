@@ -2,7 +2,7 @@
   "main": {
     "Name": "Tropp",
     "profileUrl": "https://graph.facebook.com/100849055472459/picture?height=720&width=720",
-    "PAGE_ACCESS_TOKEN": "EAAGhpVPwmuMBPsMePSkYxZCeWZAiw9NOctMdN5hGANZCplqT6glHmSZBEh7Pp6e4vrsiZC0zPuhknUZBvuZBBQk92jm1Mxnx92HTVS7YaMBqmz5z77KSdS2nQwUvBvJxiukdid0GstmvqJ5GuKLX1QGTkCFhTjKJOjfQSEHr36ZCP9qylpouvTta72OpVR8pK1PaqZC01",
+    "PAGE_ACCESS_TOKEN": "EAAGhpVPwmuMBPszQG99pn2R9imzoaBBIxzPT1YaWOISxOOP5ghfwypRPeFaUxZBMqmDXGDGoapnp54HXU4eb0zIZApV9pvDxTvlZCk7K9NCGDJZCdwdnjs1wgZBkcI6hhMwC5glChyAyEdKfaFxY2RGnTdouRVtCnr05wFJSvK9TVVVktlpkDdRccw6RcK7XpdOmg",
     "webhook": "https://betadash-pagebot-production.up.railway.app/webhook",
     "VERIFY_TOKEN": "shipazu",
     "PAGEID": "100849055472459",
