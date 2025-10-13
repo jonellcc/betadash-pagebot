@@ -1151,7 +1151,7 @@ const s = ["✧", "✦", "⟡"];
       } else {
      const s = ["✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
-        const api = `https://kaiz-apis.gleeze.com/api/gemini-pro?ask=${encodeURIComponent(combinedContent)}&uid=${senderId}&apikey=70e8c89d-e021-460f-96c1-5eb93fff70e8`;
+        const api = `https://api-rynxzei.onrender.com/api/gemini?prompt=${encodeURIComponent(combinedContent)}`;
      const response = await axios.get(api);
       const anss = convertToBold(response.data.response);
         text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━\n${anss}\n━━━━━━━━━━━━━`;
