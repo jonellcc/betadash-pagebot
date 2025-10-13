@@ -1,4 +1,5 @@
 const axios = require("axios");
+
 const headers = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
   'Content-Type': 'application/json'
@@ -15,23 +16,29 @@ module.exports = {
       return;
     }
 
-    sendMessage(senderId, { text: `[ 🔍 ] 𝗦𝗲𝗮𝗿𝗰𝗵𝗶𝗻𝗴 𝗳𝗼𝗿: '${search}', please wait...` }, pageAccessToken);
+    sendMessage(senderId, { text: `[ 🔍 ] Searching for: '${search}', please wait...` }, pageAccessToken);
 
     try {
-      const videoSearchUrl = `https://betadash-search-download.vercel.app/yt?search=${encodeURIComponent(search)}`;
-        const videoResponse = await axios.get(videoSearchUrl);
-        const videoData = videoResponse.data[0];
+      const apiUrl = `https://api.ccprojectsapis-jonell.gleeze.com/api/ytsearch?title=${encodeURIComponent(search)}`;
+      const response = await axios.get(apiUrl);
+      const results = response.data.results;
 
-const videoUrl = videoData.url;
+      if (!results || results.length === 0) {
+        sendMessage(senderId, { text: "❌ No results found." }, pageAccessToken);
+        return;
+      }
 
-      const { title, time, views, thumbnail, channelName} = videoData;
+      const video = results[0]; // first result
+      const { title, url: videoUrl, thumbnail, duration, views, author } = video;
 
-const kupal = `https://yt-video-production.up.railway.app/ytdl?url=${videoUrl}`;
-        const vid = await axios.get(kupal, { headers });
-       const videos = vid.data.video;
-      const message = `𝗩𝗶𝗲𝘄𝘀: ${videoData.views}\n𝗗𝘂𝗿𝗮𝘁𝗶𝗼𝗻: ${time}`;
+      const downloadUrl = `https://yt-video-production.up.railway.app/ytdl?url=${videoUrl}`;
+      const vid = await axios.get(downloadUrl, { headers });
+      const videoDownload = vid.data.video;
 
-await sendMessage(
+      const message = `👤 Author: ${author}\n👁️ Views: ${views}\n⏱️ Duration: ${duration}`;
+
+      // Send preview with buttons
+      await sendMessage(
         senderId,
         {
           attachment: {
@@ -45,55 +52,58 @@ await sendMessage(
                   subtitle: message,
                   default_action: {
                     type: 'web_url',
-                    url: thumbnail,
+                    url: videoUrl,
                     webview_height_ratio: 'compact',
                   },
                   buttons: [
-                     {
-                     type: 'web_url',
-                     url: videos,
-                     title: 'Download Mp4',
-                   },
                     {
-                     type: 'web_url',
-                     url: videoUrl,
-                     title: 'Watch on YouTube',
-                   },
+                      type: 'web_url',
+                      url: videoDownload,
+                      title: 'Download Mp4',
+                    },
+                    {
+                      type: 'web_url',
+                      url: videoUrl,
+                      title: 'Watch on YouTube',
+                    },
+                  ],
+                },
               ],
             },
-         ],
-      },
-    },
-  },
-  pageAccessToken
-);
+          },
+        },
+        pageAccessToken
+      );
 
-      if (videos) {
-        const headResponse = await axios.head(videos, { headers });
+      // Check file size before sending
+      if (videoDownload) {
+        const headResponse = await axios.head(videoDownload, { headers });
         const fileSize = parseInt(headResponse.headers['content-length'], 10);
 
         if (!isNaN(fileSize) && fileSize <= 25 * 1024 * 1024) {
-          sendMessage(senderId, {
+          // Send video directly
+          await sendMessage(senderId, {
             attachment: {
               type: 'video',
               payload: {
-                url: videos,
+                url: videoDownload,
                 is_reusable: true
               }
             }
           }, pageAccessToken);
         } else {
-          sendMessage(senderId, {
+          // Too large to send directly
+          await sendMessage(senderId, {
             attachment: {
               type: 'template',
               payload: {
                 template_type: 'button',
-                text: `Error: The video exceeds the 25 MB limit and cannot be sent.`,
+                text: `⚠️ The video exceeds 25MB and cannot be sent directly.`,
                 buttons: [
                   {
                     type: 'web_url',
-                    url: videos,
-                    title: 'Watch Video'
+                    url: videoDownload,
+                    title: 'Download Video'
                   }
                 ]
               }
@@ -101,8 +111,9 @@ await sendMessage(
           }, pageAccessToken);
         }
       }
+
     } catch (error) {
-      sendMessage(senderId, { text: "The google redirected video Url cannot be sent:\n" + error.message }, pageAccessToken);
+      sendMessage(senderId, { text: "❌ Error fetching video:\n" + error.message }, pageAccessToken);
     }
   }
 };
