@@ -13,16 +13,15 @@ module.exports = {
     }
 
     try {
-      const res = await axios.get(`https://markdevs-last-api-s7d0.onrender.com/sim?q=${content}`);
+      const res = await axios.get(`https://sim2-0.onrender.com/sim2.5?prompt=${prompt}&uid=${senderId}`);
       
       const response = await axios.get(res);
-      const respond = response.data.response;
+      const respond = response.data.reply;
 
-      // Send the API response text back to the user
-      sendMessage(senderId, { text: respond }, pageAccessToken);
+     await sendMessage(senderId, { text: respond }, pageAccessToken);
 
     } catch (error) {
-      sendMessage(senderId, { text: 'Sorry, there was an error processing your request.' }, pageAccessToken);
+      await sendMessage(senderId, { text: 'Sorry, there was an error processing your request.' }, pageAccessToken);
     }
   }
 };
