@@ -628,10 +628,11 @@ async function handleMessage(event, pageAccessToken) {
         return;
     } 
 
-     if (config.selfListen && event?.message?.is_echo) return;
-     if (event?.message?.is_echo) {
-      event.sender.id = event.recipient.id;
-    }
+if (!config.selfListen && event?.message?.is_echo) return;
+
+if (event?.message?.is_echo) {
+  event.sender.id = event.recipient.id;
+}
 
 const senderId = event.sender.id;
 const messageText = event.message.text;
