@@ -113,10 +113,10 @@ module.exports = {
           await sendMessage(senderId, { text: message }, pageAccessToken);
         }
       } else {
-        await sendMessage(senderId, { text: 'You have reached your daily request limit. Please come back tomorrow.' }, pageAccessToken);
+        await sendMessage(senderId, { text: 'U have reached your daily request limit. Please come back tomorrow.' }, pageAccessToken);
       }
     } catch (err) {
-      await sendMessage(senderId, { text: 'You have reached your daily request limit. Please come back tomorrow.' }, pageAccessToken);
+      await sendMessage(senderId, { text: 'U have reached your daily request limit. Please come back tomorrow.' }, pageAccessToken);
       }
   }
 };
