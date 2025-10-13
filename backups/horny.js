@@ -1,0 +1,175 @@
+const axios = require('axios');
+
+module.exports = {
+  name: 'horny',
+  description: 'Random video',
+  author: 'Cliff',
+  async execute(senderId, args, pageAccessToken, sendMessage, splitMessageIntoChunks) {
+    const links = [
+  "https://i.imgur.com/vwmA33q.mp4",
+  "https://i.imgur.com/f8DkZS9.mp4",
+  "https://i.imgur.com/YQ3VgZE.mp4",
+  "https://i.imgur.com/TOQQ1So.mp4",
+  "https://i.imgur.com/wrDzggx.mp4",
+  "https://i.imgur.com/Lnr3DZA.mp4",
+  "https://i.imgur.com/K8L5gt8.mp4",
+  "https://i.imgur.com/TZpZHLn.mp4",
+  "https://i.imgur.com/EIoKHsc.mp4",
+  "https://i.imgur.com/0HMrgWJ.mp4",
+  "https://i.imgur.com/bbZsqXm.mp4",
+ "https://i.imgur.com/uA4sNw7.mp4",
+  "https://i.imgur.com/8mdshbv.mp4",
+  "https://i.imgur.com/0azRXWN.mp4",
+  "https://i.imgur.com/2YO1UIV.mp4",
+  "https://i.imgur.com/ht6pqg3.mp4",
+  "https://i.imgur.com/2EDrkgt.mp4",
+  "https://i.imgur.com/pFB6VnE.mp4",
+  "https://i.imgur.com/jruTcFx.mp4",
+  "https://i.imgur.com/vDHfKxh.mp4",
+  "https://i.imgur.com/bwihQeY.mp4",
+  "https://i.imgur.com/JMuALc1.mp4",
+  "https://i.imgur.com/8lIZa5G.mp4",
+  "https://i.imgur.com/LR9ooyJ.mp4",
+  "https://i.imgur.com/Viv4X8C.mp4",
+  "https://i.imgur.com/cspl74z.mp4",
+  "https://i.imgur.com/SzPPdqW.mp4",
+  "https://i.imgur.com/QZRP8Sn.mp4",
+  "https://i.imgur.com/pCbdZYY.mp4",
+  "https://i.imgur.com/j6CrJxW.mp4",
+    "https://i.imgur.com/Rkl5UmH.mp4",
+    "https://i.imgur.com/qxPR4i6.mp4",
+   /** "https://i.imgur.com/9LDVC57.mp4",
+    "https://i.imgur.com/r7IxgiR.mp4",
+    "https://i.imgur.com/J1jWubu.mp4", **/
+    "https://i.imgur.com/JnmXyO3.mp4",
+    "https://i.imgur.com/Qudb0Vl.mp4",
+    "https://i.imgur.com/N3wIadu.mp4",
+    "https://i.imgur.com/X7lugs3.mp4",
+    "https://i.imgur.com/6b61HGs.mp4",
+    "https://i.imgur.com/EPzjIbt.mp4",
+    "https://i.imgur.com/WWGiRvB.mp4",
+    "https://i.imgur.com/20QmmsT.mp4",
+    "https://i.imgur.com/nN28Eea.mp4",
+    "https://i.imgur.com/fknQ3Ut.mp4",
+    "https://i.imgur.com/yXZJ4A9.mp4",
+    "https://i.imgur.com/GnF9Fdw.mp4",
+    "https://i.imgur.com/B86BX8.mp4",
+    "https://i.imgur.com/kZCBjkz.mp4",
+    "https://i.imgur.com/id5Rv7O.mp4",
+    "https://i.imgur.com/aWIyVpN.mp4",
+    "https://i.imgur.com/aFIwl8X.mp4",
+    "https://i.imgur.com/SJ60dUB.mp4",
+    "https://i.imgur.com/ySu69zS.mp4",
+    "https://i.imgur.com/mAmwCe6.mp4",
+    "https://i.imgur.com/Sbztqx2.mp4",
+    "https://i.imgur.com/s2d0BIK.mp4",
+    "https://i.imgur.com/rWRfAAZ.mp4",
+    "https://i.imgur.com/dYLBspd.mp4",
+    "https://i.imgur.com/HCv8Pfs.mp4",
+    "https://i.imgur.com/jdVLoxo.mp4",
+    "https://i.imgur.com/lFoNnZZ.mp4",
+    "https://i.imgur.com/qDsEv1Q.mp4",
+    "https://i.imgur.com/NjWUgW8.mp4",
+    "https://i.imgur.com/ViP4uvu.mp4",
+    "https://i.imgur.com/bim2U8C.mp4",
+    "https://i.imgur.com/YzlGSlm.mp4",
+    "https://i.imgur.com/HZpxU7h.mp4",
+    "https://i.imgur.com/9iOci5S.mp4",
+    "https://i.imgur.com/6w5tnvs.mp4",
+    "https://i.imgur.com/1L0DMtl.mp4",
+    "https://i.imgur.com/3MBTpM8.mp4",
+    "https://i.imgur.com/8h1Vgum.mp4",
+    "https://i.imgur.com/e505Ko2.mp4",
+    "https://i.imgur.com/3umJ6NL.mp4",
+     "https://i.imgur.com/BNiKcCo.mp4",
+    "https://i.imgur.com/b80TN1v.mp4",
+    "https://i.imgur.com/JcqGbH3.mp4",
+    "https://i.imgur.com/5C6yFIm.mp4",
+    "https://i.imgur.com/9FODpXk.mp4",
+    "https://i.imgur.com/mTDsUVm.mp4",
+    "https://i.imgur.com/mb6S7u1.mp4",
+    "https://i.imgur.com/9XNga6q.mp4",
+    "https://i.imgur.com/IZA5W0C.mp4",
+    "https://i.imgur.com/36YC5rC.mp4",
+    "https://i.imgur.com/fEIbpYt.mp4",
+    "https://i.imgur.com/ZiMZ8GC.mp4",
+    "https://i.imgur.com/Kz1mURj.mp4",
+    "https://i.imgur.com/NdZHNFg.mp4",
+    "https://i.imgur.com/A3BkIdC.mp4",
+    "https://i.imgur.com/j1OUYrd.mp4",
+    "https://i.imgur.com/dBKeSB1.mp4",
+    "https://i.imgur.com/2RANKal.mp4",
+    "https://i.imgur.com/sqMtii5.mp4",
+    "https://i.imgur.com/6EPzmKN.mp4",
+    "https://i.imgur.com/4iP5klr.mp4",
+    "https://i.imgur.com/KzIRBW5.mp4",
+    "https://i.imgur.com/ECqjTdX.mp4",
+    "https://i.imgur.com/aenOYPU.mp4",
+    "https://i.imgur.com/1x4PfFf.mp4",
+    "https://i.imgur.com/O3d8KUV.mp4",
+    "https://i.imgur.com/v69h4i0.mp4",
+    "https://i.imgur.com/K3VYzc3.mp4",
+    "https://i.imgur.com/lLK7pRl.mp4",
+    "https://i.imgur.com/Bg4jafS.mp4",
+    "https://i.imgur.com/Y1Pr26F.mp4",
+    "https://i.imgur.com/NGdjghe.mp4",
+    "https://i.imgur.com/wHGFau4.mp4",
+    "https://i.imgur.com/5PHTuUc.mp4",
+    "https://i.imgur.com/jXsQ8y1.mp4",
+    "https://i.imgur.com/eAKQOSc.mp4",
+    "https://i.imgur.com/WeVU44f.mp4",
+    "https://i.imgur.com/pvCO07d.mp4",
+    "https://i.imgur.com/Hiblj7U.mp4",
+    "https://i.imgur.com/TRTEZJb.mp4",
+    "https://i.imgur.com/5ttP8wS.mp4",
+    "https://i.imgur.com/kaAdYb4.mp4",
+    "https://i.imgur.com/EaW6bLY.mp4",
+    "https://i.imgur.com/gMP8xJb.mp4",
+    "https://i.imgur.com/WKvMqID.mp4",
+    "https://i.imgur.com/1WNjGdq.mp4"
+]; 
+
+try {
+    const randomIndex = Math.floor(Math.random() * links.length);
+    const videoUrl = links[randomIndex];
+
+    if (videoUrl) {
+      sendMessage(senderId, {
+        attachment: {
+          type: 'video',
+          payload: {
+            url: videoUrl,
+            is_reusable: true
+          }
+        },
+        quick_replies: [
+          {
+            content_type: "text",
+            title: "shoti",
+            payload: "SHOTI"
+          },
+          {
+            content_type: "text",
+            title: "Help",
+            payload: "HELP"
+          },
+          {
+            content_type: "text",
+            title: "Privacy Policy",
+            payload: "PRIVACY POLICY"
+          },
+          {
+            content_type: "text",
+            title: "Feedback",
+            payload: "FEEDBACK"
+          }
+        ]
+      }, pageAccessToken);
+     } else {
+      await sendMessage(senderId, { text: 'Sorry, no video found.' }, pageAccessToken);
+      }
+    } catch (error) {
+      await sendMessage(senderId, { text: error.message }, pageAccessToken);
+    }
+  }
+};
