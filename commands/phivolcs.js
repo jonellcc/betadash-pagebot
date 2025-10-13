@@ -14,16 +14,18 @@ module.exports = {
     const option = (args[0] || '').toLowerCase();
 
     if (!option || !['on', 'off'].includes(option)) {
-      return await sendMessage(senderId, {
+      await sendMessage(senderId, {
         text: '⚙️ 𝗨𝘀𝗮𝗴𝗲: 𝗽𝗵𝗶𝗹𝘃𝗼𝗹𝗰𝘀 𝗼𝗻 | 𝗽𝗵𝗶𝗹𝘃𝗼𝗹𝗰𝘀 𝗼𝗳𝗳\n\n🌋 "on" → auto send every new earthquake detected.\n🌋 "off" → stop updates.'
       }, pageAccessToken);
+      return;
     }
 
     if (option === 'on') {
       if (autoSend) {
-        return await sendMessage(senderId, {
+        await sendMessage(senderId, {
           text: '🌋 𝗘𝗮𝗿𝘁𝗵𝗾𝘂𝗮𝗸𝗲 𝗮𝘂𝘁𝗼-𝘂𝗽𝗱𝗮𝘁𝗲 𝗶𝘀 𝗮𝗹𝗿𝗲𝗮𝗱𝘆 𝗼𝗻.'
         }, pageAccessToken);
+        return;
       }
 
       autoSend = true;
@@ -69,7 +71,6 @@ module.exports = {
             }
           }
         } catch (err) {
-          console.error('Error fetching PHIVOLCS data:', err);
           await sendMessage(senderId, {
             text: '⚠️ Error retrieving earthquake data: ' + err.message
           }, pageAccessToken);
@@ -84,7 +85,7 @@ module.exports = {
         clearInterval(interval);
         interval = null;
       }
-      return await sendMessage(senderId, {
+      await sendMessage(senderId, {
         text: '🛑 𝗘𝗮𝗿𝘁𝗵𝗾𝘂𝗮𝗸𝗲 𝗮𝘂𝘁𝗼-𝘂𝗽𝗱𝗮𝘁𝗲 𝘁𝘂𝗿𝗻𝗲𝗱 𝗼𝗳𝗳.'
       }, pageAccessToken);
     }
