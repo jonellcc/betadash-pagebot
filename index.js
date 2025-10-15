@@ -1142,12 +1142,12 @@ if (messageText && messageText.toLowerCase().startsWith("humanize")) {
 const lgg = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;
 const ghh = await axios.get(lgg);
 const lkj = ghh.data.url;
-    const jgd = await axios.post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDcNRWrf0nCVHCDUnYBLjON3pwW4pPitP0',
+const jgd = await axios.post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDcNRWrf0nCVHCDUnYBLjON3pwW4pPitP0',
       {
         contents: [
           {
             parts: [
-              { combinedContent },
+              { `${encodeURIComponent(combinedContent)}` },
               {
                 inline_data: {
                   mime_type: 'image/jpeg',
