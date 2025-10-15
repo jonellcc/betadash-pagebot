@@ -1142,11 +1142,31 @@ if (messageText && messageText.toLowerCase().startsWith("humanize")) {
 const lgg = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURIComponent(imageUrl)}`;
 const ghh = await axios.get(lgg);
 const lkj = ghh.data.url;
-        const apiUrl = `https://kaiz-apis.gleeze.com/api/gemini-vision?q=${encodeURIComponent(combinedContent)}&uid=${senderId}&imageUrl=${lkj}&apikey=ceb699c9-cdac-452d-b312-d2d7970f59e9`;
+    const jgd = await axios.post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDcNRWrf0nCVHCDUnYBLjON3pwW4pPitP0',
+      {
+        contents: [
+          {
+            parts: [
+              { combinedContent },
+              {
+                inline_data: {
+                  mime_type: 'image/jpeg',
+                  data: (await axios.get(lkj, { responseType: 'arraybuffer' })).data.toString('base64')
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    )
+
+const idd = jgd.data?.candidates?.[0]?.content?.parts?.[0]?.text;    
 const s = ["✧", "✦", "⟡"];
   const sy = s[Math.floor(Math.random() * s.length)];
-        const response = await axios.get(apiUrl, { headers });
-       const cg = convertToBold(response.data.response);
+       const cg = convertToBold(idd);
         text = `${sy} | 𝗚𝗘𝗠𝗜𝗡𝗜-𝗙𝗟𝗔𝗦𝗛 𝟭.𝟱\n━━━━━━━━━━━━━━\n${cg}\n━━━━━━━━━━━━━━`;
       } else {
      const s = ["✧", "✦", "⟡"];
