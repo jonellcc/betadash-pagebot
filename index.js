@@ -1143,25 +1143,31 @@ const lgg = `https://betadash-api-swordslush.vercel.app/shorten?link=${encodeURI
 const ghh = await axios.get(lgg);
 const lkj = ghh.data.url;
 const jgd = await axios.post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyDcNRWrf0nCVHCDUnYBLjON3pwW4pPitP0',
+  {
+    contents: [
       {
-        contents: [
+        parts: [
           {
-            parts: [
-              { `${encodeURIComponent(combinedContent)}` },
-              {
-                inline_data: {
-                  mime_type: 'image/jpeg',
-                  data: (await axios.get(lkj, { responseType: 'arraybuffer' })).data.toString('base64')
-                }
-              }
-            ]
+            text: encodeURIComponent(combinedContent)
+          },
+          {
+            inline_data: {
+              mime_type: 'image/jpeg',
+              data: (
+                await axios.get(lkj, { responseType: 'arraybuffer' })
+              ).data.toString('base64')
+            }
           }
         ]
-      },
-      {
-        headers: { 'Content-Type': 'application/json' }
       }
-    )
+    ]
+  },
+  {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+);
 
 const idd = jgd.data?.candidates?.[0]?.content?.parts?.[0]?.text;    
 const s = ["✧", "✦", "⟡"];
