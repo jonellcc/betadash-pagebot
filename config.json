@@ -1,26 +1,26 @@
 {
   "main": {
-    "Name": "Tropp",
+    "Name": "Educational Purpose AI",
     "profileUrl": "https://graph.facebook.com/100849055472459/picture?height=720&width=720",
-    "PAGE_ACCESS_TOKEN": "EAAGhpVPwmuMBPkZAeUYSO47DJwmW6PXiraTpo5vusYPrE4barcYsDZCzgLbB9SFjmCiYSGWjDadSVISXAhJBoUi8MFqTqNE663fpDFwWd6K7qbM0ZAKXxnz7tnw4vvJ6WVaxz4vD0mcLAOPJnyrZCyHQcZABo2aL8UANMa1XcJ0BuCoGWT0zQwfx5m7ZAtZCOHZAqZBQp",
-    "webhook": "https://betadash-pagebot-production.up.railway.app/webhook",
-    "VERIFY_TOKEN": "shipazu",
+    "PAGE_ACCESS_TOKEN": "EAAHwNm4CT2YBPqdQ787YOjeYWncuHsU8kRVRyUcCP5exQtZBaoWY4sg55hoQiC6VA2QHZChrbTHzlxIejemShLjZCMcS0YFMlJa4oy1N09G8UF92omS2MQFosMuZBb1uAwZAxL6F3kaNu2j4XOop41uIN36vLsZAPp6O2pn1AnKWd35csOZCMvNHZCT5O1Q868jkBsFHTgZDZD",
+    "webhook": "",
+    "VERIFY_TOKEN": "ccprojects",
     "PAGEID": "100849055472459",
     "ADMINS": [
-      "25532987236345562",
-      "7913024942132935",
-      "8269473539829237",
-      "8505900689447357"
+      "",
+      "",
+      "",
+      ""
     ]
   },
-  "selfListen": true,
+  "selfListen": false,
   "sessions": [
      {
-      "name": "Mecha Ai",
-      "profileUrl": "https://graph.facebook.com/850668488122934/picture?height=720&width=720",
-      "PAGE_ACCESS_TOKEN": "EAASYBPk42I0BPpFdFxhwiyNp6wx8XXDCwrpI9kLXTyLuIYX3gDdqy3O5kb3UcQYqVAjJNlR63aA2glR5ZAcWm0S2Jz9tLLwujgW50ZA1uEZAwJBvzKsDy6r8rwjLJ04HOPHTZBGYnCufiqMLD7so72SqMJlBA3SAvmt4WpKUnDZAJ0LWnykIEx7Ob1igB4eA2lM4sqAZDZD",
-      "pageid": "850668488122934",
-      "adminid": "24664056909872068"
+      "name": "",
+      "profileUrl": "",
+      "PAGE_ACCESS_TOKEN": "",
+      "pageid": "",
+      "adminid": ""
      }
   ]
 }
