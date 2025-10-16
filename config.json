@@ -3,7 +3,7 @@
     "Name": "Educational Purpose AI",
     "profileUrl": "https://graph.facebook.com/100849055472459/picture?height=720&width=720",
     "PAGE_ACCESS_TOKEN": "EAAHwNm4CT2YBPqdQ787YOjeYWncuHsU8kRVRyUcCP5exQtZBaoWY4sg55hoQiC6VA2QHZChrbTHzlxIejemShLjZCMcS0YFMlJa4oy1N09G8UF92omS2MQFosMuZBb1uAwZAxL6F3kaNu2j4XOop41uIN36vLsZAPp6O2pn1AnKWd35csOZCMvNHZCT5O1Q868jkBsFHTgZDZD",
-    "webhook": "",
+    "webhook": "https://betadash-pagebot.onrender.com/webhook",
     "VERIFY_TOKEN": "ccprojects",
     "PAGEID": "61566734774070",
     "ADMINS": [
